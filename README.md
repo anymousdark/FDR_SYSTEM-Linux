@@ -71,7 +71,7 @@ de `MainWindow.ShowPage(string tag)`.
 
 ## 3. Requisitos no Linux
 
-Testado em ambiente Debian/Ubuntu/Kali. Comandos de instalação:
+Alvo: Debian/Ubuntu/Kali. Comandos de instalação:
 
 ```bash
 sudo apt update
