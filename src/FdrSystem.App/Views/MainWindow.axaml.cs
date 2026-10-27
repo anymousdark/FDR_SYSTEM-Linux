@@ -1,0 +1,124 @@
+using System.IO.Compression;
+using Avalonia.Controls;
+using Avalonia.Interactivity;
+using Avalonia.Threading;
+using FdrSystem.App.Services;
+using FdrSystem.App.Views.Pages;
+using FdrSystem.Core;
+using FdrSystem.Core.Tools;
+using FdrSystem.Core.Usb;
+
+namespace FdrSystem.App.Views;
+
+public partial class MainWindow : Window
+{
+    private readonly ToolRunner _tools = new();
+    private readonly DispatcherTimer _usbTimer;
+    private OfflineView? _offline;
+    private string? _lastUsbSignature;
+
+    public MainWindow()
+    {
+        InitializeComponent();
+
+        var themeIndex = Array.IndexOf(["Dark", "Light", "Midnight", "Forest", "Amethyst"], AppSettings.Current.Theme);
+        ThemeManager.Apply(themeIndex >= 0 ? themeIndex : 0);
+
+        ShowPage("offline");
+
+        // A app abre sempre em Offline: o grupo de rádio pode mudar de estado
+        // durante a construção da janela e não queremos herdar essa escolha.
+        Loaded += (_, _) =>
+        {
+            NavOffline.IsChecked = true;
+            ShowPage("offline");
+        };
+
+        _usbTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
+        _usbTimer.Tick += (_, _) => PollUsb();
+        _usbTimer.Start();
+
+        PollUsb();
+    }
+
+    private void Nav_Click(object? sender, RoutedEventArgs e)
+    {
+        if (sender is RadioButton { Tag: string tag }) ShowPage(tag);
+    }
+
+    private void ShowPage(string tag)
+    {
+        AppLog.Info("página -> " + tag, "Nav");
+        PageHost.Content = tag switch
+        {
+            "offline" => _offline ??= new OfflineView(this, _tools),
+            _ => PlaceholderView.For(tag, this),
+        };
+
+        if (tag == "offline") _offline?.EnsureAutoRead();
+    }
+
+    /// <summary>Chamado pelo timer: mostra o estado do USB e dispara a leitura automática.</summary>
+    private void PollUsb()
+    {
+        var devices = UsbScanner.FindAppleDevices();
+        var signature = string.Join("|", devices.Select(d => $"{d.ProductId:X4}:{d.Serial}"));
+
+        if (devices.Count == 0)
+        {
+            SetStatus("Conecte o iPhone por USB — a leitura começa automaticamente.");
+            _lastUsbSignature = null;
+            return;
+        }
+
+        var device = devices[0];
+        var mode = device.Mode;
+        SetStatus(mode == "Normal"
+            ? $"iPhone ligado (USB) — {(string.IsNullOrWhiteSpace(device.Product) ? "a ler…" : device.Product)}"
+            : $"iPhone em {mode} — dados lidos diretamente do USB.");
+
+        if (signature == _lastUsbSignature) return;
+        _lastUsbSignature = signature;
+        _offline?.EnsureAutoRead(force: true);
+    }
+
+    public void SetStatus(string text) => StatusText.Text = text;
+
+    private void ThemeButton_Click(object? sender, RoutedEventArgs e)
+    {
+        ThemeManager.Cycle();
+        SetStatus("Tema: " + ThemeManager.Names[ThemeManager.CurrentIndex] + ".");
+    }
+
+    private void LogsButton_Click(object? sender, RoutedEventArgs e)
+    {
+        try
+        {
+            AppPaths.EnsureDataDirectories();
+            var target = Path.Combine(AppPaths.Documents, AppPaths.AppName, "Relatorios");
+            Directory.CreateDirectory(target);
+            var zip = Path.Combine(target, $"logs-{DateTime.Now:yyyyMMdd-HHmmss}.zip");
+
+            using (var archive = ZipFile.Open(zip, ZipArchiveMode.Create))
+            {
+                foreach (var file in Directory.EnumerateFiles(AppPaths.LogDirectory, "app-*.log"))
+                    archive.CreateEntryFromFile(file, Path.GetFileName(file));
+
+                var summary = archive.CreateEntry("resumo.txt");
+                using var writer = new StreamWriter(summary.Open());
+                writer.WriteLine($"FDR_SYSTEM {typeof(MainWindow).Assembly.GetName().Version}");
+                writer.WriteLine($"SO: {Environment.OSVersion}");
+                writer.WriteLine($"Runtime: {Environment.Version}");
+                writer.WriteLine($"Ferramentas: ideviceinfo={( _tools.Has("ideviceinfo") ? "ok" : "ausente")}");
+                writer.WriteLine($"USB: {UsbScanner.DescribeEnvironment()}");
+            }
+
+            SetStatus($"Logs exportados para {zip}");
+        }
+        catch (Exception ex) when (ex is IOException or UnauthorizedAccessException)
+        {
+            AppLog.Error("exportar logs: " + ex.Message, "Sistema");
+            SetStatus("Não foi possível exportar os logs.");
+        }
+    }
+}

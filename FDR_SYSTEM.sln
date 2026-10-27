@@ -1,0 +1,34 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.0.31903.59
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{17C546EF-3282-4B4C-8F1D-33E7578C2A1A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FdrSystem.Core", "src\FdrSystem.Core\FdrSystem.Core.csproj", "{98FD6C8B-6840-4101-BB25-D5AE9BCC83C8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "FdrSystem.App", "src\FdrSystem.App\FdrSystem.App.csproj", "{C772272A-86F4-44D1-9864-716E2BB7CF80}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{98FD6C8B-6840-4101-BB25-D5AE9BCC83C8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{98FD6C8B-6840-4101-BB25-D5AE9BCC83C8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{98FD6C8B-6840-4101-BB25-D5AE9BCC83C8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{98FD6C8B-6840-4101-BB25-D5AE9BCC83C8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C772272A-86F4-44D1-9864-716E2BB7CF80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C772272A-86F4-44D1-9864-716E2BB7CF80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C772272A-86F4-44D1-9864-716E2BB7CF80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C772272A-86F4-44D1-9864-716E2BB7CF80}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{98FD6C8B-6840-4101-BB25-D5AE9BCC83C8} = {17C546EF-3282-4B4C-8F1D-33E7578C2A1A}
+		{C772272A-86F4-44D1-9864-716E2BB7CF80} = {17C546EF-3282-4B4C-8F1D-33E7578C2A1A}
+	EndGlobalSection
+EndGlobal

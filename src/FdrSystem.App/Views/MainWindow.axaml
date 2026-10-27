@@ -1,0 +1,173 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        x:Class="FdrSystem.App.Views.MainWindow"
+        Title="FDR_SYSTEM"
+        Width="1240" Height="760"
+        MinWidth="980" MinHeight="620"
+        WindowStartupLocation="CenterScreen"
+        Background="{DynamicResource WindowBg}"
+        Foreground="{DynamicResource TextPrimary}"
+        FontFamily="Inter, Segoe UI, Noto Sans, DejaVu Sans, sans-serif">
+
+  <Grid RowDefinitions="56,*">
+
+    <!-- Cabeçalho: marca, estado e ações globais -->
+    <Border Grid.Row="0" Background="{DynamicResource HeaderBg}"
+            BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,0,1">
+      <DockPanel Margin="14,0" LastChildFill="True">
+
+        <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" VerticalAlignment="Center" Spacing="8">
+          <Border x:Name="NetBadge" Background="{DynamicResource BadgeBg}" CornerRadius="14" Padding="10,4">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Path Data="{StaticResource IconNet}" Stroke="{DynamicResource BadgeFg}" StrokeThickness="1.5" Width="13" Height="13" />
+              <TextBlock x:Name="NetBadgeText" Text="SEM REDE" Foreground="{DynamicResource BadgeFg}"
+                         FontSize="10" FontWeight="Bold" VerticalAlignment="Center" />
+            </StackPanel>
+          </Border>
+          <Button x:Name="ThemeButton" Classes="tool" Click="ThemeButton_Click" ToolTip.Tip="Mudar de tema">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Path Data="{StaticResource IconTheme}" Stroke="{DynamicResource TextStrong}" StrokeThickness="1.5" Width="13" Height="13" />
+              <TextBlock Text="Tema" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+          <Button x:Name="LogsButton" Classes="ghost" Click="LogsButton_Click"
+                  ToolTip.Tip="Exportar logs de erro da aplicação">
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <Path Data="{StaticResource IconLogs}" Stroke="{DynamicResource TextSecondary}" StrokeThickness="1.5" Width="13" Height="13" />
+              <TextBlock Text="Exportar logs" VerticalAlignment="Center" />
+            </StackPanel>
+          </Button>
+        </StackPanel>
+
+        <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center" Spacing="10">
+          <Path Data="{StaticResource IconPhone}" Stroke="{DynamicResource BrandIconFg}" StrokeThickness="1.6" Width="20" Height="20" />
+          <TextBlock Text="FDR_SYSTEM" Foreground="{DynamicResource HeaderTitleStrong}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
+          <TextBlock Text="v1.5.9" Foreground="{DynamicResource HeaderVersionFg}" FontSize="11" VerticalAlignment="Center" />
+          <TextBlock Text="·  por anymousdark" Foreground="{DynamicResource HeaderAuthorFg}" FontSize="10.5" VerticalAlignment="Center" />
+        </StackPanel>
+
+        <TextBlock x:Name="StatusText"
+                   Text="Conecte o iPhone por USB — a leitura começa automaticamente."
+                   FontWeight="SemiBold" FontSize="11.5"
+                   Foreground="{DynamicResource HeaderTitleStrong}"
+                   TextTrimming="CharacterEllipsis"
+                   VerticalAlignment="Center" Margin="24,0" />
+      </DockPanel>
+    </Border>
+
+    <Grid Grid.Row="1" ColumnDefinitions="212,*">
+
+      <!-- Barra lateral -->
+      <Border Grid.Column="0" Background="{DynamicResource SidebarBg}"
+              BorderBrush="{DynamicResource CardBorder}" BorderThickness="0,0,1,0" Padding="12">
+        <ScrollViewer VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+          <StackPanel>
+            <TextBlock Text="PÁGINAS" Foreground="{DynamicResource PagesLabel}" FontSize="10.5"
+                       FontWeight="Bold" Margin="4,0,0,8" />
+
+            <RadioButton x:Name="NavOffline" Classes="nav" GroupName="pages" IsChecked="True" Tag="offline" Click="Nav_Click">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconPhone}" Classes="icon" VerticalAlignment="Center" />
+                <StackPanel>
+                  <TextBlock Text="Offline" FontWeight="SemiBold" FontSize="13" />
+                  <TextBlock Text="Sem internet" FontSize="10.5" Opacity="0.75" />
+                </StackPanel>
+              </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="NavOnline" Classes="nav" GroupName="pages" Tag="online" Click="Nav_Click">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconDownload}" Classes="icon" VerticalAlignment="Center" />
+                <StackPanel>
+                  <TextBlock Text="Online" FontWeight="SemiBold" FontSize="13" />
+                  <TextBlock Text="Firmware e restauro" FontSize="10.5" Opacity="0.75" />
+                </StackPanel>
+              </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="NavRestauro" Classes="nav" GroupName="pages" Tag="restauro" Click="Nav_Click">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconRestore}" Classes="icon" VerticalAlignment="Center" />
+                <StackPanel>
+                  <TextBlock Text="Restauro" FontWeight="SemiBold" FontSize="13" />
+                  <TextBlock Text="Progresso em direto" FontSize="10.5" Opacity="0.75" />
+                </StackPanel>
+              </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="NavReparo" Classes="nav" GroupName="pages" Tag="reparo" Click="Nav_Click">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconWrench}" Classes="icon" VerticalAlignment="Center" />
+                <StackPanel>
+                  <TextBlock Text="Reparo" FontWeight="SemiBold" FontSize="13" />
+                  <TextBlock Text="Estado do aparelho" FontSize="10.5" Opacity="0.75" />
+                </StackPanel>
+              </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="NavDiagnostico" Classes="nav" GroupName="pages" Tag="diagnostico" Click="Nav_Click">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconTerminal}" Classes="icon" VerticalAlignment="Center" />
+                <StackPanel>
+                  <TextBlock Text="Diagnóstico" FontWeight="SemiBold" FontSize="13" />
+                  <TextBlock Text="Logs e emparelhamento" FontSize="10.5" Opacity="0.75" />
+                </StackPanel>
+              </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="NavFirmware" Classes="nav" GroupName="pages" Tag="firmware" Click="Nav_Click">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconBox}" Classes="icon" VerticalAlignment="Center" />
+                <StackPanel>
+                  <TextBlock Text="Firmware" FontWeight="SemiBold" FontSize="13" />
+                  <TextBlock Text="Todos os iPhones" FontSize="10.5" Opacity="0.75" />
+                </StackPanel>
+              </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="NavAcessibilidade" Classes="nav" GroupName="pages" Tag="acessibilidade" Click="Nav_Click">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconFolder}" Classes="icon" VerticalAlignment="Center" />
+                <StackPanel>
+                  <TextBlock Text="Acessibilidade" FontWeight="SemiBold" FontSize="13" />
+                  <TextBlock Text="Fotos e ficheiros" FontSize="10.5" Opacity="0.75" />
+                </StackPanel>
+              </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="NavDriver" Classes="nav" GroupName="pages" Tag="driver" Click="Nav_Click">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconChip}" Classes="icon" VerticalAlignment="Center" />
+                <StackPanel>
+                  <TextBlock Text="Driver" FontWeight="SemiBold" FontSize="13" />
+                  <TextBlock Text="Acesso USB no Linux" FontSize="10.5" Opacity="0.75" />
+                </StackPanel>
+              </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="NavJailbreak" Classes="nav" GroupName="pages" Tag="jailbreak" Click="Nav_Click">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconUnlock}" Classes="icon" VerticalAlignment="Center" />
+                <StackPanel>
+                  <TextBlock Text="Jailbreak" FontWeight="SemiBold" FontSize="13" />
+                  <TextBlock Text="checkm8 (opcional)" FontSize="10.5" Opacity="0.75" />
+                </StackPanel>
+              </StackPanel>
+            </RadioButton>
+
+            <Border Background="{DynamicResource SoftBg}" CornerRadius="10" Padding="10" Margin="0,12,0,0">
+              <StackPanel Spacing="6">
+                <TextBlock Text="SOBRE" Foreground="{DynamicResource TextMuted}" FontSize="10.5" FontWeight="Bold" />
+                <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                           Text="As funções offline não usam a internet; as online só contactam a Apple." />
+              </StackPanel>
+            </Border>
+          </StackPanel>
+        </ScrollViewer>
+      </Border>
+
+      <!-- Área das páginas -->
+      <ContentControl Grid.Column="1" x:Name="PageHost" Margin="20,16" />
+    </Grid>
+  </Grid>
+</Window>
