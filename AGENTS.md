@@ -1,7 +1,8 @@
 # AGENTS.md — instruções para agentes de IA
 
 Port de **FDR_SYSTEM** (WPF/Windows) para **Linux** com **Avalonia 11.3.x**.
-Lê o `README.md` primeiro; este ficheiro é o resumo operacional.
+Lê o `README.md` primeiro; este ficheiro é o resumo operacional. Para retomar numa máquina
+Linux, segue `docs/CONTINUE-ON-LINUX.md`.
 
 ## Regras de ouro
 

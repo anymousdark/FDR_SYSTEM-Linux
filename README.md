@@ -9,6 +9,10 @@ foram testados com um iPhone real no ambiente Windows de desenvolvimento; falta 
 numa instalação Linux. As outras cinco páginas ainda são placeholders. O projeto compila e
 gera um binário `linux-x64` self-contained.
 
+> **A continuar numa máquina Linux?** Segue o guia
+> [`docs/CONTINUE-ON-LINUX.md`](docs/CONTINUE-ON-LINUX.md): instalação, permissões USB,
+> build, testes com iPhone, publicação e próximos passos.
+
 ---
 
 ## Índice
