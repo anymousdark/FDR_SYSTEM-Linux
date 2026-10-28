@@ -1,0 +1,167 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FdrSystem.App.Views.Pages.DiagnosticoView">
+
+  <Grid RowDefinitions="Auto,12,*">
+
+    <Border Grid.Row="0" Classes="card" Padding="12,10">
+      <DockPanel LastChildFill="False">
+        <StackPanel DockPanel.Dock="Left" Spacing="2" VerticalAlignment="Center">
+          <TextBlock Text="Diagnóstico" Classes="h1" />
+          <TextBlock Text="Registos, emparelhamento e perfis do iPhone" Classes="label" />
+        </StackPanel>
+        <TextBlock x:Name="ToolsStatusText" DockPanel.Dock="Right" Classes="label"
+                   Text="A verificar ferramentas…" TextWrapping="Wrap"
+                   MaxWidth="390" VerticalAlignment="Center" TextAlignment="Right" />
+      </DockPanel>
+    </Border>
+
+    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled">
+      <Grid ColumnDefinitions="*,16,*" RowDefinitions="Auto,16,Auto">
+
+        <!-- Syslog -->
+        <Border Grid.Row="0" Grid.Column="0" Classes="card">
+          <StackPanel Spacing="8">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Path Data="{StaticResource IconTerminal}" Stroke="{DynamicResource GreenText}"
+                    StrokeThickness="1.6" Width="15" Height="15" />
+              <TextBlock Text="REGISTO DO iOS" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource TextSecondary}"
+                       Text="Acompanha o syslog em direto. O registo fica no ecrã até limpares ou fechares a aplicação." />
+
+            <WrapPanel>
+              <Button x:Name="SyslogToggleButton" Classes="primary" Click="SyslogToggle_Click" Margin="0,0,8,6">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Path Data="{StaticResource IconTerminal}" Stroke="White" StrokeThickness="1.5" Width="13" Height="13" />
+                  <TextBlock x:Name="SyslogToggleText" Text="Começar a ouvir" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+              <Button x:Name="SyslogSaveButton" Classes="tool" Click="SyslogSave_Click" IsEnabled="False" Margin="0,0,8,6">
+                Guardar
+              </Button>
+              <Button x:Name="SyslogClearButton" Classes="tool" Click="SyslogClear_Click" Margin="0,0,8,6">
+                Limpar
+              </Button>
+            </WrapPanel>
+
+            <StackPanel Orientation="Horizontal" Spacing="6">
+              <TextBlock Text="Filtrar:" Classes="label" VerticalAlignment="Center" />
+              <TextBox x:Name="SyslogFilterBox" Watermark="ex.: SpringBoard" Width="190"
+                       TextChanged="SyslogFilter_Changed" />
+            </StackPanel>
+
+            <Border Background="{DynamicResource Surface2}" CornerRadius="8" Padding="8" Margin="0,2,0,0">
+              <TextBox x:Name="SyslogText" Height="300" IsReadOnly="True" AcceptsReturn="True"
+                       TextWrapping="NoWrap"
+                       BorderThickness="0"
+                       Background="Transparent" Foreground="{DynamicResource TextPrimary}"
+                       FontFamily="Cascadia Mono,DejaVu Sans Mono,Consolas,monospace"
+                       FontSize="10.5" Padding="0" />
+            </Border>
+
+            <TextBlock x:Name="SyslogStatusText" Classes="label" TextWrapping="Wrap"
+                       Text="Liga o iPhone e clica em «Começar a ouvir»." />
+          </StackPanel>
+        </Border>
+
+        <!-- Crash reports -->
+        <Border Grid.Row="0" Grid.Column="2" Classes="card">
+          <StackPanel Spacing="8">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Path Data="{StaticResource IconBox}" Stroke="{DynamicResource AmberText}"
+                    StrokeThickness="1.6" Width="15" Height="15" />
+              <TextBlock Text="RELATÓRIOS DE FALHAS" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource TextSecondary}"
+                       Text="Copia os crash logs e panics do iPhone para um ZIP neste PC. Os relatórios são copiados, não apagados do aparelho." />
+
+            <WrapPanel>
+              <Button x:Name="CrashCollectButton" Classes="primary" Click="CrashCollect_Click" Margin="0,0,8,6">
+                Recolher para ZIP
+              </Button>
+              <Button x:Name="CrashOpenButton" Classes="tool" Click="CrashOpen_Click" IsEnabled="False" Margin="0,0,8,6">
+                Abrir pasta
+              </Button>
+            </WrapPanel>
+
+            <TextBlock x:Name="CrashStatusText" Classes="label" TextWrapping="Wrap"
+                       Text="Os ficheiros ficam em Documentos/FDR_SYSTEM/Relatorios." />
+          </StackPanel>
+        </Border>
+
+        <!-- Pairing -->
+        <Border Grid.Row="2" Grid.Column="0" Classes="card">
+          <StackPanel Spacing="8">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Path Data="{StaticResource IconPhone}" Stroke="{DynamicResource BlueText}"
+                    StrokeThickness="1.6" Width="15" Height="15" />
+              <TextBlock Text="EMPARELHAMENTO" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource TextSecondary}"
+                       Text="Valida se o iPhone confia neste computador. Para emparelhar, desbloqueia o aparelho e aceita «Confiar neste computador»." />
+
+            <WrapPanel>
+              <Button x:Name="PairValidateButton" Classes="tool" Click="PairValidate_Click" Margin="0,0,8,6">
+                Validar
+              </Button>
+              <Button x:Name="PairRepairButton" Classes="primary" Click="PairRepair_Click" Margin="0,0,8,6">
+                Emparelhar
+              </Button>
+            </WrapPanel>
+
+            <TextBlock x:Name="PairStatusText" Classes="label" TextWrapping="Wrap"
+                       Text="Ainda não validado nesta sessão." />
+
+            <Border Background="{DynamicResource Surface2}" CornerRadius="8" Padding="8">
+              <TextBox x:Name="PairOutputText" Height="72" IsReadOnly="True" AcceptsReturn="True"
+                       TextWrapping="Wrap" BorderThickness="0"
+                       Background="Transparent" Foreground="{DynamicResource TextPrimary}"
+                       FontFamily="Cascadia Mono,DejaVu Sans Mono,Consolas,monospace"
+                       FontSize="10" Padding="0" />
+            </Border>
+          </StackPanel>
+        </Border>
+
+        <!-- Provisioning profiles -->
+        <Border Grid.Row="2" Grid.Column="2" Classes="card">
+          <StackPanel Spacing="8">
+            <StackPanel Orientation="Horizontal" Spacing="8">
+              <Path Data="{StaticResource IconFolder}" Stroke="{DynamicResource TextMuted}"
+                    StrokeThickness="1.6" Width="15" Height="15" />
+              <TextBlock Text="PERFIS DE APROVISIONAMENTO" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
+            </StackPanel>
+
+            <TextBlock TextWrapping="Wrap" FontSize="11" Foreground="{DynamicResource TextSecondary}"
+                       Text="Lista os perfis instalados no iPhone. Operação só de leitura; não instala nem remove perfis." />
+
+            <WrapPanel>
+              <Button x:Name="ProvisionListButton" Classes="tool" Click="ProvisionList_Click" Margin="0,0,8,6">
+                Listar perfis
+              </Button>
+              <Button x:Name="ProvisionCopyButton" Classes="tool" Click="ProvisionCopy_Click" IsEnabled="False" Margin="0,0,8,6">
+                Copiar
+              </Button>
+            </WrapPanel>
+
+            <TextBlock x:Name="ProvisionStatusText" Classes="label" TextWrapping="Wrap"
+                       Text="Ainda sem lista." />
+
+            <Border Background="{DynamicResource Surface2}" CornerRadius="8" Padding="8">
+              <TextBox x:Name="ProvisionOutputText" Height="80" IsReadOnly="True" AcceptsReturn="True"
+                       TextWrapping="NoWrap"
+                       BorderThickness="0"
+                       Background="Transparent" Foreground="{DynamicResource TextPrimary}"
+                       FontFamily="Cascadia Mono,DejaVu Sans Mono,Consolas,monospace"
+                       FontSize="10" Padding="0" />
+            </Border>
+          </StackPanel>
+        </Border>
+
+      </Grid>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

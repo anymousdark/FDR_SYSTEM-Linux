@@ -15,6 +15,7 @@ public partial class MainWindow : Window
     private readonly ToolRunner _tools = new();
     private readonly DispatcherTimer _usbTimer;
     private OfflineView? _offline;
+    private DiagnosticoView? _diagnostico;
     private string? _lastUsbSignature;
 
     public MainWindow()
@@ -38,6 +39,12 @@ public partial class MainWindow : Window
         _usbTimer.Tick += (_, _) => PollUsb();
         _usbTimer.Start();
 
+        Closing += (_, _) =>
+        {
+            _usbTimer.Stop();
+            _diagnostico?.Shutdown();
+        };
+
         PollUsb();
     }
 
@@ -52,6 +59,7 @@ public partial class MainWindow : Window
         PageHost.Content = tag switch
         {
             "offline" => _offline ??= new OfflineView(this, _tools),
+            "diagnostico" => _diagnostico ??= new DiagnosticoView(this, _tools),
             _ => PlaceholderView.For(tag, this),
         };
 

@@ -34,6 +34,7 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 |---|---|
 | Adicionar/trocar página | `src/FdrSystem.App/Views/MainWindow.axaml.cs` → `ShowPage(string tag)` |
 | Correr ferramentas `idevice*` | `src/FdrSystem.Core/Tools/ToolRunner.cs` |
+| Diagnosticar (syslog, crash, pair, provision) | `src/FdrSystem.App/Views/Pages/DiagnosticoView.axaml(.cs)` |
 | Ler dados do iPhone | `src/FdrSystem.Core/Devices/DeviceService.cs` |
 | Etiquetas/máscaras PT | `src/FdrSystem.Core/Devices/DeviceLabels.cs` |
 | Cores/temas | `src/FdrSystem.App/Themes/*.axaml` + `Services/ThemeManager.cs` |
@@ -42,8 +43,9 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 
 ## Tarefas em aberto (por ordem)
 
-- [ ] **Diagnóstico** — `idevicesyslog` (stream), `idevicecrashreport -e -k` → ZIP,
-      `idevicepair validate|pair`, `ideviceprovision list`. Página nova: `Views/Pages/DiagnosticoView`.
+- [x] **Diagnóstico** — `idevicesyslog` (stream), `idevicecrashreport -e -k` → ZIP,
+      `idevicepair validate|pair`, `ideviceprovision list`. Implementado em
+      `Views/Pages/DiagnosticoView.axaml(.cs)`.
 - [ ] **Acessibilidade (AFC)** — portar `AfcClient.cs` do original (P/Invoke igual; muda só a lib).
 - [ ] **Driver** — estado do `usbmuxd`, regras udev, `UsbScanner.DescribeEnvironment()`.
 - [ ] **Online / Firmware / Restauro** — portar `DownloadManager.cs` (segmentado, SHA-256) e

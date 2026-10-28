@@ -3,9 +3,9 @@
 > Port do **FDR_SYSTEM 1.5.9** (C# + WPF, Windows) para **Linux**, em **Avalonia UI**.
 > Repositório **privado**. A aplicação Windows original não é alterada por este projeto.
 
-**Estado atual:** alpha técnico. A shell, os temas e a página **Offline** funcionam; as outras
-oito páginas ainda são placeholders. O projeto compila e gera um binário `linux-x64`
-self-contained.
+**Estado atual:** alpha técnico. A shell, os temas e a página **Offline** funcionam; a página
+**Diagnóstico** está implementada (teste com iPhone real pendente); as outras sete páginas
+ainda são placeholders. O projeto compila e gera um binário `linux-x64` self-contained.
 
 ---
 
@@ -51,10 +51,10 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Leitura de dispositivo via `ideviceinfo` | ✅ funcional |
 | Bateria via `idevicediagnostics` | ✅ funcional |
 | Exportação JSON, cópia e máscara de IDs | ✅ funcional |
+| Página **Diagnóstico** | ✅ implementada (syslog, crash ZIP, pair, provision; teste real pendente) |
 | Página Online | ⬜ placeholder |
 | Restauro | ⬜ placeholder |
 | Reparo | ⬜ placeholder |
-| Diagnóstico | ⬜ placeholder |
 | Firmware | ⬜ placeholder |
 | Acessibilidade (AFC) | ⬜ placeholder |
 | Driver / `usbmuxd` / udev | ⬜ placeholder |
@@ -291,8 +291,8 @@ e não deve ser alterado por este repositório.
 
 Ordem sugerida para completar o port:
 
-- [ ] **Diagnóstico** — `idevicesyslog`, `idevicecrashreport`, `idevicepair`,
-      `ideviceprovision`, com streaming e cancelamento.
+- [x] **Diagnóstico** — `idevicesyslog` em direto, crash reports para ZIP,
+      `idevicepair validate|pair` e `ideviceprovision list`.
 - [ ] **Acessibilidade (AFC)** — portar `AfcClient.cs`; o P/Invoke é igual, muda a lib.
 - [ ] **Driver** — estado do `usbmuxd`, regras udev e `UsbScanner.DescribeEnvironment()`.
 - [ ] **Online / Firmware / Restauro** — `DownloadManager` segmentado com SHA-256 e
