@@ -17,6 +17,7 @@ public partial class MainWindow : Window
     private OfflineView? _offline;
     private DiagnosticoView? _diagnostico;
     private AcessibilidadeView? _acessibilidade;
+    private DriverView? _driver;
     private string? _lastUsbSignature;
 
     public MainWindow()
@@ -63,11 +64,13 @@ public partial class MainWindow : Window
             "offline" => _offline ??= new OfflineView(this, _tools),
             "diagnostico" => _diagnostico ??= new DiagnosticoView(this, _tools),
             "acessibilidade" => _acessibilidade ??= new AcessibilidadeView(this, _tools),
+            "driver" => _driver ??= new DriverView(this, _tools),
             _ => PlaceholderView.For(tag, this),
         };
 
         if (tag == "offline") _offline?.EnsureAutoRead();
         if (tag == "acessibilidade") _acessibilidade?.EnsureConnected();
+        if (tag == "driver") _driver?.EnsureRefreshed();
     }
 
     /// <summary>Chamado pelo timer: mostra o estado do USB e dispara a leitura automática.</summary>

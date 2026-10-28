@@ -4,9 +4,10 @@
 > Repositório **privado**. A aplicação Windows original não é alterada por este projeto.
 
 **Estado atual:** alpha técnico. A shell, os temas e a página **Offline** funcionam; as páginas
-**Diagnóstico** e **Acessibilidade (AFC)** estão implementadas (teste com iPhone real
-pendente); as outras seis páginas ainda são placeholders. O projeto compila e gera um
-binário `linux-x64` self-contained.
+**Diagnóstico**, **Acessibilidade (AFC)** e **Driver** estão implementadas. Diagnóstico e AFC
+foram testados com um iPhone real no ambiente Windows de desenvolvimento; falta validar tudo
+numa instalação Linux. As outras cinco páginas ainda são placeholders. O projeto compila e
+gera um binário `linux-x64` self-contained.
 
 ---
 
@@ -52,13 +53,13 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Leitura de dispositivo via `ideviceinfo` | ✅ funcional |
 | Bateria via `idevicediagnostics` | ✅ funcional |
 | Exportação JSON, cópia e máscara de IDs | ✅ funcional |
-| Página **Diagnóstico** | ✅ implementada (syslog, crash ZIP, pair, provision; teste real pendente) |
-| Página **Acessibilidade (AFC)** | ✅ implementada (navegar, importar/exportar, DCIM, captura; teste real pendente) |
+| Página **Diagnóstico** | ✅ implementada (syslog, crash ZIP, pair, provision; teste real no Windows, Linux pendente) |
+| Página **Acessibilidade (AFC)** | ✅ implementada (navegar, importar/exportar, DCIM, captura; teste real no Windows, Linux pendente) |
+| Página **Driver** | ✅ implementada (usbmuxd, udev, grupos, dispositivos; teste Linux pendente) |
 | Página Online | ⬜ placeholder |
 | Restauro | ⬜ placeholder |
 | Reparo | ⬜ placeholder |
 | Firmware | ⬜ placeholder |
-| Driver / `usbmuxd` / udev | ⬜ placeholder |
 | Jailbreak | ⬜ placeholder |
 | Empacotamento `.deb` | 🟡 básico |
 | AppImage | ⬜ por fazer |
@@ -298,7 +299,8 @@ Ordem sugerida para completar o port:
       `idevicepair validate|pair` e `ideviceprovision list`.
 - [x] **Acessibilidade (AFC)** — `AfcSession` sobre `libimobiledevice-1.0.so`; navegação,
       importar/exportar, DCIM, apagar com confirmação e captura de ecrã.
-- [ ] **Driver** — estado do `usbmuxd`, regras udev e `UsbScanner.DescribeEnvironment()`.
+- [x] **Driver** — estado do `usbmuxd`, regras udev, grupos e dispositivos via
+      `DriverEnvironment`; a UI mostra comandos sem executar `sudo`.
 - [ ] **Online / Firmware / Restauro** — `DownloadManager` segmentado com SHA-256 e
       `idevicerestore` com progresso por `stdout`.
 - [ ] **Reparo** — recovery/restart/ativação; MDM apenas deteção.
@@ -334,6 +336,20 @@ groups
 ```
 
 Confirma o cabo, o pareamento, o grupo `plugdev` e o `usbmuxd` ativo.
+
+### Driver: estado do usbmuxd e udev
+
+A página **Driver** é só de leitura: mostra o socket, o serviço systemd, as regras udev e os
+dispositivos Apple. Não instala pacotes nem corre `sudo`. Se aparecer `socket ausente`:
+
+```bash
+sudo systemctl enable --now usbmuxd
+systemctl status usbmuxd
+```
+
+Se as regras udev não forem encontradas, confirma que o pacote `usbmuxd` está instalado e
+que o utilizador está no grupo `plugdev` (termina e volta a entrar na sessão depois de
+`usermod`).
 
 ### Acessibilidade: biblioteca nativa em falta
 

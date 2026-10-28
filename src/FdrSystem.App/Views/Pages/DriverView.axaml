@@ -1,0 +1,187 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FdrSystem.App.Views.Pages.DriverView">
+
+  <Grid RowDefinitions="Auto,12,*">
+
+    <Border Grid.Row="0" Background="{DynamicResource BlueBoxBg}" CornerRadius="12" Padding="14">
+      <Grid ColumnDefinitions="Auto,*">
+        <Path Grid.Column="0" Data="{StaticResource IconChip}" Stroke="{DynamicResource BlueText}"
+              StrokeThickness="1.6" Width="16" Height="16" VerticalAlignment="Top" Margin="0,2,9,0" />
+        <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="{DynamicResource BlueText2}" FontSize="10.5"
+                   Text="No Linux não há drivers Apple: o acesso é feito pelo usbmuxd e pelas regras udev. Esta página só lê o estado; não executa sudo nem altera regras." />
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+      <Grid ColumnDefinitions="*,16,340">
+
+        <StackPanel Grid.Column="0" Spacing="12">
+
+          <Border Classes="card" Padding="14">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+
+              <StackPanel Grid.Row="0" Grid.Column="0" Spacing="3">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <Path Data="{StaticResource IconNet}" Stroke="{DynamicResource TextMuted}"
+                        StrokeThickness="1.6" Width="14" Height="14" />
+                  <TextBlock Text="ESTADO DO ACESSO USB" Classes="label" FontWeight="Bold" />
+                </StackPanel>
+                <TextBlock x:Name="EnvironmentText" Classes="value" TextWrapping="Wrap"
+                           Text="A verificar o ambiente…" />
+              </StackPanel>
+
+              <Button x:Name="DriverRefreshButton" Grid.Row="0" Grid.Column="1" Classes="tool"
+                      Click="DriverRefresh_Click" VerticalAlignment="Top" ToolTip.Tip="Voltar a ler o estado do sistema">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Path Data="{StaticResource IconRefresh}" Stroke="{DynamicResource TextSecondary}"
+                        StrokeThickness="1.5" Width="13" Height="13" />
+                  <TextBlock Text="Atualizar" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+
+              <Border Grid.Row="1" Grid.ColumnSpan="2" Height="1" Margin="0,12"
+                      Background="{DynamicResource CardBorder}" />
+
+              <Grid Grid.Row="2" Grid.ColumnSpan="2" RowDefinitions="Auto,Auto,Auto,Auto"
+                    ColumnDefinitions="165,*">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="usbmuxd (socket)" Classes="label" Margin="0,0,8,7" />
+                <TextBlock Grid.Row="0" Grid.Column="1" x:Name="UsbmuxdText" Classes="value" TextWrapping="Wrap" Margin="0,0,0,7" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Serviço systemd" Classes="label" Margin="0,0,8,7" />
+                <TextBlock Grid.Row="1" Grid.Column="1" x:Name="ServiceText" Classes="value" TextWrapping="Wrap" Margin="0,0,0,7" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="Regras udev" Classes="label" Margin="0,0,8,7" />
+                <TextBlock Grid.Row="2" Grid.Column="1" x:Name="UdevText" Classes="value" TextWrapping="Wrap" Margin="0,0,0,7" />
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="Grupos do utilizador" Classes="label" Margin="0,0,8,0" />
+                <TextBlock Grid.Row="3" Grid.Column="1" x:Name="GroupsText" Classes="value" TextWrapping="Wrap" />
+              </Grid>
+
+              <Border Grid.Row="3" Grid.ColumnSpan="2" Height="1" Margin="0,12"
+                      Background="{DynamicResource CardBorder}" />
+
+              <Border Grid.Row="4" Grid.ColumnSpan="2" x:Name="DriverStatusBox"
+                      Background="{DynamicResource AmberBoxBg}" CornerRadius="8" Padding="10,8">
+                <TextBlock x:Name="DriverStatusText" Classes="value" TextWrapping="Wrap"
+                           Text="A verificar o acesso USB…" />
+              </Border>
+            </Grid>
+          </Border>
+
+          <Border Classes="card" Padding="14">
+            <Grid RowDefinitions="Auto,Auto,Auto">
+              <DockPanel Grid.Row="0" Margin="0,0,0,8">
+                <TextBlock x:Name="DevicesCountText" DockPanel.Dock="Right" Classes="label"
+                           VerticalAlignment="Center" />
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <Path Data="{StaticResource IconPhone}" Stroke="{DynamicResource TextMuted}"
+                        StrokeThickness="1.6" Width="14" Height="14" />
+                  <TextBlock Text="DISPOSITIVOS APPLE DETETADOS" Classes="label" FontWeight="Bold" />
+                </StackPanel>
+              </DockPanel>
+
+              <TextBlock Grid.Row="1" x:Name="DevicesEmptyText" Classes="label" TextWrapping="Wrap"
+                         Text="Nenhum iPhone detetado por USB. Liga o aparelho, desbloqueia-o e aceita «Confiar neste computador»." />
+
+              <DataGrid Grid.Row="2" x:Name="DevicesGrid" Height="70" MaxHeight="180" Margin="0,2,0,0"
+                        IsVisible="False" AutoGenerateColumns="False" IsReadOnly="True" CanUserResizeColumns="True"
+                        CanUserSortColumns="False" Background="{DynamicResource Surface2}" BorderThickness="0">
+                <DataGrid.Columns>
+                  <DataGridTextColumn Header="Modo" Binding="{Binding Mode}" Width="85" />
+                  <DataGridTextColumn Header="PID" Binding="{Binding Pid}" Width="75" />
+                  <DataGridTextColumn Header="Produto" Binding="{Binding Product}" Width="*" />
+                  <DataGridTextColumn Header="Série (mascarada)" Binding="{Binding Serial}" Width="150" />
+                </DataGrid.Columns>
+              </DataGrid>
+            </Grid>
+          </Border>
+
+          <Border Classes="card" Padding="14">
+            <StackPanel Spacing="6">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Path Data="{StaticResource IconChip}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="14" Height="14" />
+                <TextBlock Text="COMO FUNCIONA NO LINUX" Classes="label" FontWeight="Bold" />
+              </StackPanel>
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Text="O usbmuxd é o serviço que fala com o iPhone por USB e expõe o socket usado pelo libimobiledevice. As regras udev dão ao utilizador atual permissão para abrir o aparelho sem root. No Windows isto era feito por drivers Apple, UsbDk e pnputil; no Linux não é necessário nem recomendado instalar libwdi ou certificados self-signed." />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Text="Se o socket existir mas o iPhone não aparecer, confirma que o aparelho está desbloqueado e que aceitaste «Confiar neste computador». Para recovery/DFU, o modo aparece na tabela acima e não precisa de driver adicional." />
+            </StackPanel>
+          </Border>
+
+        </StackPanel>
+
+        <StackPanel Grid.Column="2" Spacing="12">
+
+          <Border Classes="card" Padding="14">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Path Data="{StaticResource IconTerminal}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="14" Height="14" />
+                <TextBlock Text="FERRAMENTAS" Classes="label" FontWeight="Bold" />
+              </StackPanel>
+
+              <ItemsControl x:Name="ToolsList">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,2">
+                      <TextBlock Text="{Binding Label}" Foreground="{DynamicResource TextSecondary}" FontSize="10.5" />
+                      <TextBlock Grid.Column="1" Text="{Binding StatusText}" Foreground="{Binding StatusBrush}"
+                                 FontSize="10.5" FontWeight="SemiBold" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <TextBlock x:Name="ToolsHintText" Classes="label" TextWrapping="Wrap"
+                         Text="A verificar as ferramentas…" />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="14">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Path Data="{StaticResource IconCopy}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="14" Height="14" />
+                <TextBlock Text="COMANDOS ÚTEIS" Classes="label" FontWeight="Bold" />
+              </StackPanel>
+
+              <TextBox x:Name="CommandsBox" IsReadOnly="True" AcceptsReturn="True" TextWrapping="Wrap"
+                       Height="196" FontSize="10.5"
+                       FontFamily="Cascadia Mono,DejaVu Sans Mono,Consolas,monospace" />
+
+              <Button x:Name="CopyCommandsButton" Classes="tool" Click="CopyCommands_Click">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <Path Data="{StaticResource IconCopy}" Stroke="{DynamicResource TextSecondary}"
+                        StrokeThickness="1.5" Width="13" Height="13" />
+                  <TextBlock Text="Copiar comandos" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Text="A app não corre estes comandos. Copia-os para um terminal e confirma o que cada um faz." />
+            </StackPanel>
+          </Border>
+
+          <Border Background="{DynamicResource AmberBoxBg}" CornerRadius="12" Padding="14">
+            <StackPanel Spacing="7">
+              <TextBlock Text="SE O IPHONE NÃO APARECER" Foreground="{DynamicResource AmberText}"
+                         Classes="label" FontWeight="Bold" />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AmberText2}" FontSize="10.5"
+                         Text="1. Confirma que o cabo é de dados e liga-o diretamente ao PC." />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AmberText2}" FontSize="10.5"
+                         Text="2. Desbloqueia o iPhone e aceita «Confiar neste computador»." />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AmberText2}" FontSize="10.5"
+                         Text="3. Confirma o serviço: systemctl status usbmuxd. Se estiver parado, ativa-o com os comandos ao lado." />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AmberText2}" FontSize="10.5"
+                         Text="4. Depois de entrares no grupo plugdev, termina sessão e volta a entrar para as permissões passarem a valer." />
+            </StackPanel>
+          </Border>
+
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

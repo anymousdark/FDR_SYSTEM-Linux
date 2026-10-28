@@ -12,6 +12,7 @@ Referência: `C:\Users\p\Documents\OfflineDeviceDiagnostics` (só leitura).
 | `LockdownClient.cs` | 118 | *(por portar)* | `InteropBootstrap` já resolve `libimobiledevice-1.0.so.6` |
 | `AfcClient.cs` | 328 | `src/FdrSystem.Core/Devices/AfcSession.cs` | AFC nativa sobre `libimobiledevice-1.0.so`; UI em `AcessibilidadeView` |
 | `MainWindow.Diagnostics.cs` | 468 | `src/FdrSystem.App/Views/Pages/DiagnosticoView.axaml(.cs)` | syslog, crash ZIP, pair e provision |
+| `MainWindow.xaml` (`DriversPanel`) | ~105 | `src/FdrSystem.App/Views/Pages/DriverView.axaml(.cs)` + `src/FdrSystem.Core/Usb/DriverEnvironment.cs` | estado do usbmuxd/udev, dispositivos e comandos; sem pnputil/UsbDk |
 | `DownloadManager.cs` | 605 | *(por portar)* | motor segmentado + SHA-256 |
 | `MainWindow.xaml.cs` (leitura, 780–902) | ~120 | `Devices/DeviceService.cs` | troca de `.exe` por ferramentas do PATH |
 | `MainWindow.xaml.cs` (etiquetas 1554–1694) | ~140 | `Devices/DeviceLabels.cs` | `GroupOf`, `LabelOf`, `DiskLabel`, `BatteryQLabel`, `Mask`, `DisplayValue` |
@@ -30,9 +31,9 @@ No Avalonia usar `WindowState="Maximized"`.
 `.deb` com `apt`, ou `AppImageUpdate`. Deixar para o fim.
 
 ### Restantes páginas
-`MainWindow.xaml.cs` tem ~2750 linhas. Offline, Diagnóstico e Acessibilidade já estão
-portados; faltam Online/Firmware/Reparo/Driver/Jailbreak. Portar por blocos, uma página por
-vez, com o mesmo nome de handler.
+`MainWindow.xaml.cs` tem ~2750 linhas. Offline, Diagnóstico, Acessibilidade e Driver já estão
+portados; faltam Online/Firmware/Reparo/Jailbreak. Portar por blocos, uma página por vez, com
+o mesmo nome de handler.
 
 ## Diferenças de plataforma a respeitar
 

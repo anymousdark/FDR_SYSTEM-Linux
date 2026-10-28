@@ -36,6 +36,7 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 | Correr ferramentas `idevice*` | `src/FdrSystem.Core/Tools/ToolRunner.cs` |
 | Diagnosticar (syslog, crash, pair, provision) | `src/FdrSystem.App/Views/Pages/DiagnosticoView.axaml(.cs)` |
 | Acessibilidade/AFC | `src/FdrSystem.App/Views/Pages/AcessibilidadeView.axaml(.cs)` + `src/FdrSystem.Core/Devices/AfcSession.cs` |
+| Driver / usbmuxd / udev | `src/FdrSystem.App/Views/Pages/DriverView.axaml(.cs)` + `src/FdrSystem.Core/Usb/DriverEnvironment.cs` |
 | Ler dados do iPhone | `src/FdrSystem.Core/Devices/DeviceService.cs` |
 | Etiquetas/máscaras PT | `src/FdrSystem.Core/Devices/DeviceLabels.cs` |
 | Cores/temas | `src/FdrSystem.App/Themes/*.axaml` + `Services/ThemeManager.cs` |
@@ -50,7 +51,9 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 - [x] **Acessibilidade (AFC)** — `AfcSession` (P/Invoke de `libimobiledevice-1.0.so`),
       navegação, importar/exportar, DCIM, apagar com confirmação e captura de ecrã.
       Implementado em `Views/Pages/AcessibilidadeView.axaml(.cs)`.
-- [ ] **Driver** — estado do `usbmuxd`, regras udev, `UsbScanner.DescribeEnvironment()`.
+- [x] **Driver** — `DriverEnvironment` lê socket do `usbmuxd`, serviço systemd, regras udev,
+      grupos e dispositivos; UI em `Views/Pages/DriverView.axaml(.cs)`. Testado no Windows
+      de desenvolvimento; falta validar no Linux.
 - [ ] **Online / Firmware / Restauro** — portar `DownloadManager.cs` (segmentado, SHA-256) e
       `idevicerestore` com progresso por stdout.
 - [ ] **Reparo** — recovery/restart/ativação; MDM só deteção.
