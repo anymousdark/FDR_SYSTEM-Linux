@@ -6,6 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <LangVersion>latest</LangVersion>
     <RootNamespace>FdrSystem.Core</RootNamespace>
+    <!-- O ModuleInitializer é intencional: instala o resolver das .so do libimobiledevice. -->
+    <NoWarn>$(NoWarn);CA2255</NoWarn>
   </PropertyGroup>
 
 </Project>

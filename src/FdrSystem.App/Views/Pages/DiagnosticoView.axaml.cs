@@ -29,6 +29,12 @@ public partial class DiagnosticoView : UserControl
     private Process? _syslogProcess;
     private string? _lastReportFolder;
 
+    // Construtor público sem dependências para o carregador XAML/designer.
+    // A aplicação usa sempre o construtor com owner e ToolRunner.
+    public DiagnosticoView() : this(null!, new ToolRunner())
+    {
+    }
+
     public DiagnosticoView(MainWindow owner, ToolRunner tools)
     {
         InitializeComponent();

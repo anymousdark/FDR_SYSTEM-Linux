@@ -65,6 +65,91 @@ public static class Dialogs
         window.ShowDialog(owner);
     }
 
+    /// <summary>Confirmação modal simples, usada antes de apagar ficheiros do iPhone.</summary>
+    public static async Task<bool> ConfirmAsync(
+        Window owner,
+        string title,
+        string message,
+        string confirmText = "Confirmar")
+    {
+        var panel = new StackPanel { Spacing = 14, Margin = new Thickness(18) };
+        panel.Children.Add(new TextBlock
+        {
+            Text = message,
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = Brush("TextPrimary"),
+            FontSize = 11.5,
+        });
+
+        var buttons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Spacing = 8,
+        };
+
+        var confirm = new Button { Content = confirmText, Padding = new Thickness(12, 6) };
+        confirm.Classes.Add("primary");
+        var cancel = new Button { Content = "Cancelar", Padding = new Thickness(12, 6) };
+        cancel.Classes.Add("tool");
+
+        var window = CreateShell(owner, title, 480, 220, panel);
+        window.CanResize = false;
+
+        confirm.Click += (_, _) => window.Close(true);
+        cancel.Click += (_, _) => window.Close(false);
+        buttons.Children.Add(confirm);
+        buttons.Children.Add(cancel);
+        panel.Children.Add(buttons);
+
+        return await window.ShowDialog<bool>(owner);
+    }
+
+    /// <summary>Pede um nome (por exemplo, uma pasta nova) sem usar APIs específicas do Windows.</summary>
+    public static async Task<string?> PromptAsync(
+        Window owner,
+        string title,
+        string message,
+        string initial = "")
+    {
+        var panel = new StackPanel { Spacing = 8, Margin = new Thickness(18) };
+        panel.Children.Add(new TextBlock
+        {
+            Text = message,
+            TextWrapping = TextWrapping.Wrap,
+            Foreground = Brush("TextSecondary"),
+            FontSize = 11.5,
+        });
+
+        var box = new TextBox { Text = initial, Padding = new Thickness(7, 5) };
+        panel.Children.Add(box);
+
+        var buttons = new StackPanel
+        {
+            Orientation = Orientation.Horizontal,
+            HorizontalAlignment = HorizontalAlignment.Right,
+            Spacing = 8,
+            Margin = new Thickness(0, 6, 0, 0),
+        };
+
+        var ok = new Button { Content = "OK", Padding = new Thickness(12, 6) };
+        ok.Classes.Add("primary");
+        var cancel = new Button { Content = "Cancelar", Padding = new Thickness(12, 6) };
+        cancel.Classes.Add("tool");
+
+        var window = CreateShell(owner, title, 480, 230, panel);
+        window.CanResize = false;
+        window.Loaded += (_, _) => box.Focus();
+
+        ok.Click += (_, _) => window.Close(box.Text?.Trim() ?? string.Empty);
+        cancel.Click += (_, _) => window.Close(null);
+        buttons.Children.Add(ok);
+        buttons.Children.Add(cancel);
+        panel.Children.Add(buttons);
+
+        return await window.ShowDialog<string?>(owner);
+    }
+
     private static Window CreateShell(Window owner, string title, double width, double height, Control content)
     {
         var window = new Window

@@ -22,5 +22,9 @@
   <StreamGeometry x:Key="IconTheme">M12,3 A9,9 0 1 0 12,21 A4,4 0 0 1 12,13 A4,4 0 0 1 12,3 Z</StreamGeometry>
   <StreamGeometry x:Key="IconLogs">M6,3 H14 L18,7 V21 H6 Z M14,3 V7 H18</StreamGeometry>
   <StreamGeometry x:Key="IconUpdate">M12,4 V16 M8,12 L12,16 L16,12 M4,20 H20</StreamGeometry>
+  <StreamGeometry x:Key="IconUp">M12,19 V5 M6,11 L12,5 L18,11</StreamGeometry>
+  <StreamGeometry x:Key="IconTrash">M5,7 H19 M9,7 V5 H15 V7 M7,7 L8,20 H16 L17,7 M10,10 V17 M14,10 V17</StreamGeometry>
+  <StreamGeometry x:Key="IconCamera">M4,7 H8 L9.5,5 H14.5 L16,7 H20 V19 H4 Z M12,9 A4,4 0 1 0 12,17 A4,4 0 1 0 12,9 Z</StreamGeometry>
+  <StreamGeometry x:Key="IconClose">M6,6 L18,18 M18,6 L6,18</StreamGeometry>
 
 </ResourceDictionary>

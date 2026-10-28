@@ -26,6 +26,12 @@ public partial class OfflineView : UserControl
     private bool _reading;
     private DateTime _lastReadUtc = DateTime.MinValue;
 
+    // Construtor público sem dependências para o carregador XAML/designer.
+    // A aplicação usa sempre o construtor com owner e ToolRunner.
+    public OfflineView() : this(null!, new ToolRunner())
+    {
+    }
+
     public OfflineView(MainWindow owner, ToolRunner tools)
     {
         InitializeComponent();

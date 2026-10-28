@@ -3,9 +3,10 @@
 > Port do **FDR_SYSTEM 1.5.9** (C# + WPF, Windows) para **Linux**, em **Avalonia UI**.
 > Repositório **privado**. A aplicação Windows original não é alterada por este projeto.
 
-**Estado atual:** alpha técnico. A shell, os temas e a página **Offline** funcionam; a página
-**Diagnóstico** está implementada (teste com iPhone real pendente); as outras sete páginas
-ainda são placeholders. O projeto compila e gera um binário `linux-x64` self-contained.
+**Estado atual:** alpha técnico. A shell, os temas e a página **Offline** funcionam; as páginas
+**Diagnóstico** e **Acessibilidade (AFC)** estão implementadas (teste com iPhone real
+pendente); as outras seis páginas ainda são placeholders. O projeto compila e gera um
+binário `linux-x64` self-contained.
 
 ---
 
@@ -52,11 +53,11 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Bateria via `idevicediagnostics` | ✅ funcional |
 | Exportação JSON, cópia e máscara de IDs | ✅ funcional |
 | Página **Diagnóstico** | ✅ implementada (syslog, crash ZIP, pair, provision; teste real pendente) |
+| Página **Acessibilidade (AFC)** | ✅ implementada (navegar, importar/exportar, DCIM, captura; teste real pendente) |
 | Página Online | ⬜ placeholder |
 | Restauro | ⬜ placeholder |
 | Reparo | ⬜ placeholder |
 | Firmware | ⬜ placeholder |
-| Acessibilidade (AFC) | ⬜ placeholder |
 | Driver / `usbmuxd` / udev | ⬜ placeholder |
 | Jailbreak | ⬜ placeholder |
 | Empacotamento `.deb` | 🟡 básico |
@@ -80,7 +81,7 @@ sudo apt update
 sudo apt install -y dotnet-sdk-8.0
 
 # Comunicação com o iPhone
-sudo apt install -y libimobiledevice-utils usbmuxd
+sudo apt install -y libimobiledevice-utils libimobiledevice-1.0-6 usbmuxd
 
 # Opcional: restauro
 sudo apt install -y idevicerestore || true
@@ -127,6 +128,7 @@ dotnet build src/FdrSystem.App/FdrSystem.App.csproj -c Debug
 ```
 
 Build esperado: **0 erros, 0 avisos** em cerca de 7–10 segundos numa máquina normal.
+O aviso `CA2255` do `ModuleInitializer` é suprimido de propósito no Core.
 
 ### Versões fixas
 
@@ -191,7 +193,7 @@ O script gera ainda um `.deb` simples se `dpkg-deb` estiver instalado. O `.deb` 
 ### Pacote `.deb`
 
 O script instala em `/opt/fdr-system`, cria o symlink `/usr/bin/fdr-system` e o ficheiro
-`.desktop`. Dependências declaradas: `libimobiledevice-utils` e `usbmuxd`.
+`.desktop`. Dependências declaradas: `libimobiledevice-utils`, `libimobiledevice-1.0-6` e `usbmuxd`.
 
 ```bash
 sudo apt install ./publish/fdr-system_1.5.9_amd64.deb
@@ -224,6 +226,7 @@ FDR_SYSTEM-Linux/
 │  │  ├─ Tools/ToolRunner.cs       # localiza e executa idevice*
 │  │  ├─ Usb/                      # sysfs (Linux) e SetupAPI (Windows, para testes)
 │  │  ├─ Devices/                  # leitura, plists, bateria, etiquetas, snapshot
+│  │  │  └─ AfcSession.cs          # AFC nativa (área Media)
 │  │  └─ Specs/DeviceSpecs.cs      # tabela chip/RAM/ecrã
 │  └─ FdrSystem.App/               # Avalonia
 │     ├─ Views/                    # MainWindow + Pages/
@@ -293,7 +296,8 @@ Ordem sugerida para completar o port:
 
 - [x] **Diagnóstico** — `idevicesyslog` em direto, crash reports para ZIP,
       `idevicepair validate|pair` e `ideviceprovision list`.
-- [ ] **Acessibilidade (AFC)** — portar `AfcClient.cs`; o P/Invoke é igual, muda a lib.
+- [x] **Acessibilidade (AFC)** — `AfcSession` sobre `libimobiledevice-1.0.so`; navegação,
+      importar/exportar, DCIM, apagar com confirmação e captura de ecrã.
 - [ ] **Driver** — estado do `usbmuxd`, regras udev e `UsbScanner.DescribeEnvironment()`.
 - [ ] **Online / Firmware / Restauro** — `DownloadManager` segmentado com SHA-256 e
       `idevicerestore` com progresso por `stdout`.
@@ -330,6 +334,15 @@ groups
 ```
 
 Confirma o cabo, o pareamento, o grupo `plugdev` e o `usbmuxd` ativo.
+
+### Acessibilidade: biblioteca nativa em falta
+
+```bash
+sudo apt install libimobiledevice-1.0-6
+```
+
+A página AFC usa P/Invoke para `libimobiledevice-1.0.so`; as ferramentas `idevice*` vêm
+de `libimobiledevice-utils`.
 
 ### `dotnet publish` falha com `ResponseEnded`
 

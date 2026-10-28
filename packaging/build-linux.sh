@@ -41,7 +41,7 @@ Version: $VERSION
 Section: utils
 Priority: optional
 Architecture: amd64
-Depends: libimobiledevice-utils, usbmuxd
+Depends: libimobiledevice-utils, libimobiledevice-1.0-6, usbmuxd
 Maintainer: anymousdark
 Description: FDR_SYSTEM — leitura, recuperacao e restauro de iPhones (Linux)
  Diagnostico offline, firmwares, restauro e ficheiros de iPhones por USB.
