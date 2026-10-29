@@ -16,7 +16,8 @@ Referência: `C:\Users\p\Documents\OfflineDeviceDiagnostics` (só leitura).
 | `AfcClient.cs` | 328 | `src/FdrSystem.Core/Devices/AfcSession.cs` | AFC nativa sobre `libimobiledevice-1.0.so`; UI em `AcessibilidadeView` |
 | `MainWindow.Diagnostics.cs` | 468 | `src/FdrSystem.App/Views/Pages/DiagnosticoView.axaml(.cs)` | syslog, crash ZIP, pair e provision |
 | `MainWindow.xaml` (`DriversPanel`) | ~105 | `src/FdrSystem.App/Views/Pages/DriverView.axaml(.cs)` + `src/FdrSystem.Core/Usb/DriverEnvironment.cs` | estado do usbmuxd/udev, dispositivos e comandos; sem pnputil/UsbDk |
-| `DownloadManager.cs` | 605 | *(por portar)* | motor segmentado + SHA-256 |
+| `DownloadManager.cs` | 605 | `src/FdrSystem.Core/Firmware/DownloadManager.cs` | motor segmentado + SHA-256, retoma por `.download.meta`, sem WPF |
+| `MainWindow.xaml.cs` (Online) | ~120 | `src/FdrSystem.App/Views/Pages/OnlineView.axaml(.cs)` + `Core/Firmware/IpswCatalog.cs` | catálogo `api.ipsw.me`, descarga, importação e verificação |
 | `MainWindow.xaml.cs` (leitura, 780–902) | ~120 | `Devices/DeviceService.cs` | troca de `.exe` por ferramentas do PATH |
 | `MainWindow.xaml.cs` (etiquetas 1554–1694) | ~140 | `Devices/DeviceLabels.cs` | `GroupOf`, `LabelOf`, `DiskLabel`, `BatteryQLabel`, `Mask`, `DisplayValue` |
 | `MainWindow.xaml.cs` (bateria 1676–1809) | ~130 | `Devices/BatteryParser.cs` | inclui fallback do iOS 26 |
@@ -34,8 +35,8 @@ No Avalonia usar `WindowState="Maximized"`.
 `.deb` com `apt`, ou `AppImageUpdate`. Deixar para o fim.
 
 ### Restantes páginas
-`MainWindow.xaml.cs` tem ~2750 linhas. Offline, Diagnóstico, Acessibilidade e Driver já estão
-portados; faltam Online/Firmware/Restauro/Reparo/Jailbreak. Portar por blocos, uma página por
+`MainWindow.xaml.cs` tem ~2750 linhas. Offline, Diagnóstico, Acessibilidade, Driver e Online já
+estão portados; faltam Firmware/Restauro/Reparo/Jailbreak. Portar por blocos, uma página por
 vez, com o mesmo nome de handler.
 
 ## Diferenças de plataforma a respeitar

@@ -15,10 +15,14 @@ public partial class MainWindow : Window
     private readonly ToolRunner _tools = new();
     private readonly DispatcherTimer _usbTimer;
     private OfflineView? _offline;
+    private OnlineView? _online;
     private DiagnosticoView? _diagnostico;
     private AcessibilidadeView? _acessibilidade;
     private DriverView? _driver;
     private string? _lastUsbSignature;
+
+    /// <summary>IPSW escolhido na página Online e entregue à página Restauro.</summary>
+    public string? PendingRestoreFile { get; private set; }
 
     public MainWindow()
     {
@@ -38,7 +42,7 @@ public partial class MainWindow : Window
         };
 
         _usbTimer = new DispatcherTimer { Interval = TimeSpan.FromSeconds(2) };
-        _usbTimer.Tick += (_, _) => PollUsb();
+        _usbTimer.Tick += (_, _) => { PollUsb(); UpdateNetBadge(); };
         _usbTimer.Start();
 
         Closing += (_, _) =>
@@ -49,6 +53,20 @@ public partial class MainWindow : Window
         };
 
         PollUsb();
+        UpdateNetBadge();
+    }
+
+    /// <summary>Badge do cabeçalho: diz se há rede disponível (não faz pedidos próprios).</summary>
+    private void UpdateNetBadge()
+    {
+        var online = System.Net.NetworkInformation.NetworkInterface.GetIsNetworkAvailable();
+        NetBadgeText.Text = online ? "REDE" : "SEM REDE";
+        NetBadge.Background = online
+            ? Avalonia.Application.Current?.FindResource("GreenBoxBg") as Avalonia.Media.IBrush
+            : Avalonia.Application.Current?.FindResource("BadgeBg") as Avalonia.Media.IBrush;
+        NetBadgeText.Foreground = online
+            ? Avalonia.Application.Current?.FindResource("GreenText") as Avalonia.Media.IBrush
+            : Avalonia.Application.Current?.FindResource("BadgeFg") as Avalonia.Media.IBrush;
     }
 
     private void Nav_Click(object? sender, RoutedEventArgs e)
@@ -62,6 +80,7 @@ public partial class MainWindow : Window
         PageHost.Content = tag switch
         {
             "offline" => _offline ??= new OfflineView(this, _tools),
+            "online" => _online ??= new OnlineView(this, _tools),
             "diagnostico" => _diagnostico ??= new DiagnosticoView(this, _tools),
             "acessibilidade" => _acessibilidade ??= new AcessibilidadeView(this, _tools),
             "driver" => _driver ??= new DriverView(this, _tools),
@@ -71,6 +90,21 @@ public partial class MainWindow : Window
         if (tag == "offline") _offline?.EnsureAutoRead();
         if (tag == "acessibilidade") _acessibilidade?.EnsureConnected();
         if (tag == "driver") _driver?.EnsureRefreshed();
+    }
+
+    /// <summary>Muda de página a pedido de outra página (ex.: Online → Restauro).</summary>
+    public void Navigate(string tag)
+    {
+        var nav = this.FindControl<RadioButton>("Nav" + char.ToUpperInvariant(tag[0]) + tag[1..]);
+        if (nav is not null) nav.IsChecked = true;
+        ShowPage(tag);
+    }
+
+    /// <summary>Guarda o IPSW validado na página Online e abre a página Restauro.</summary>
+    public void RequestRestore(string firmwarePath)
+    {
+        PendingRestoreFile = firmwarePath;
+        Navigate("restauro");
     }
 
     /// <summary>Chamado pelo timer: mostra o estado do USB e dispara a leitura automática.</summary>

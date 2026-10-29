@@ -15,9 +15,6 @@ public sealed class PlaceholderView : UserControl
 
     private static readonly Dictionary<string, PageInfo> Pages = new(StringComparer.Ordinal)
     {
-        ["online"] = new("Online", "Firmware e restauro (usa a rede)",
-            "Consulta o catálogo da Apple, descarrega IPSW com motor segmentado, verifica SHA-256 e restaura via idevicerestore.",
-            "Falta: catálogo api.ipsw.me, DownloadManager e execução do idevicerestore do sistema."),
         ["restauro"] = new("Restauro", "Progresso em direto",
             "Duas barras (preparação do IPSW e gravação no iPhone), fase atual em português e saída completa do motor.",
             "Falta: correr idevicerestore e ler o progresso. Depende da página Online."),

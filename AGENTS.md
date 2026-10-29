@@ -59,7 +59,9 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 - [x] **Driver** — `DriverEnvironment` lê socket do `usbmuxd`, serviço systemd, regras udev,
       grupos e dispositivos; UI em `Views/Pages/DriverView.axaml(.cs)`. Testado no Windows
       de desenvolvimento; falta validar no Linux.
-- [ ] **Online / Firmware / Restauro** — portar `DownloadManager.cs` (segmentado, SHA-256) e
+- [x] **Online** — `Core/Firmware/DownloadManager.cs` + `IpswCatalog.cs`, UI em
+      `Views/Pages/OnlineView.axaml(.cs)`.
+- [ ] **Firmware / Restauro** — lista completa e
       `idevicerestore` com progresso por stdout.
 - [ ] **Reparo** — recovery/restart/ativação; MDM só deteção.
 - [ ] **Jailbreak** — abrir `palera1n`/`checkra1n` do sistema.

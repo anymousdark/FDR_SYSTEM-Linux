@@ -1,0 +1,172 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FdrSystem.App.Views.Pages.OnlineView">
+
+  <UserControl.Styles>
+    <Style Selector="Button.danger">
+      <Setter Property="Background" Value="{DynamicResource DangerBg}" />
+      <Setter Property="Foreground" Value="White" />
+      <Setter Property="CornerRadius" Value="8" />
+      <Setter Property="Padding" Value="12,7" />
+      <Setter Property="FontWeight" Value="SemiBold" />
+    </Style>
+    <Style Selector="Button.danger:pointerover /template/ ContentPresenter#PART_ContentPresenter">
+      <Setter Property="Background" Value="{DynamicResource DangerHover}" />
+    </Style>
+  </UserControl.Styles>
+
+  <Grid RowDefinitions="Auto,12,*">
+
+    <Border Grid.Row="0" Classes="card" Padding="12,10">
+      <DockPanel LastChildFill="False">
+        <StackPanel DockPanel.Dock="Left" Spacing="2" VerticalAlignment="Center">
+          <TextBlock Text="Online" Classes="h1" />
+          <TextBlock Text="Firmware assinado pela Apple, descarga e verificação" Classes="label" />
+        </StackPanel>
+        <TextBlock x:Name="NetStatusText" DockPanel.Dock="Right" Classes="label"
+                   Text="Catálogo: api.ipsw.me (público)" TextWrapping="Wrap" MaxWidth="420"
+                   VerticalAlignment="Center" TextAlignment="Right" />
+      </DockPanel>
+    </Border>
+
+    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled">
+      <Grid ColumnDefinitions="*,16,360">
+
+        <!-- Coluna esquerda -->
+        <StackPanel Grid.Column="0" Spacing="12">
+
+          <Border Background="{DynamicResource BlueBoxBg}" CornerRadius="12" Padding="14">
+            <Grid ColumnDefinitions="Auto,*">
+              <Path Data="{StaticResource IconNet}" Stroke="{DynamicResource BlueText}"
+                    StrokeThickness="1.6" Width="14" Height="14" VerticalAlignment="Top" Margin="0,1,8,0" />
+              <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="{DynamicResource BlueText2}" FontSize="10.5"
+                         Text="Esta página usa a internet. Consulta apenas o catálogo público de firmware (api.ipsw.me) e descarrega o IPSW que a Apple ainda assina. Não altera o aparelho até você clicar em «Restaurar»." />
+            </Grid>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="10">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Path Data="{StaticResource IconDownload}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="12" Height="12" />
+                <TextBlock Text="FIRMWARE ASSINADO" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
+              </StackPanel>
+
+              <WrapPanel>
+                <Button x:Name="LookupButton" Classes="primary" Click="Lookup_Click" Margin="0,0,8,6">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Path Data="{StaticResource IconSearch}" Stroke="White" StrokeThickness="1.5" Width="13" Height="13" />
+                    <TextBlock Text="Consultar firmware" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+                <Button x:Name="DownloadButton" Classes="tool" Click="Download_Click" IsEnabled="False" Margin="0,0,8,6">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Path Data="{StaticResource IconDownload}" Stroke="{DynamicResource TextPrimary}" StrokeThickness="1.5" Width="13" Height="13" />
+                    <TextBlock Text="Baixar IPSW" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+                <Button x:Name="OpenFolderButton" Classes="tool" Click="OpenFolder_Click" Margin="0,0,8,6">
+                  <StackPanel Orientation="Horizontal" Spacing="6">
+                    <Path Data="{StaticResource IconFolder}" Stroke="{DynamicResource TextPrimary}" StrokeThickness="1.5" Width="13" Height="13" />
+                    <TextBlock Text="Abrir pasta" VerticalAlignment="Center" />
+                  </StackPanel>
+                </Button>
+                <Button x:Name="ImportButton" Classes="tool" Click="Import_Click" Margin="0,0,8,6">
+                  <TextBlock Text="Importar IPSW" VerticalAlignment="Center" />
+                </Button>
+                <Button x:Name="VerifyButton" Classes="tool" Click="Verify_Click" IsEnabled="False" Margin="0,0,8,6">
+                  <TextBlock Text="Verificar" VerticalAlignment="Center" />
+                </Button>
+              </WrapPanel>
+
+              <TextBlock x:Name="FirmwareInfoText" TextWrapping="Wrap" FontSize="13" FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextPrimary}"
+                         Text="Ligue o iPhone por USB (normal, recovery ou DFU) ou escreva o identificador — ex.: iPhone13,2." />
+              <TextBlock x:Name="FirmwareUrlText" TextWrapping="Wrap" FontSize="10.5"
+                         Foreground="{DynamicResource TextFaint}" />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="8">
+              <DockPanel LastChildFill="False">
+                <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="8" VerticalAlignment="Center">
+                  <Button x:Name="RefreshDownloadsButton" Classes="tool" Click="RefreshDownloads_Click" Padding="9,4">
+                    <TextBlock Text="Atualizar" FontSize="10.5" />
+                  </Button>
+                  <Button x:Name="ClearFinishedButton" Classes="tool" Click="ClearFinished_Click" Padding="9,4">
+                    <TextBlock Text="Limpar concluídos" FontSize="10.5" />
+                  </Button>
+                </StackPanel>
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Path Data="{StaticResource IconDownload}" Stroke="{DynamicResource TextMuted}"
+                        StrokeThickness="1.6" Width="12" Height="12" />
+                  <TextBlock Text="DOWNLOADS E FIRMWARES NA PASTA" Classes="label" FontWeight="Bold"
+                             VerticalAlignment="Center" />
+                </StackPanel>
+              </DockPanel>
+
+              <TextBlock TextWrapping="Wrap" FontSize="10.5" Foreground="{DynamicResource TextFaint}"
+                         Text="Downloads em curso e ficheiros em ~/Documents/iDevice-Firmware (completos e incompletos). Cada linha tem os seus próprios botões." />
+
+              <ScrollViewer MaxHeight="360" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+                <StackPanel x:Name="DownloadsPanel" Spacing="6" />
+              </ScrollViewer>
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Path Data="{StaticResource IconPhone}" Stroke="{DynamicResource AmberText5}"
+                      StrokeThickness="1.6" Width="12" Height="12" />
+                <TextBlock Text="IDENTIFICADOR DO APARELHO" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
+              </StackPanel>
+              <TextBox x:Name="ModelOverrideBox" Height="30" Padding="7,4" Watermark="Ex.: iPhone13,2" />
+              <TextBlock TextWrapping="Wrap" FontSize="10.5" Foreground="{DynamicResource TextFaint}"
+                         Text="Deixe vazio para usar o aparelho detetado por USB (funciona em normal, recovery e DFU)." />
+              <TextBlock x:Name="OnlineDetectText" TextWrapping="Wrap" FontSize="10.5"
+                         Foreground="{DynamicResource BlueText}"
+                         Text="Nenhum aparelho detetado por USB — ligue o iPhone ou escreva o identificador." />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Coluna direita -->
+        <StackPanel Grid.Column="2" Spacing="12">
+          <Border Background="{DynamicResource RedBoxBg}" CornerRadius="12" Padding="16">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Path Data="{StaticResource IconRestore}" Stroke="{DynamicResource RedText}"
+                      StrokeThickness="1.6" Width="14" Height="14" />
+                <TextBlock Text="RESTAURO" Foreground="{DynamicResource RedText}" Classes="label"
+                           FontWeight="Bold" VerticalAlignment="Center" />
+              </StackPanel>
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource RedTextSoft}" FontSize="10.5"
+                         Text="O restauro APAGA todo o conteúdo e repõe o iPhone de fábrica. Só funciona com firmware que a Apple ainda assina. Não remove o bloqueio de ativação (iCloud) — para isso é preciso a conta original." />
+              <Button x:Name="RestoreButton" Classes="danger" Click="Restore_Click" IsEnabled="False" Margin="0,6,0,0">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Path Data="{StaticResource IconRestore}" Stroke="White" StrokeThickness="1.5" Width="13" Height="13" />
+                  <TextBlock Text="Restaurar firmware" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+              <TextBlock x:Name="RestoreStatusText" TextWrapping="Wrap" Foreground="{DynamicResource RedTextSoft}"
+                         FontSize="10.5" Margin="0,4,0,0"
+                         Text="Escolha o firmware e clique «Restaurar». O progresso em direto aparece na página Restauro." />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="6">
+              <TextBlock Text="PASTA DE FIRMWARE" Classes="label" FontWeight="Bold" />
+              <TextBlock x:Name="FolderText" TextWrapping="Wrap" FontSize="10.5"
+                         Foreground="{DynamicResource TextSecondary}" />
+              <TextBlock TextWrapping="Wrap" FontSize="10.5" Foreground="{DynamicResource TextFaint}"
+                         Text="A app copia ficheiros para esta pasta; nada é apagado do iPhone sem confirmação." />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

@@ -22,13 +22,13 @@ a aplicação.
 No `main` atual, estas páginas estão implementadas e ligadas:
 
 - **Offline**
+- **Online**
 - **Diagnóstico**
 - **Acessibilidade (AFC)**
 - **Driver**
 
 Estas cinco ainda são placeholders **de propósito**:
 
-- **Online**
 - **Restauro**
 - **Reparo**
 - **Firmware**
@@ -144,7 +144,7 @@ página implementada, o código é antigo.
 | Diagnóstico | implementado; teste Linux pendente | `DiagnosticoView.axaml(.cs)` | `idevicesyslog`, `idevicecrashreport`, `idevicepair`, `ideviceprovision` |
 | Acessibilidade | implementado; teste Linux pendente | `AcessibilidadeView.axaml(.cs)` + `AfcSession.cs` | `libimobiledevice-1.0-6`, `idevice_id`, `ideviceinfo`, `idevicescreenshot` |
 | Driver | implementado; teste Linux pendente | `DriverView.axaml(.cs)` + `DriverEnvironment.cs` | `usbmuxd`, udev, `systemctl`, `id` |
-| Online | **placeholder** | `PlaceholderView.cs` | catálogo `api.ipsw.me`, `DownloadManager`, rede |
+| Online | funcional | `OnlineView.axaml(.cs)` + `Core/Firmware/` | `api.ipsw.me`; `idevicerestore` só na página Restauro |
 | Restauro | **placeholder** | `PlaceholderView.cs` | `idevicerestore`; depende de Online |
 | Reparo | **placeholder** | `PlaceholderView.cs` | `ideviceenterrecovery`, `idevicediagnostics`, `irecovery` |
 | Firmware | **placeholder** | `PlaceholderView.cs` | catálogo `api.ipsw.me`, lista partilhada com Online |

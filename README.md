@@ -4,7 +4,7 @@
 > Repositório **privado**. A aplicação Windows original não é alterada por este projeto.
 
 **Estado atual:** alpha técnico. A shell, os temas e a página **Offline** funcionam; as páginas
-**Diagnóstico**, **Acessibilidade (AFC)** e **Driver** estão implementadas. Diagnóstico e AFC
+**Diagnóstico**, **Acessibilidade (AFC)**, **Driver** e **Online** estão implementadas. Diagnóstico e AFC
 foram testados com um iPhone real no ambiente Windows de desenvolvimento; falta validar tudo
 numa instalação Linux. As outras cinco páginas ainda são placeholders. O projeto compila e
 gera um binário `linux-x64` self-contained.
@@ -64,7 +64,7 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Página **Diagnóstico** | ✅ implementada (syslog, crash ZIP, pair, provision; teste real no Windows, Linux pendente) |
 | Página **Acessibilidade (AFC)** | ✅ implementada (navegar, importar/exportar, DCIM, captura; teste real no Windows, Linux pendente) |
 | Página **Driver** | ✅ implementada (usbmuxd, udev, grupos, dispositivos; teste Linux pendente) |
-| Página Online | ⬜ placeholder |
+| Página **Online** | ✅ implementada (catálogo `api.ipsw.me`, download segmentado com retoma, SHA-256) |
 | Restauro | ⬜ placeholder |
 | Reparo | ⬜ placeholder |
 | Firmware | ⬜ placeholder |
@@ -309,7 +309,9 @@ Ordem sugerida para completar o port:
       importar/exportar, DCIM, apagar com confirmação e captura de ecrã.
 - [x] **Driver** — estado do `usbmuxd`, regras udev, grupos e dispositivos via
       `DriverEnvironment`; a UI mostra comandos sem executar `sudo`.
-- [ ] **Online / Firmware / Restauro** — `DownloadManager` segmentado com SHA-256 e
+- [x] **Online** — catálogo `api.ipsw.me`, `DownloadManager` segmentado com retoma e SHA-256,
+      importação de IPSW e verificação. `idevicerestore` fica na página Restauro.
+- [ ] **Firmware / Restauro** — lista completa de firmwares e
       `idevicerestore` com progresso por `stdout`.
 - [ ] **Reparo** — recovery/restart/ativação; MDM apenas deteção.
 - [ ] **Jailbreak** — detetar `palera1n`/`checkra1n` e abrir a ferramenta do sistema,
