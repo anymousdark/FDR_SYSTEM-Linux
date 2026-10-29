@@ -1,0 +1,141 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FdrSystem.App.Views.Pages.RestauroView">
+
+  <Grid RowDefinitions="Auto,12,*">
+
+    <Border Grid.Row="0" Classes="card" Padding="12,10">
+      <DockPanel LastChildFill="False">
+        <StackPanel DockPanel.Dock="Left" Spacing="2" VerticalAlignment="Center">
+          <TextBlock Text="Restauro" Classes="h1" />
+          <TextBlock Text="Progresso em direto do idevicerestore" Classes="label" />
+        </StackPanel>
+        <TextBlock x:Name="EngineStatusText" DockPanel.Dock="Right" Classes="label"
+                   Text="A verificar o motor…" TextWrapping="Wrap" MaxWidth="430"
+                   VerticalAlignment="Center" TextAlignment="Right" />
+      </DockPanel>
+    </Border>
+
+    <Grid Grid.Row="2" ColumnDefinitions="*,16,400">
+
+      <ScrollViewer Grid.Column="0" HorizontalScrollBarVisibility="Disabled">
+        <StackPanel Spacing="12">
+
+          <Border Background="{DynamicResource RedBoxBg}" CornerRadius="12" Padding="14">
+            <Grid ColumnDefinitions="Auto,*">
+              <Path Data="{StaticResource IconRestore}" Stroke="{DynamicResource RedText}"
+                    StrokeThickness="1.6" Width="14" Height="14" VerticalAlignment="Top" Margin="0,1,8,0" />
+              <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="{DynamicResource RedTextSoft}"
+                         FontSize="10.5"
+                         Text="O restauro APAGA todo o conteúdo do iPhone. Só funciona com firmware que a Apple ainda assina e não remove o bloqueio de ativação (iCloud). Usa um aparelho de teste e faz backup." />
+            </Grid>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="10">
+              <TextBlock Text="FIRMWARE ESCOLHIDO" Classes="label" FontWeight="Bold" />
+              <TextBlock x:Name="FileText" TextWrapping="Wrap" FontSize="13" FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextPrimary}" Text="Nenhum IPSW escolhido." />
+              <TextBlock x:Name="FileDetailText" TextWrapping="Wrap" FontSize="10.5"
+                         Foreground="{DynamicResource TextFaint}" />
+
+              <WrapPanel>
+                <Button x:Name="PickButton" Classes="primary" Click="Pick_Click" Margin="0,0,8,6"
+                        Content="Escolher IPSW" />
+                <Button x:Name="VerifyButton" Classes="tool" Click="Verify_Click" IsEnabled="False" Margin="0,0,8,6">
+                  <TextBlock Text="Verificar SHA-256" VerticalAlignment="Center" />
+                </Button>
+                <Button x:Name="OpenFolderButton" Classes="tool" Click="OpenFolder_Click" Margin="0,0,8,6">
+                  <TextBlock Text="Abrir pasta" VerticalAlignment="Center" />
+                </Button>
+              </WrapPanel>
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="8">
+              <TextBlock Text="APARELHO LIGADO" Classes="label" FontWeight="Bold" />
+              <TextBlock x:Name="DeviceText" TextWrapping="Wrap" FontSize="11.5"
+                         Foreground="{DynamicResource TextPrimary}" Text="A procurar iPhone por USB…" />
+              <TextBlock x:Name="CompatText" TextWrapping="Wrap" FontSize="10.5"
+                         Foreground="{DynamicResource TextMuted}" />
+              <Button x:Name="RefreshDeviceButton" Classes="tool" Click="RefreshDevice_Click"
+                      HorizontalAlignment="Left">
+                <TextBlock Text="Voltar a procurar" FontSize="10.5" />
+              </Button>
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="10">
+              <TextBlock Text="PROGRESSO" Classes="label" FontWeight="Bold" />
+
+              <TextBlock Text="1 · Preparação e extração do IPSW" FontSize="10.5"
+                         Foreground="{DynamicResource TextMuted}" />
+              <Grid ColumnDefinitions="*,52">
+                <ProgressBar x:Name="PrepBar" Minimum="0" Maximum="100" Value="0" Height="10"
+                             Foreground="{DynamicResource BlueText}" />
+                <TextBlock x:Name="PrepPercentText" Grid.Column="1" Text="—" FontSize="10.5"
+                           Foreground="{DynamicResource TextSecondary}"
+                           HorizontalAlignment="Right" VerticalAlignment="Center" />
+              </Grid>
+
+              <TextBlock Text="2 · Gravação no iPhone" FontSize="10.5"
+                         Foreground="{DynamicResource TextMuted}" Margin="0,6,0,0" />
+              <Grid ColumnDefinitions="*,52">
+                <ProgressBar x:Name="InstallBar" Minimum="0" Maximum="100" Value="0" Height="10"
+                             Foreground="{DynamicResource GreenText}" />
+                <TextBlock x:Name="InstallPercentText" Grid.Column="1" Text="—" FontSize="10.5"
+                           Foreground="{DynamicResource TextSecondary}"
+                           HorizontalAlignment="Right" VerticalAlignment="Center" />
+              </Grid>
+
+              <TextBlock x:Name="PhaseText" Text="Em espera." FontSize="15" FontWeight="Bold"
+                         Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" Margin="0,8,0,0" />
+              <TextBlock x:Name="DetailText" FontSize="10.5" Foreground="{DynamicResource TextSecondary}"
+                         TextWrapping="Wrap" Text="Quando iniciar um restauro, o estado aparece aqui em direto." />
+
+              <WrapPanel>
+                <Button x:Name="StartButton" Classes="primary" Click="Start_Click" IsEnabled="False"
+                        Margin="0,0,8,6" Content="Iniciar restauro" />
+                <Button x:Name="CancelButton" Classes="tool" Click="Cancel_Click" IsEnabled="False" Margin="0,0,8,6">
+                  <TextBlock Text="Cancelar" VerticalAlignment="Center" />
+                </Button>
+              </WrapPanel>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </ScrollViewer>
+
+      <Grid Grid.Column="2" RowDefinitions="*,12,Auto">
+        <Border Grid.Row="0" Classes="card" Padding="16">
+          <Grid RowDefinitions="Auto,*">
+            <TextBlock Grid.Row="0" Text="REGISTO DO MOTOR" Classes="label" FontWeight="Bold" Margin="0,0,0,8" />
+            <Border Grid.Row="1" Background="{DynamicResource Surface2}" CornerRadius="8" Padding="8">
+              <TextBox x:Name="LogText" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
+                       BorderThickness="0" Background="Transparent"
+                       Foreground="{DynamicResource TextPrimary}"
+                       FontFamily="Cascadia Mono,DejaVu Sans Mono,Consolas,monospace"
+                       FontSize="10.5"
+                       ScrollViewer.VerticalScrollBarVisibility="Auto"
+                       ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+            </Border>
+          </Grid>
+        </Border>
+
+        <Border Grid.Row="2" Background="{DynamicResource AmberBoxBg}" CornerRadius="12" Padding="14">
+          <StackPanel Spacing="6">
+            <StackPanel Orientation="Horizontal" Spacing="7">
+              <Path Data="{StaticResource IconBattery}" Stroke="{DynamicResource AmberText6}"
+                    StrokeThickness="1.6" Width="13" Height="13" VerticalAlignment="Center" />
+              <TextBlock Text="DURANTE O RESTAURO" Foreground="{DynamicResource AmberText6}"
+                         Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
+            </StackPanel>
+            <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AmberText7}" FontSize="10.5"
+                       Text="Não desligue o cabo, não feche a aplicação e não deixe o PC suspender. O iPhone pode parecer desligado em várias fases (ecrã preto, logótipo, barra) — é normal." />
+          </StackPanel>
+        </Border>
+      </Grid>
+    </Grid>
+  </Grid>
+</UserControl>

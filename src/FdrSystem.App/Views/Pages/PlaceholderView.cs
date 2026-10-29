@@ -15,9 +15,6 @@ public sealed class PlaceholderView : UserControl
 
     private static readonly Dictionary<string, PageInfo> Pages = new(StringComparer.Ordinal)
     {
-        ["restauro"] = new("Restauro", "Progresso em direto",
-            "Duas barras (preparação do IPSW e gravação no iPhone), fase atual em português e saída completa do motor.",
-            "Falta: correr idevicerestore e ler o progresso. Depende da página Online."),
         ["reparo"] = new("Reparo", "Estado do aparelho",
             "Verificar modo, entrar/sair de recovery, reiniciar, ativação/iCloud (deteção), MDM (só deteção) e pular configuração inicial.",
             "Falta: portar os comandos e os painéis. Base USB já existe no core."),

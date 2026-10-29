@@ -65,7 +65,7 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Página **Acessibilidade (AFC)** | ✅ implementada (navegar, importar/exportar, DCIM, captura; teste real no Windows, Linux pendente) |
 | Página **Driver** | ✅ implementada (usbmuxd, udev, grupos, dispositivos; teste Linux pendente) |
 | Página **Online** | ✅ implementada (catálogo `api.ipsw.me`, download segmentado com retoma, SHA-256) |
-| Restauro | ⬜ placeholder |
+| Página **Restauro** | ✅ implementada (`idevicerestore`, duas barras, confirmação destrutiva, cancelar) |
 | Reparo | ⬜ placeholder |
 | Página **Firmware** | ✅ implementada (catálogo completo, filtro, cache 12 h, download por linha) |
 | Jailbreak | ⬜ placeholder |
@@ -312,8 +312,8 @@ Ordem sugerida para completar o port:
 - [x] **Online** — catálogo `api.ipsw.me`, `DownloadManager` segmentado com retoma e SHA-256,
       importação de IPSW e verificação. `idevicerestore` fica na página Restauro.
 - [x] **Firmware** — catálogo completo com filtro e cache, DataGrid por modelo e download partilhado.
-- [ ] **Restauro** —
-      `idevicerestore` com progresso por `stdout`.
+- [x] **Restauro** — `Core/Firmware/RestoreEngine.cs` + `Views/Pages/RestauroView.axaml(.cs)`:
+      valida IPSW, confirma o apagamento, progresso por `stdout` e cancelamento com confirmação.
 - [ ] **Reparo** — recovery/restart/ativação; MDM apenas deteção.
 - [ ] **Jailbreak** — detetar `palera1n`/`checkra1n` e abrir a ferramenta do sistema,
       mantendo os avisos para A7–A11.

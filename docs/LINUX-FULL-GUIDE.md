@@ -23,17 +23,17 @@ No `main` atual, estas páginas estão implementadas e ligadas:
 
 - **Offline**
 - **Online**
+- **Restauro**
 - **Diagnóstico**
 - **Acessibilidade (AFC)**
 - **Driver**
 
-Estas cinco ainda são placeholders **de propósito**:
+Estas duas ainda são placeholders **de propósito**:
 
-- **Restauro**
 - **Reparo**
 - **Jailbreak**
 
-Se vires o cartão “Falta: …” nessas cinco, está correto. O que não pode acontecer é
+Se vires o cartão “Falta: …” nesses dois, está correto. O que não pode acontecer é
 **Diagnóstico**, **Acessibilidade** ou **Driver** aparecerem como placeholder.
 
 ### 0.2 Build antigo, `.deb` antigo ou commit antigo
@@ -144,7 +144,7 @@ página implementada, o código é antigo.
 | Acessibilidade | implementado; teste Linux pendente | `AcessibilidadeView.axaml(.cs)` + `AfcSession.cs` | `libimobiledevice-1.0-6`, `idevice_id`, `ideviceinfo`, `idevicescreenshot` |
 | Driver | implementado; teste Linux pendente | `DriverView.axaml(.cs)` + `DriverEnvironment.cs` | `usbmuxd`, udev, `systemctl`, `id` |
 | Online | funcional | `OnlineView.axaml(.cs)` + `Core/Firmware/` | `api.ipsw.me`; `idevicerestore` só na página Restauro |
-| Restauro | **placeholder** | `PlaceholderView.cs` | `idevicerestore`; depende de Online |
+| Restauro | funcional | `RestauroView.axaml(.cs)` + `Core/Firmware/RestoreEngine.cs` | `idevicerestore --erase --no-input`, duas barras e log |
 | Reparo | **placeholder** | `PlaceholderView.cs` | `ideviceenterrecovery`, `idevicediagnostics`, `irecovery` |
 | Firmware | funcional | `FirmwareView.axaml(.cs)` | catálogo `api.ipsw.me` + cache local; download partilhado com Online |
 | Jailbreak | **placeholder** | `PlaceholderView.cs` | `palera1n`/`checkra1n` externos; sem binários incluídos |
@@ -704,17 +704,24 @@ GET https://api.ipsw.me/v4/device/{ProductType}?type=ipsw
 
 **Objetivo:** executar `idevicerestore` com progresso em direto e confirmação destrutiva.
 
-O projeto Windows usa:
+O projeto Windows usa `-P --erase --no-input`, mas a versão Linux do `idevicerestore`
+(1.0.0+, Ubuntu 24.04+) já não aceita `-P`. A implementação Linux usa:
 
-```text
-idevicerestore -P --erase --no-input <ficheiro.ipsw>
+```bash
+idevicerestore --erase --no-input <ficheiro.ipsw>
 ```
 
-Antes de portar, confirma a sintaxe da versão instalada:
+Confirma sempre a sintaxe da versão instalada:
 
 ```bash
 idevicerestore --help
 ```
+
+**Estado:** implementado em `Core/Firmware/RestoreEngine.cs` +
+`Views/Pages/RestauroView.axaml(.cs)`. O progresso é lido de
+`progress: <passo> <fração>` e de linhas `Etiqueta: valor` (mesmo formato do Windows).
+O IPSW é recusado se tiver menos de 200 MB ou se não for possível identificar o modelo
+(cabeçalho `--ipsw-info` ou nome do ficheiro).
 
 **Implementação:**
 
@@ -854,7 +861,7 @@ No fim:
 1. Corrigir/confirmar o build Linux e o `.deb`.
 2. Implementar **Online** + `DownloadManager`.
 3. Implementar **Firmware** reutilizando o catálogo.
-4. Implementar **Restauro**.
+4. ~~Implementar **Restauro**~~ — feito em `RestoreEngine.cs` + `RestauroView`.
 5. Implementar **Reparo**.
 6. Implementar **Jailbreak**.
 7. AppImage/CI.

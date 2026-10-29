@@ -23,6 +23,7 @@ public partial class MainWindow : Window
     private OfflineView? _offline;
     private OnlineView? _online;
     private FirmwareView? _firmware;
+    private RestauroView? _restauro;
     private DiagnosticoView? _diagnostico;
     private AcessibilidadeView? _acessibilidade;
     private DriverView? _driver;
@@ -93,6 +94,7 @@ public partial class MainWindow : Window
             "offline" => _offline ??= new OfflineView(this, _tools),
             "online" => _online ??= new OnlineView(this, _tools, _downloads),
             "firmware" => _firmware ??= new FirmwareView(this, _downloads),
+            "restauro" => _restauro ??= new RestauroView(this, _tools, _downloads),
             "diagnostico" => _diagnostico ??= new DiagnosticoView(this, _tools),
             "acessibilidade" => _acessibilidade ??= new AcessibilidadeView(this, _tools),
             "driver" => _driver ??= new DriverView(this, _tools),
@@ -102,6 +104,7 @@ public partial class MainWindow : Window
         if (tag == "offline") _offline?.EnsureAutoRead();
         if (tag == "acessibilidade") _acessibilidade?.EnsureConnected();
         if (tag == "driver") _driver?.EnsureRefreshed();
+        if (tag == "restauro" && PendingRestoreFile is { Length: > 0 } ipsw) _restauro?.EnsureLoaded(ipsw);
     }
 
     /// <summary>Muda de página a pedido de outra página (ex.: Online → Restauro).</summary>
