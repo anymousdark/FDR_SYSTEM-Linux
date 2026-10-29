@@ -15,9 +15,6 @@ public sealed class PlaceholderView : UserControl
 
     private static readonly Dictionary<string, PageInfo> Pages = new(StringComparer.Ordinal)
     {
-        ["reparo"] = new("Reparo", "Estado do aparelho",
-            "Verificar modo, entrar/sair de recovery, reiniciar, ativação/iCloud (deteção), MDM (só deteção) e pular configuração inicial.",
-            "Falta: portar os comandos e os painéis. Base USB já existe no core."),
         ["jailbreak"] = new("Jailbreak", "checkm8 (opcional)",
             "No lugar do WinRa1n (Windows-only), a versão Linux abre o palera1n ou o checkra1n instalados no sistema.",
             "Falta: detetar a ferramenta e mostrar avisos de compatibilidade (A7–A11, iOS 12–17)."),

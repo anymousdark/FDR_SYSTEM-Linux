@@ -64,7 +64,9 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 - [x] **Firmware** — `Views/Pages/FirmwareView.axaml(.cs)` com cache em `~/.local/share/FDR_SYSTEM/cache`.
 - [x] **Restauro** — `Core/Firmware/RestoreEngine.cs` (progresso `progress: <passo> <fração>`)
       + `Views/Pages/RestauroView.axaml(.cs)`; recusa IPSW pequeno/incompatível.
-- [ ] **Reparo** — recovery/restart/ativação; MDM só deteção.
+- [x] **Reparo** — `Views/Pages/ReparoView.axaml(.cs)`: `UsbScanner` + `IrecoveryDevices`,
+      `ideviceenterrecovery`, `idevicediagnostics restart`, `irecovery -n`, `ideviceactivation state`
+      e chaves MDM de `ideviceinfo -x`; só leitura, sem `sudo`.
 - [ ] **Jailbreak** — abrir `palera1n`/`checkra1n` do sistema.
 - [ ] **Empacotamento** — `.deb` completo + AppImage.
 - [ ] **Teste no hardware** — correr no Linux com iPhone real e registar o que falha.

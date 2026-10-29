@@ -24,16 +24,16 @@ No `main` atual, estas páginas estão implementadas e ligadas:
 - **Offline**
 - **Online**
 - **Restauro**
+- **Reparo**
 - **Diagnóstico**
 - **Acessibilidade (AFC)**
 - **Driver**
 
-Estas duas ainda são placeholders **de propósito**:
+Este ainda é placeholder **de propósito**:
 
-- **Reparo**
 - **Jailbreak**
 
-Se vires o cartão “Falta: …” nesses dois, está correto. O que não pode acontecer é
+Se vires o cartão “Falta: …” no Jailbreak, está correto. O que não pode acontecer é
 **Diagnóstico**, **Acessibilidade** ou **Driver** aparecerem como placeholder.
 
 ### 0.2 Build antigo, `.deb` antigo ou commit antigo
@@ -145,7 +145,7 @@ página implementada, o código é antigo.
 | Driver | implementado; teste Linux pendente | `DriverView.axaml(.cs)` + `DriverEnvironment.cs` | `usbmuxd`, udev, `systemctl`, `id` |
 | Online | funcional | `OnlineView.axaml(.cs)` + `Core/Firmware/` | `api.ipsw.me`; `idevicerestore` só na página Restauro |
 | Restauro | funcional | `RestauroView.axaml(.cs)` + `Core/Firmware/RestoreEngine.cs` | `idevicerestore --erase --no-input`, duas barras e log |
-| Reparo | **placeholder** | `PlaceholderView.cs` | `ideviceenterrecovery`, `idevicediagnostics`, `irecovery` |
+| Reparo | funcional | `ReparoView.axaml(.cs)` | `ideviceenterrecovery`, `idevicediagnostics restart`, `irecovery -n`, ativação/MDM só leitura |
 | Firmware | funcional | `FirmwareView.axaml(.cs)` | catálogo `api.ipsw.me` + cache local; download partilhado com Online |
 | Jailbreak | **placeholder** | `PlaceholderView.cs` | `palera1n`/`checkra1n` externos; sem binários incluídos |
 
@@ -782,6 +782,12 @@ ideviceactivation state
 - mostra estado de ativação/MDM apenas como leitura;
 - ferramenta ausente mostra mensagem, não crash.
 
+**Estado:** implementado em `Views/Pages/ReparoView.axaml(.cs)`. O ECID aparece completo
+(é necessário para recovery) e não sai da máquina. A app nunca corre `sudo`: quando o
+`irecovery` falha por permissão, mostra `sudo irecovery -n` para o utilizador executar.
+A ativação é só `ideviceactivation state`; não há botão para ativar nem para saltar a
+configuração inicial.
+
 ### 6.5 Jailbreak
 
 **Objetivo:** abrir uma ferramenta externa de jailbreak, sem a incluir no FDR.
@@ -862,7 +868,7 @@ No fim:
 2. Implementar **Online** + `DownloadManager`.
 3. Implementar **Firmware** reutilizando o catálogo.
 4. ~~Implementar **Restauro**~~ — feito em `RestoreEngine.cs` + `RestauroView`.
-5. Implementar **Reparo**.
+5. ~~Implementar **Reparo**~~ — feito em `ReparoView` (sem `sudo`, sem contornar MDM/iCloud).
 6. Implementar **Jailbreak**.
 7. AppImage/CI.
 

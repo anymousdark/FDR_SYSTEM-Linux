@@ -1,0 +1,188 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FdrSystem.App.Views.Pages.ReparoView">
+
+  <Grid RowDefinitions="Auto,12,*">
+
+    <Border Grid.Row="0" Classes="card" Padding="12,10">
+      <DockPanel LastChildFill="False">
+        <StackPanel DockPanel.Dock="Left" Spacing="2" VerticalAlignment="Center">
+          <TextBlock Text="Reparo" Classes="h1" />
+          <TextBlock Text="Modo, recovery, reinício, ativação e gestão (só leitura)" Classes="label" />
+        </StackPanel>
+        <TextBlock x:Name="HeaderStatusText" DockPanel.Dock="Right" Classes="label"
+                   Text="A procurar iPhone por USB…" TextWrapping="Wrap" MaxWidth="420"
+                   VerticalAlignment="Center" TextAlignment="Right" />
+      </DockPanel>
+    </Border>
+
+    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled"
+                   BringIntoViewOnFocusChange="False">
+      <Grid ColumnDefinitions="*,16,380">
+
+        <!-- Coluna esquerda -->
+        <StackPanel Grid.Column="0" Spacing="12">
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="10">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Path Data="{StaticResource IconWrench}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Stretch="Uniform" Width="12" Height="12" />
+                <TextBlock Text="ESTADO E REPARO (USB)" Classes="label" FontWeight="Bold"
+                           VerticalAlignment="Center" />
+              </StackPanel>
+
+              <TextBlock x:Name="ReparoModeText" Text="Modo: —" FontSize="15" FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" />
+              <TextBlock x:Name="ReparoDeviceText" FontSize="10.5" Foreground="{DynamicResource TextSecondary}"
+                         TextWrapping="Wrap"
+                         Text="Liga o iPhone por USB. Em normal é preciso confiar neste computador." />
+
+              <Button x:Name="RModeButton" Classes="tool" Click="Mode_Click"
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                <TextBlock Text="Verificar modo" />
+              </Button>
+              <Button x:Name="RRecoveryButton" Classes="tool" Click="Recovery_Click" IsEnabled="False"
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                <TextBlock Text="Entrar em modo recovery" />
+              </Button>
+              <Button x:Name="RExitRecoveryButton" Classes="tool" Click="ExitRecovery_Click" IsEnabled="False"
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                <TextBlock Text="Sair do modo recovery" />
+              </Button>
+              <Button x:Name="RRestartButton" Classes="tool" Click="Restart_Click" IsEnabled="False"
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                <TextBlock Text="Reiniciar dispositivo" />
+              </Button>
+
+              <TextBlock x:Name="ActionStatusText" FontSize="10.5" Foreground="{DynamicResource TextFaint}"
+                         TextWrapping="Wrap" Text="Nada foi alterado no aparelho." />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Path Data="{StaticResource IconUnlock}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Stretch="Uniform" Width="12" Height="12" />
+                <TextBlock Text="ATIVAÇÃO E CONTA (iCLOUD)" Classes="label" FontWeight="Bold"
+                           VerticalAlignment="Center" />
+              </StackPanel>
+
+              <TextBlock x:Name="ActivationStateText" Text="Estado de ativação: —" FontSize="13"
+                         FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" />
+              <TextBlock x:Name="IcloudStateText" Text="Bloqueio de ativação (iCloud): —"
+                         FontSize="10.5" Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap" />
+              <TextBlock FontSize="10.5" Foreground="{DynamicResource TextFaint}" TextWrapping="Wrap"
+                         Text="Só leitura. A app nunca pede a conta Apple nem a palavra-passe, não ativa o aparelho por si e não contorna o Bloqueio de Ativação. Se o iPhone estiver associado a uma conta, a ativação faz-se no próprio aparelho com a conta original." />
+
+              <Button x:Name="ActivationCheckButton" Classes="tool" Click="ActivationCheck_Click"
+                      HorizontalAlignment="Left">
+                <TextBlock Text="Verificar estado" FontSize="10.5" />
+              </Button>
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Path Data="{StaticResource IconBox}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Stretch="Uniform" Width="12" Height="12" />
+                <TextBlock Text="GESTÃO DA EMPRESA (MDM)" Classes="label" FontWeight="Bold"
+                           VerticalAlignment="Center" />
+              </StackPanel>
+
+              <TextBlock x:Name="MdmStatusText" Text="Estado de gestão: —" FontSize="13" FontWeight="SemiBold"
+                         Foreground="{DynamicResource TextPrimary}" TextWrapping="Wrap" />
+              <TextBlock x:Name="MdmDetailsText" FontSize="10.5" Foreground="{DynamicResource TextFaint}"
+                         TextWrapping="Wrap"
+                         Text="Mostra se o aparelho está sob gestão empresarial (supervisão, perfis, configuração automática) usando apenas as chaves que o USB expõe. É deteção: a app não remove nem contorna gestão — isso passa pelo administrador do aparelho." />
+
+              <Button x:Name="MdmCheckButton" Classes="tool" Click="MdmCheck_Click"
+                      HorizontalAlignment="Left">
+                <TextBlock Text="Verificar gestão" FontSize="10.5" />
+              </Button>
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="8">
+              <DockPanel LastChildFill="False">
+                <TextBlock DockPanel.Dock="Left" Text="REGISTO" Classes="label" FontWeight="Bold"
+                           VerticalAlignment="Center" />
+                <Button x:Name="ClearLogButton" DockPanel.Dock="Right" Classes="tool" Click="ClearLog_Click"
+                        Padding="9,4">
+                  <TextBlock Text="Limpar" FontSize="10" />
+                </Button>
+              </DockPanel>
+
+              <Border Background="{DynamicResource Surface2}" CornerRadius="8" Padding="8">
+                <TextBox x:Name="LogText" Height="150" IsReadOnly="True" AcceptsReturn="True"
+                         TextWrapping="NoWrap" BorderThickness="0" Background="Transparent"
+                         Foreground="{DynamicResource TextPrimary}"
+                         FontFamily="Cascadia Mono,DejaVu Sans Mono,Consolas,monospace" FontSize="10"
+                         ScrollViewer.VerticalScrollBarVisibility="Auto"
+                         ScrollViewer.HorizontalScrollBarVisibility="Auto" />
+              </Border>
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Coluna direita -->
+        <StackPanel Grid.Column="2" Spacing="12">
+
+          <Border Background="{DynamicResource BlueBoxBg}" CornerRadius="12" Padding="14">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Path Data="{StaticResource IconPhone}" Stroke="{DynamicResource BlueText}"
+                      StrokeThickness="1.6" Stretch="Uniform" Width="13" Height="13" VerticalAlignment="Top" />
+                <TextBlock Text="ENTRAR EM DFU (BOTÕES)" Foreground="{DynamicResource BlueText}"
+                           Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
+              </StackPanel>
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource BlueText2}" FontSize="10.5"
+                         Text="O DFU só se entra com os botões físicos — nenhum programa consegue lá pôr o iPhone por software. No iPhone 8 e posteriores: 1) ligue ao PC; 2) prima e solte Volume +, depois Volume −; 3) mantenha o botão lateral até o ecrã apagar (~10 s); 4) sem largar o lateral, mantenha Volume − por 5 s; 5) largue o lateral e mantenha Volume − até o PC detetar (ecrã sempre preto). Se aparecer o logótipo, tente de novo." />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="6">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Path Data="{StaticResource IconChip}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Stretch="Uniform" Width="12" Height="12" />
+                <TextBlock Text="DADOS EM RECOVERY / DFU (USB)" Classes="label" FontWeight="Bold"
+                           VerticalAlignment="Center" />
+              </StackPanel>
+              <TextBlock x:Name="RecHintText" TextWrapping="Wrap" Foreground="{DynamicResource TextFaint}"
+                         FontSize="10.5"
+                         Text="Em recovery ou DFU, o USB expõe estes dados sem emparelhamento. Em modo normal aparecem os dados do sistema." />
+              <TextBlock x:Name="RecModelText" Foreground="{DynamicResource TextPrimary}" FontSize="12.5"
+                         FontWeight="SemiBold" Margin="0,6,0,0" Text="Modelo: —" TextWrapping="Wrap" />
+              <TextBlock x:Name="RecSerialText" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Margin="0,2,0,0" Text="Serial: —" TextWrapping="Wrap" />
+              <TextBlock x:Name="RecEcidText" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Margin="0,2,0,0" Text="ECID: —" TextWrapping="Wrap" />
+              <TextBlock x:Name="RecChipText" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Margin="0,2,0,0" Text="CPU/Board: —" TextWrapping="Wrap" />
+              <TextBlock x:Name="RecIbootText" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Margin="0,2,0,0" Text="iBoot: —" TextWrapping="Wrap" />
+              <TextBlock FontSize="10.5" Foreground="{DynamicResource TextFaint}" Margin="0,6,0,0"
+                         TextWrapping="Wrap"
+                         Text="O ECID e o serial são identificadores do aparelho: aparecem aqui porque são precisos para recovery, mas não são enviados para lado nenhum." />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="6">
+              <TextBlock Text="MOTORES OPCIONAIS" Classes="label" FontWeight="Bold" />
+              <TextBlock x:Name="ToolsStatusText" TextWrapping="Wrap"
+                         Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Text="A verificar ferramentas…" />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextFaint}" FontSize="10.5"
+                         Text="Sair do recovery precisa de «irecovery» (pacote libirecovery) e a ativação de «ideviceactivation». A app não corre sudo: se faltar permissão, mostra o comando para executar no terminal." />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

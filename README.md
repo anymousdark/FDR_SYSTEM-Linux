@@ -66,7 +66,7 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Página **Driver** | ✅ implementada (usbmuxd, udev, grupos, dispositivos; teste Linux pendente) |
 | Página **Online** | ✅ implementada (catálogo `api.ipsw.me`, download segmentado com retoma, SHA-256) |
 | Página **Restauro** | ✅ implementada (`idevicerestore`, duas barras, confirmação destrutiva, cancelar) |
-| Reparo | ⬜ placeholder |
+| Página **Reparo** | ✅ implementada (modo normal/recovery/DFU, entrar/sair do recovery, reiniciar, ativação e MDM só leitura) |
 | Página **Firmware** | ✅ implementada (catálogo completo, filtro, cache 12 h, download por linha) |
 | Jailbreak | ⬜ placeholder |
 | Empacotamento `.deb` | 🟡 básico |
@@ -314,7 +314,8 @@ Ordem sugerida para completar o port:
 - [x] **Firmware** — catálogo completo com filtro e cache, DataGrid por modelo e download partilhado.
 - [x] **Restauro** — `Core/Firmware/RestoreEngine.cs` + `Views/Pages/RestauroView.axaml(.cs)`:
       valida IPSW, confirma o apagamento, progresso por `stdout` e cancelamento com confirmação.
-- [ ] **Reparo** — recovery/restart/ativação; MDM apenas deteção.
+- [x] **Reparo** — `Views/Pages/ReparoView.axaml(.cs)`: modo por USB, recovery/restart com
+      confirmação, `ideviceactivation state` e MDM apenas como deteção; nunca corre `sudo`.
 - [ ] **Jailbreak** — detetar `palera1n`/`checkra1n` e abrir a ferramenta do sistema,
       mantendo os avisos para A7–A11.
 - [ ] **Empacotamento** — `.deb` completo e AppImage.
