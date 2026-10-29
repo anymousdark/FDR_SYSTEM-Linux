@@ -6,8 +6,8 @@ using Avalonia.Media;
 namespace FdrSystem.App.Views.Pages;
 
 /// <summary>
-/// Páginas ainda não portadas: mostram o que a versão Windows faz e o estado do
-/// port, para a navegação ficar completa desde o início.
+/// Fallback para uma tag de navegação desconhecida. Já não há páginas por portar —
+/// todas as rotas do <see cref="MainWindow"/> têm vista própria.
 /// </summary>
 public sealed class PlaceholderView : UserControl
 {
@@ -15,9 +15,6 @@ public sealed class PlaceholderView : UserControl
 
     private static readonly Dictionary<string, PageInfo> Pages = new(StringComparer.Ordinal)
     {
-        ["jailbreak"] = new("Jailbreak", "checkm8 (opcional)",
-            "No lugar do WinRa1n (Windows-only), a versão Linux abre o palera1n ou o checkra1n instalados no sistema.",
-            "Falta: detetar a ferramenta e mostrar avisos de compatibilidade (A7–A11, iOS 12–17)."),
     };
 
     public static PlaceholderView For(string tag, MainWindow owner) =>

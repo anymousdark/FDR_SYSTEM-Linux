@@ -68,7 +68,7 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Página **Restauro** | ✅ implementada (`idevicerestore`, duas barras, confirmação destrutiva, cancelar) |
 | Página **Reparo** | ✅ implementada (modo normal/recovery/DFU, entrar/sair do recovery, reiniciar, ativação e MDM só leitura) |
 | Página **Firmware** | ✅ implementada (catálogo completo, filtro, cache 12 h, download por linha) |
-| Jailbreak | ⬜ placeholder |
+| Página **Jailbreak** | ✅ implementada (deteta `palera1n`/`checkra1n`, mostra caminho/versão, comandos e avisos; não executa nem corre `sudo`) |
 | Empacotamento `.deb` | 🟡 básico |
 | AppImage | ⬜ por fazer |
 | Teste com iPhone real em Linux | ⬜ por fazer |
@@ -316,8 +316,9 @@ Ordem sugerida para completar o port:
       valida IPSW, confirma o apagamento, progresso por `stdout` e cancelamento com confirmação.
 - [x] **Reparo** — `Views/Pages/ReparoView.axaml(.cs)`: modo por USB, recovery/restart com
       confirmação, `ideviceactivation state` e MDM apenas como deteção; nunca corre `sudo`.
-- [ ] **Jailbreak** — detetar `palera1n`/`checkra1n` e abrir a ferramenta do sistema,
-      mantendo os avisos para A7–A11.
+- [x] **Jailbreak** — `Views/Pages/JailbreakView.axaml(.cs)`: deteta `palera1n`/`checkra1n`,
+      mostra caminho/versão e comandos para copiar, com avisos checkm8 (A5–A11); nunca executa
+      as ferramentas nem corre `sudo`, e não serve para contornar iCloud/Activation Lock/MDM.
 - [ ] **Empacotamento** — `.deb` completo e AppImage.
 - [ ] **Teste real** — correr numa instalação Linux limpa com iPhone físico.
 - [ ] **CI** — build e testes automáticos num runner Linux.

@@ -150,7 +150,7 @@
                 <Path Data="{StaticResource IconUnlock}" Classes="icon" VerticalAlignment="Center" />
                 <StackPanel>
                   <TextBlock Text="Jailbreak" FontWeight="SemiBold" FontSize="13" />
-                  <TextBlock Text="checkm8 (opcional)" FontSize="10.5" Opacity="0.75" />
+                  <TextBlock Text="Ferramentas externas" FontSize="10.5" Opacity="0.75" />
                 </StackPanel>
               </StackPanel>
             </RadioButton>

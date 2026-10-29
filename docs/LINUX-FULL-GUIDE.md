@@ -17,9 +17,9 @@
 Isto tem duas explicações possíveis, e **nenhuma** significa que seja preciso reescrever
 a aplicação.
 
-### 0.1 As cinco páginas que ainda são placeholders
+### 0.1 Páginas implementadas
 
-No `main` atual, estas páginas estão implementadas e ligadas:
+No `main` atual, todas as páginas do Windows estão implementadas e ligadas:
 
 - **Offline**
 - **Online**
@@ -28,17 +28,15 @@ No `main` atual, estas páginas estão implementadas e ligadas:
 - **Diagnóstico**
 - **Acessibilidade (AFC)**
 - **Driver**
-
-Este ainda é placeholder **de propósito**:
-
+- **Firmware**
 - **Jailbreak**
 
-Se vires o cartão “Falta: …” no Jailbreak, está correto. O que não pode acontecer é
-**Diagnóstico**, **Acessibilidade** ou **Driver** aparecerem como placeholder.
+Já não há placeholders: se vires o cartão “Falta: …” numa destas páginas, estás a
+correr um binário antigo (ver 0.2).
 
 ### 0.2 Build antigo, `.deb` antigo ou commit antigo
 
-Se só vês Offline, ou se as três páginas já implementadas também aparecem como
+Se só vês Offline, ou se páginas que o README dá como implementadas aparecem como
 placeholder, estás quase certamente a correr um binário antigo. Confirma:
 
 ```bash
@@ -147,7 +145,7 @@ página implementada, o código é antigo.
 | Restauro | funcional | `RestauroView.axaml(.cs)` + `Core/Firmware/RestoreEngine.cs` | `idevicerestore --erase --no-input`, duas barras e log |
 | Reparo | funcional | `ReparoView.axaml(.cs)` | `ideviceenterrecovery`, `idevicediagnostics restart`, `irecovery -n`, ativação/MDM só leitura |
 | Firmware | funcional | `FirmwareView.axaml(.cs)` | catálogo `api.ipsw.me` + cache local; download partilhado com Online |
-| Jailbreak | **placeholder** | `PlaceholderView.cs` | `palera1n`/`checkra1n` externos; sem binários incluídos |
+| Jailbreak | funcional | `JailbreakView.axaml(.cs)` | deteta `palera1n`/`checkra1n`, mostra caminho/versão e comandos; não executa |
 
 O encaminhamento está em:
 
@@ -610,7 +608,7 @@ Ordem recomendada:
 2. **Firmware** — lista completa, reutilizando o catálogo/download.
 3. **Restauro** — `idevicerestore` e progresso.
 4. **Reparo** — recovery/restart/estado; sem contornar bloqueios.
-5. **Jailbreak** — detetar ferramentas externas.
+5. ~~**Jailbreak**~~ — feito em `JailbreakView` (deteta e mostra comandos; nunca executa).
 6. **Empacotamento** — AppImage e `.deb` completo.
 
 Cada página deve:
@@ -811,6 +809,13 @@ configuração inicial.
 - não corre `sudo` dentro da app;
 - avisos de compatibilidade visíveis.
 
+**Estado:** implementado em `Views/Pages/JailbreakView.axaml(.cs)`. A página usa
+`ToolRunner.Locate` para o caminho; corre `palera1n --version` (4 s) para a versão, mas
+**não executa o checkra1n** (é uma app gráfica). Mostra os comandos `sudo palera1n -l`,
+`sudo palera1n -c -f` e `sudo checkra1n` para copiar, liga aos sites oficiais e avisa que
+o jailbreak pode quebrar o sistema. Não há botão para executar, não corre `sudo` e não
+contorna iCloud/Activation Lock/MDM.
+
 ### 6.6 Empacotamento e CI
 
 - `.deb` básico já existe em `packaging/build-linux.sh`;
@@ -869,7 +874,7 @@ No fim:
 3. Implementar **Firmware** reutilizando o catálogo.
 4. ~~Implementar **Restauro**~~ — feito em `RestoreEngine.cs` + `RestauroView`.
 5. ~~Implementar **Reparo**~~ — feito em `ReparoView` (sem `sudo`, sem contornar MDM/iCloud).
-6. Implementar **Jailbreak**.
+6. ~~Implementar **Jailbreak**~~ — feito em `JailbreakView`.
 7. AppImage/CI.
 
 Não tentes portar as cinco páginas de uma vez. O projeto Windows tem milhares de
@@ -904,9 +909,11 @@ sudo apt install --reinstall ./publish/fdr-system_1.5.9_amd64.deb
 Se estás a abrir `fdr-system` e o `readlink` aponta para outro sítio, remove ou
 reinstala o `.deb`. Não apagues ficheiros sem confirmar o que são.
 
-### As páginas Online/Restauro/Reparo/Firmware/Jailbreak mostram “Falta…”
+### Uma página implementada mostra “Falta…”
 
-É o comportamento esperado: ainda são placeholders. Não é um erro de build.
+Já não há placeholders no `main`. Se vires o cartão “Falta: …”, estás a correr um
+binário antigo: confirma o commit com `git log --oneline -1`, reconstrói e reinstala o
+`.deb` (ver 0.2). Não é um erro de build.
 
 ### `idevice_id -l` não devolve nada
 

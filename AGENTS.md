@@ -67,7 +67,9 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 - [x] **Reparo** — `Views/Pages/ReparoView.axaml(.cs)`: `UsbScanner` + `IrecoveryDevices`,
       `ideviceenterrecovery`, `idevicediagnostics restart`, `irecovery -n`, `ideviceactivation state`
       e chaves MDM de `ideviceinfo -x`; só leitura, sem `sudo`.
-- [ ] **Jailbreak** — abrir `palera1n`/`checkra1n` do sistema.
+- [x] **Jailbreak** — `Views/Pages/JailbreakView.axaml(.cs)`: deteta `palera1n`/`checkra1n`
+      (`Locate` + `--version` só no palera1n), mostra caminho, comandos e avisos; nunca executa
+      as ferramentas, nunca corre `sudo`, não contorna iCloud/Activation Lock/MDM.
 - [ ] **Empacotamento** — `.deb` completo + AppImage.
 - [ ] **Teste no hardware** — correr no Linux com iPhone real e registar o que falha.
 

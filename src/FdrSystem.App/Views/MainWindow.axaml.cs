@@ -25,6 +25,7 @@ public partial class MainWindow : Window
     private FirmwareView? _firmware;
     private RestauroView? _restauro;
     private ReparoView? _reparo;
+    private JailbreakView? _jailbreak;
     private DiagnosticoView? _diagnostico;
     private AcessibilidadeView? _acessibilidade;
     private DriverView? _driver;
@@ -97,6 +98,7 @@ public partial class MainWindow : Window
             "firmware" => _firmware ??= new FirmwareView(this, _downloads),
             "restauro" => _restauro ??= new RestauroView(this, _tools, _downloads),
             "reparo" => _reparo ??= new ReparoView(this, _tools),
+            "jailbreak" => _jailbreak ??= new JailbreakView(_tools),
             "diagnostico" => _diagnostico ??= new DiagnosticoView(this, _tools),
             "acessibilidade" => _acessibilidade ??= new AcessibilidadeView(this, _tools),
             "driver" => _driver ??= new DriverView(this, _tools),
@@ -108,6 +110,7 @@ public partial class MainWindow : Window
         if (tag == "driver") _driver?.EnsureRefreshed();
         if (tag == "restauro" && PendingRestoreFile is { Length: > 0 } ipsw) _restauro?.EnsureLoaded(ipsw);
         if (tag == "reparo") _reparo?.EnsureRefreshed();
+        if (tag == "jailbreak") _jailbreak?.EnsureRefreshed();
     }
 
     /// <summary>Muda de página a pedido de outra página (ex.: Online → Restauro).</summary>

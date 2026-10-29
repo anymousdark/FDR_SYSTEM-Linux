@@ -19,6 +19,7 @@ Referência: `C:\Users\p\Documents\OfflineDeviceDiagnostics` (só leitura).
 | `DownloadManager.cs` | 605 | `src/FdrSystem.Core/Firmware/DownloadManager.cs` | motor segmentado + SHA-256, retoma por `.download.meta`, sem WPF |
 | `MainWindow.xaml.cs` (Restauro) | ~200 | `src/FdrSystem.Core/Firmware/RestoreEngine.cs` + `RestauroView.axaml(.cs)` | `idevicerestore --erase --no-input`, progresso por passo, log, cancelar |
 | `MainWindow.xaml.cs` (Reparo) | ~340 | `src/FdrSystem.App/Views/Pages/ReparoView.axaml(.cs)` | modo USB, recovery/restart, ativação e MDM só leitura |
+| `MainWindow.xaml.cs` (Jailbreak) | ~230 | `src/FdrSystem.App/Views/Pages/JailbreakView.axaml(.cs)` | deteta palera1n/checkra1n, comandos, avisos; não executa |
 | `MainWindow.xaml.cs` (Firmware) | ~300 | `src/FdrSystem.App/Views/Pages/FirmwareView.axaml(.cs)` | lista de modelos, cache 12 h e download por linha (motor partilhado) |
 | `MainWindow.xaml.cs` (Online) | ~120 | `src/FdrSystem.App/Views/Pages/OnlineView.axaml(.cs)` + `Core/Firmware/IpswCatalog.cs` | catálogo `api.ipsw.me`, descarga, importação e verificação |
 | `MainWindow.xaml.cs` (leitura, 780–902) | ~120 | `Devices/DeviceService.cs` | troca de `.exe` por ferramentas do PATH |
@@ -39,7 +40,7 @@ No Avalonia usar `WindowState="Maximized"`.
 
 ### Restantes páginas
 `MainWindow.xaml.cs` tem ~2750 linhas. Offline, Diagnóstico, Acessibilidade, Driver e Online já
-estão portados; falta Jailbreak. Portar por blocos, uma página por
+estão portados. Portar por blocos, uma página por
 vez, com o mesmo nome de handler.
 
 ## Diferenças de plataforma a respeitar

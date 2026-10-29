@@ -1,0 +1,198 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FdrSystem.App.Views.Pages.JailbreakView">
+
+  <Grid RowDefinitions="Auto,12,*">
+
+    <Border Grid.Row="0" Classes="card" Padding="12,10">
+      <DockPanel LastChildFill="False">
+        <StackPanel DockPanel.Dock="Left" Spacing="2" VerticalAlignment="Center">
+          <TextBlock Text="Jailbreak" Classes="h1" />
+          <TextBlock Text="Ferramentas externas — detetar, não executar" Classes="label" />
+        </StackPanel>
+        <TextBlock x:Name="HeaderStatusText" DockPanel.Dock="Right" Classes="label"
+                   Text="A procurar ferramentas…" TextWrapping="Wrap" MaxWidth="430"
+                   VerticalAlignment="Center" TextAlignment="Right" />
+      </DockPanel>
+    </Border>
+
+    <ScrollViewer Grid.Row="2" HorizontalScrollBarVisibility="Disabled"
+                  BringIntoViewOnFocusChange="False">
+      <Grid ColumnDefinitions="*,16,380">
+
+        <!-- Coluna esquerda -->
+        <StackPanel Grid.Column="0" Spacing="12">
+
+          <Border Background="{DynamicResource AmberBoxBg}" CornerRadius="12" Padding="14">
+            <Grid ColumnDefinitions="Auto,*">
+              <Path Data="{StaticResource IconUnlock}" Stroke="{DynamicResource AmberText6}"
+                    StrokeThickness="1.6" Width="14" Height="14" Stretch="Uniform"
+                    VerticalAlignment="Top" Margin="0,1,8,0" />
+              <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="{DynamicResource AmberText7}"
+                         FontSize="10.5"
+                         Text="O jailbreak altera o sistema do iPhone e pode impedir atualizações, quebrar apps do banco ou deixar o aparelho sem arrancar. A app NÃO executa nenhuma ferramenta: só mostra o que está instalado e o comando para copiares. Só tu decides e assumes o risco." />
+            </Grid>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="10">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Path Data="{StaticResource IconWrench}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="12" Height="12" Stretch="Uniform" />
+                <TextBlock Text="FERRAMENTAS DETETADAS" Classes="label" FontWeight="Bold"
+                           VerticalAlignment="Center" />
+              </StackPanel>
+
+              <StackPanel Spacing="2">
+                <TextBlock x:Name="Palera1nNameText" Text="palera1n" FontSize="12.5"
+                           FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
+                <TextBlock x:Name="Palera1nText" Text="A verificar…" FontSize="10.5"
+                           Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap" />
+              </StackPanel>
+
+              <Border Height="1" Background="{DynamicResource CardBorder}" />
+
+              <StackPanel Spacing="2">
+                <TextBlock x:Name="Checkra1nNameText" Text="checkra1n" FontSize="12.5"
+                           FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}" />
+                <TextBlock x:Name="Checkra1nText" Text="A verificar…" FontSize="10.5"
+                           Foreground="{DynamicResource TextSecondary}" TextWrapping="Wrap" />
+              </StackPanel>
+
+              <Button x:Name="RefreshToolsButton" Classes="tool" Click="RefreshTools_Click"
+                      HorizontalAlignment="Left">
+                <TextBlock Text="Voltar a procurar" FontSize="10.5" />
+              </Button>
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="10">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Path Data="{StaticResource IconTerminal}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="12" Height="12" Stretch="Uniform" />
+                <TextBlock Text="COMANDOS (NO TEU TERMINAL)" Classes="label" FontWeight="Bold"
+                           VerticalAlignment="Center" />
+              </StackPanel>
+
+              <TextBlock FontSize="10.5" Foreground="{DynamicResource TextFaint}" TextWrapping="Wrap"
+                         Text="Copia o comando e executa-o tu, num terminal. A app nunca corre sudo nem arranca estas ferramentas por ti." />
+
+              <TextBlock Text="palera1n — rootless (iOS 15+)" FontSize="10.5"
+                         Foreground="{DynamicResource TextSecondary}" />
+              <Grid ColumnDefinitions="*,8,Auto">
+                <TextBox x:Name="Palera1nCommandBox" Grid.Column="0" IsReadOnly="True"
+                         Text="sudo palera1n -l" FontSize="11"
+                         FontFamily="Cascadia Mono,DejaVu Sans Mono,Consolas,monospace" />
+                <Button Grid.Column="2" Classes="tool" Click="CopyPalera1n_Click" Padding="10,4"
+                        ToolTip.Tip="Copiar comando">
+                  <TextBlock Text="Copiar" FontSize="10.5" />
+                </Button>
+              </Grid>
+
+              <TextBlock Text="palera1n — rootful (cria fakefs na primeira vez)" FontSize="10.5"
+                         Foreground="{DynamicResource TextSecondary}" />
+              <Grid ColumnDefinitions="*,8,Auto">
+                <TextBox x:Name="Palera1nRootfulBox" Grid.Column="0" IsReadOnly="True"
+                         Text="sudo palera1n -c -f" FontSize="11"
+                         FontFamily="Cascadia Mono,DejaVu Sans Mono,Consolas,monospace" />
+                <Button Grid.Column="2" Classes="tool" Click="CopyPalera1nRootful_Click" Padding="10,4"
+                        ToolTip.Tip="Copiar comando">
+                  <TextBlock Text="Copiar" FontSize="10.5" />
+                </Button>
+              </Grid>
+
+              <TextBlock Text="checkra1n — interface gráfica" FontSize="10.5"
+                         Foreground="{DynamicResource TextSecondary}" />
+              <Grid ColumnDefinitions="*,8,Auto">
+                <TextBox x:Name="Checkra1nCommandBox" Grid.Column="0" IsReadOnly="True"
+                         Text="sudo checkra1n" FontSize="11"
+                         FontFamily="Cascadia Mono,DejaVu Sans Mono,Consolas,monospace" />
+                <Button Grid.Column="2" Classes="tool" Click="CopyCheckra1n_Click" Padding="10,4"
+                        ToolTip.Tip="Copiar comando">
+                  <TextBlock Text="Copiar" FontSize="10.5" />
+                </Button>
+              </Grid>
+
+              <TextBlock x:Name="CopyStatusText" FontSize="10.5" Foreground="{DynamicResource TextFaint}"
+                         TextWrapping="Wrap" Text="A app não corre estes comandos." />
+            </StackPanel>
+          </Border>
+
+          <Border Background="{DynamicResource RedBoxBg}" CornerRadius="12" Padding="14">
+            <StackPanel Spacing="6">
+              <TextBlock Text="O QUE ESTA PÁGINA NÃO FAZ" Foreground="{DynamicResource RedText}"
+                         Classes="label" FontWeight="Bold" />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource RedTextSoft}" FontSize="10.5"
+                         Text="Não executa jailbreak, não corre sudo, não inclui binários de terceiros e não serve para contornar iCloud, Bloqueio de Ativação ou MDM. Um aparelho bloqueado por conta continua bloqueado depois do jailbreak." />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+
+        <!-- Coluna direita -->
+        <StackPanel Grid.Column="2" Spacing="12">
+
+          <Border Background="{DynamicResource BlueBoxBg}" CornerRadius="12" Padding="14">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Path Data="{StaticResource IconPhone}" Stroke="{DynamicResource BlueText}"
+                      StrokeThickness="1.6" Width="13" Height="13" Stretch="Uniform"
+                      VerticalAlignment="Top" />
+                <TextBlock Text="ANTES DE COMEÇAR" Foreground="{DynamicResource BlueText}"
+                           Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
+              </StackPanel>
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource BlueText2}" FontSize="10.5"
+                         Text="1) Faz backup: o jailbreak pode exigir restauro. 2) Confirma no site oficial se o teu modelo e versão de iOS são suportados — não prometemos compatibilidade. 3) Usa cabo USB directo ao PC (sem hubs). 4) Tem o iPhone desbloqueado e confia neste computador. 5) Depois do jailbreak, não atualizes o iOS: perdes o jailbreak." />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="6">
+              <StackPanel Orientation="Horizontal" Spacing="6">
+                <Path Data="{StaticResource IconChip}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="12" Height="12" Stretch="Uniform" />
+                <TextBlock Text="APARELHO LIGADO" Classes="label" FontWeight="Bold"
+                           VerticalAlignment="Center" />
+              </StackPanel>
+              <TextBlock x:Name="DeviceText" Text="A procurar iPhone por USB…" FontSize="12.5"
+                         FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"
+                         TextWrapping="Wrap" />
+              <TextBlock x:Name="DeviceHintText" FontSize="10.5" Foreground="{DynamicResource TextFaint}"
+                         TextWrapping="Wrap"
+                         Text="Só informação: estas ferramentas precisam de aparelhos com a falha checkm8. Confirma no site oficial antes de tentar." />
+              <Button x:Name="RefreshDeviceButton" Classes="tool" Click="RefreshDevice_Click"
+                      HorizontalAlignment="Left">
+                <TextBlock Text="Voltar a procurar" FontSize="10.5" />
+              </Button>
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="16">
+            <StackPanel Spacing="8">
+              <TextBlock Text="LIGAÇÕES OFICIAIS" Classes="label" FontWeight="Bold" />
+              <TextBlock FontSize="10.5" Foreground="{DynamicResource TextFaint}" TextWrapping="Wrap"
+                         Text="As instruções mudam com frequência. Lê sempre na fonte antes de executar." />
+              <Button x:Name="Palera1nSiteButton" Classes="tool" Click="OpenPalera1nSite_Click"
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                <TextBlock Text="palera1n.com" FontSize="10.5" />
+              </Button>
+              <Button x:Name="Checkra1nSiteButton" Classes="tool" Click="OpenCheckra1nSite_Click"
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                <TextBlock Text="checkra.in" FontSize="10.5" />
+              </Button>
+            </StackPanel>
+          </Border>
+
+          <Border Background="{DynamicResource AmberBoxBg}" CornerRadius="12" Padding="14">
+            <StackPanel Spacing="6">
+              <TextBlock Text="COMPATIBILIDADE" Foreground="{DynamicResource AmberText6}"
+                         Classes="label" FontWeight="Bold" />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AmberText7}" FontSize="10.5"
+                         Text="Estas ferramentas dependem da falha checkm8 (chips A5 a A11, aproximadamente iPhone 4s a iPhone X). Modelos com A12 ou mais recentes NÃO são suportados. As versões de iOS suportadas mudam: não há garantia de que o teu aparelho funcione." />
+            </StackPanel>
+          </Border>
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+  </Grid>
+</UserControl>
