@@ -1,9 +1,11 @@
 # Continuar a build no Linux
 
-> **Handoff:** 28/10/2026 · branch `main` · último commit `2bb3955`
+> **Handoff:** 28/10/2026 · branch `main` · confirma o commit com `git log -1 --oneline`
 > Repositório privado: `https://github.com/anymousdark/FDR_SYSTEM-Linux`
 >
-> Este documento é o ponto de partida para retomar o port numa máquina Linux.
+> Este documento é o resumo rápido. O guia completo, com dependências por página,
+> diagnóstico de “só aparece Offline” e plano de implementação, está em
+> [`docs/LINUX-FULL-GUIDE.md`](LINUX-FULL-GUIDE.md).
 > Lê também `README.md`, `AGENTS.md` e `docs/PORTING-MAP.md`.
 
 ---

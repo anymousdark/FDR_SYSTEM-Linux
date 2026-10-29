@@ -1,5 +1,8 @@
 # Mapa do port — WPF → Avalonia/Linux
 
+> Guia de build, dependências e implementação no Linux:
+> [`docs/LINUX-FULL-GUIDE.md`](LINUX-FULL-GUIDE.md).
+
 Referência: `C:\Users\p\Documents\OfflineDeviceDiagnostics` (só leitura).
 
 ## Ficheiros já portados
@@ -32,8 +35,8 @@ No Avalonia usar `WindowState="Maximized"`.
 
 ### Restantes páginas
 `MainWindow.xaml.cs` tem ~2750 linhas. Offline, Diagnóstico, Acessibilidade e Driver já estão
-portados; faltam Online/Firmware/Reparo/Jailbreak. Portar por blocos, uma página por vez, com
-o mesmo nome de handler.
+portados; faltam Online/Firmware/Restauro/Reparo/Jailbreak. Portar por blocos, uma página por
+vez, com o mesmo nome de handler.
 
 ## Diferenças de plataforma a respeitar
 

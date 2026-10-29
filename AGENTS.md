@@ -2,7 +2,8 @@
 
 Port de **FDR_SYSTEM** (WPF/Windows) para **Linux** com **Avalonia 11.3.x**.
 Lê o `README.md` primeiro; este ficheiro é o resumo operacional. Para retomar numa máquina
-Linux, segue `docs/CONTINUE-ON-LINUX.md`.
+Linux, lê `docs/LINUX-FULL-GUIDE.md` (guia completo) e `docs/CONTINUE-ON-LINUX.md`
+(resumo).
 
 ## Regras de ouro
 
@@ -21,6 +22,8 @@ Linux, segue `docs/CONTINUE-ON-LINUX.md`.
 ## Comandos
 
 ```bash
+sudo bash packaging/install-linux-deps.sh                        # Debian/Ubuntu/Kali
+bash packaging/check-linux-env.sh                                # estado do ambiente
 dotnet build src/FdrSystem.App/FdrSystem.App.csproj -c Debug     # ~10 s
 dotnet run   --project src/FdrSystem.App/FdrSystem.App.csproj    # precisa de display (X11/Wayland)
 bash packaging/build-linux.sh                                    # publish + .deb (se houver dpkg-deb)
@@ -43,6 +46,7 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 | Cores/temas | `src/FdrSystem.App/Themes/*.axaml` + `Services/ThemeManager.cs` |
 | Estilos de botões/cartões/nav | `src/FdrSystem.App/Styles/Controls.axaml` |
 | Caminhos XDG | `src/FdrSystem.Core/AppPaths.cs` |
+| Instalar dependências / diagnosticar Linux | `packaging/install-linux-deps.sh`, `packaging/check-linux-env.sh` |
 
 ## Tarefas em aberto (por ordem)
 

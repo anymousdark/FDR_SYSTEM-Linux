@@ -9,9 +9,13 @@ foram testados com um iPhone real no ambiente Windows de desenvolvimento; falta 
 numa instalação Linux. As outras cinco páginas ainda são placeholders. O projeto compila e
 gera um binário `linux-x64` self-contained.
 
-> **A continuar numa máquina Linux?** Segue o guia
-> [`docs/CONTINUE-ON-LINUX.md`](docs/CONTINUE-ON-LINUX.md): instalação, permissões USB,
-> build, testes com iPhone, publicação e próximos passos.
+> **A continuar numa máquina Linux?** Começa pelo guia completo
+> [`docs/LINUX-FULL-GUIDE.md`](docs/LINUX-FULL-GUIDE.md): dependências, build, testes,
+> implementação das páginas e diagnóstico de “só aparece Offline”.
+> Há também um resumo em [`docs/CONTINUE-ON-LINUX.md`](docs/CONTINUE-ON-LINUX.md).
+>
+> Atalhos: `sudo bash packaging/install-linux-deps.sh` e
+> `bash packaging/check-linux-env.sh`.
 
 ---
 
