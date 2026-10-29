@@ -1,0 +1,101 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FdrSystem.App.Views.Pages.FirmwareView">
+
+  <Grid RowDefinitions="Auto,12,*">
+
+    <Border Grid.Row="0" Classes="card" Padding="12,10">
+      <DockPanel LastChildFill="False">
+        <StackPanel DockPanel.Dock="Left" Spacing="2" VerticalAlignment="Center">
+          <TextBlock Text="Firmware" Classes="h1" />
+          <TextBlock Text="Todos os iPhones e todas as versões publicadas" Classes="label" />
+        </StackPanel>
+        <TextBlock x:Name="StatusText" DockPanel.Dock="Right" Classes="label"
+                   Text="A carregar o catálogo…" TextWrapping="Wrap" MaxWidth="430"
+                   VerticalAlignment="Center" TextAlignment="Right" />
+      </DockPanel>
+    </Border>
+
+    <Grid Grid.Row="2" ColumnDefinitions="320,16,*">
+
+      <!-- Lista de modelos -->
+      <Border Grid.Column="0" Classes="card" Padding="14">
+        <Grid RowDefinitions="Auto,Auto,*">
+          <StackPanel Grid.Row="0" Spacing="6">
+            <TextBlock Text="MODELOS" Classes="label" FontWeight="Bold" />
+            <TextBox x:Name="FilterBox" Watermark="Filtrar por nome ou identificador…"
+                     TextChanged="Filter_Changed" />
+            <CheckBox x:Name="OnlyIphonesBox" Content="Só iPhones" IsChecked="True"
+                      FontSize="10.5" Click="OnlyIphones_Click" />
+          </StackPanel>
+
+          <DockPanel Grid.Row="2" Margin="0,10,0,0" LastChildFill="True">
+            <Button x:Name="RefreshCatalogButton" DockPanel.Dock="Bottom" Classes="tool"
+                    Click="RefreshCatalog_Click" Margin="0,8,0,0" HorizontalAlignment="Stretch"
+                    HorizontalContentAlignment="Center">
+              <TextBlock Text="Atualizar catálogo" FontSize="10.5" />
+            </Button>
+            <ListBox x:Name="DevicesList" SelectionChanged="Devices_SelectionChanged"
+                     Background="Transparent" BorderThickness="0"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+              <ListBox.ItemTemplate>
+                <DataTemplate>
+                  <StackPanel Spacing="1">
+                    <TextBlock Text="{Binding Name}" FontSize="11.5" />
+                    <TextBlock Text="{Binding Identifier}" FontSize="9.5"
+                               Foreground="{DynamicResource TextFaint}" />
+                  </StackPanel>
+                </DataTemplate>
+              </ListBox.ItemTemplate>
+            </ListBox>
+          </DockPanel>
+        </Grid>
+      </Border>
+
+      <!-- Firmwares do modelo escolhido -->
+      <Border Grid.Column="2" Classes="card" Padding="14">
+        <Grid RowDefinitions="Auto,Auto,*">
+
+          <StackPanel Grid.Row="0" Spacing="8">
+            <TextBlock x:Name="SelectedModelText" Text="Escolha um modelo à esquerda"
+                       FontSize="13" FontWeight="SemiBold" Foreground="{DynamicResource TextPrimary}"
+                       TextWrapping="Wrap" />
+            <WrapPanel>
+              <Button x:Name="DownloadButton" Classes="primary" Click="Download_Click"
+                      IsEnabled="False" Margin="0,0,8,6">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Path Data="{StaticResource IconDownload}" Stroke="White" StrokeThickness="1.5"
+                        Width="13" Height="13" />
+                  <TextBlock Text="Baixar selecionado" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+              <Button x:Name="ViewDownloadsButton" Classes="tool" Click="ViewDownloads_Click"
+                      Margin="0,0,8,6">
+                <TextBlock Text="Ver downloads" VerticalAlignment="Center" />
+              </Button>
+              <Button x:Name="CopyUrlButton" Classes="tool" Click="CopyUrl_Click"
+                      IsEnabled="False" Margin="0,0,8,6">
+                <TextBlock Text="Copiar URL" VerticalAlignment="Center" />
+              </Button>
+            </WrapPanel>
+            <TextBlock x:Name="HintText" FontSize="10.5" Foreground="{DynamicResource TextFaint}"
+                       TextWrapping="Wrap"
+                       Text="Só firmware «Assinado» serve para restauro. Versões «Expirado» ficam disponíveis apenas para arquivo." />
+          </StackPanel>
+
+          <DataGrid Grid.Row="2" x:Name="FirmwareGrid" Margin="0,10,0,0"
+                    AutoGenerateColumns="False" IsReadOnly="True"
+                    SelectionMode="Single" SelectionChanged="Firmware_SelectionChanged">
+            <DataGrid.Columns>
+              <DataGridTextColumn Header="Versão" Binding="{Binding Version}" Width="90" />
+              <DataGridTextColumn Header="Build" Binding="{Binding Build}" Width="110" />
+              <DataGridTextColumn Header="Data" Binding="{Binding DateText}" Width="100" />
+              <DataGridTextColumn Header="Tamanho" Binding="{Binding SizeText}" Width="100" />
+              <DataGridTextColumn Header="Estado" Binding="{Binding SignedText}" Width="*" />
+            </DataGrid.Columns>
+          </DataGrid>
+        </Grid>
+      </Border>
+    </Grid>
+  </Grid>
+</UserControl>

@@ -17,6 +17,7 @@ Referência: `C:\Users\p\Documents\OfflineDeviceDiagnostics` (só leitura).
 | `MainWindow.Diagnostics.cs` | 468 | `src/FdrSystem.App/Views/Pages/DiagnosticoView.axaml(.cs)` | syslog, crash ZIP, pair e provision |
 | `MainWindow.xaml` (`DriversPanel`) | ~105 | `src/FdrSystem.App/Views/Pages/DriverView.axaml(.cs)` + `src/FdrSystem.Core/Usb/DriverEnvironment.cs` | estado do usbmuxd/udev, dispositivos e comandos; sem pnputil/UsbDk |
 | `DownloadManager.cs` | 605 | `src/FdrSystem.Core/Firmware/DownloadManager.cs` | motor segmentado + SHA-256, retoma por `.download.meta`, sem WPF |
+| `MainWindow.xaml.cs` (Firmware) | ~300 | `src/FdrSystem.App/Views/Pages/FirmwareView.axaml(.cs)` | lista de modelos, cache 12 h e download por linha (motor partilhado) |
 | `MainWindow.xaml.cs` (Online) | ~120 | `src/FdrSystem.App/Views/Pages/OnlineView.axaml(.cs)` + `Core/Firmware/IpswCatalog.cs` | catálogo `api.ipsw.me`, descarga, importação e verificação |
 | `MainWindow.xaml.cs` (leitura, 780–902) | ~120 | `Devices/DeviceService.cs` | troca de `.exe` por ferramentas do PATH |
 | `MainWindow.xaml.cs` (etiquetas 1554–1694) | ~140 | `Devices/DeviceLabels.cs` | `GroupOf`, `LabelOf`, `DiskLabel`, `BatteryQLabel`, `Mask`, `DisplayValue` |
@@ -36,7 +37,7 @@ No Avalonia usar `WindowState="Maximized"`.
 
 ### Restantes páginas
 `MainWindow.xaml.cs` tem ~2750 linhas. Offline, Diagnóstico, Acessibilidade, Driver e Online já
-estão portados; faltam Firmware/Restauro/Reparo/Jailbreak. Portar por blocos, uma página por
+estão portados; faltam Restauro/Reparo/Jailbreak. Portar por blocos, uma página por
 vez, com o mesmo nome de handler.
 
 ## Diferenças de plataforma a respeitar

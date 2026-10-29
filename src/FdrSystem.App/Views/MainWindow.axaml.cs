@@ -5,6 +5,7 @@ using Avalonia.Threading;
 using FdrSystem.App.Services;
 using FdrSystem.App.Views.Pages;
 using FdrSystem.Core;
+using FdrSystem.Core.Firmware;
 using FdrSystem.Core.Tools;
 using FdrSystem.Core.Usb;
 
@@ -14,8 +15,14 @@ public partial class MainWindow : Window
 {
     private readonly ToolRunner _tools = new();
     private readonly DispatcherTimer _usbTimer;
+    private readonly DownloadManager _downloads = new(AppPaths.FirmwareFolder)
+    {
+        Log = (channel, message, level) => AppLog.Write(level, message, channel),
+    };
+
     private OfflineView? _offline;
     private OnlineView? _online;
+    private FirmwareView? _firmware;
     private DiagnosticoView? _diagnostico;
     private AcessibilidadeView? _acessibilidade;
     private DriverView? _driver;
@@ -23,6 +30,9 @@ public partial class MainWindow : Window
 
     /// <summary>IPSW escolhido na página Online e entregue à página Restauro.</summary>
     public string? PendingRestoreFile { get; private set; }
+
+    /// <summary>Motor de downloads partilhado por Online, Firmware e Restauro.</summary>
+    public DownloadManager Downloads => _downloads;
 
     public MainWindow()
     {
@@ -50,6 +60,7 @@ public partial class MainWindow : Window
             _usbTimer.Stop();
             _diagnostico?.Shutdown();
             _acessibilidade?.Shutdown();
+            _downloads.Dispose();
         };
 
         PollUsb();
@@ -80,7 +91,8 @@ public partial class MainWindow : Window
         PageHost.Content = tag switch
         {
             "offline" => _offline ??= new OfflineView(this, _tools),
-            "online" => _online ??= new OnlineView(this, _tools),
+            "online" => _online ??= new OnlineView(this, _tools, _downloads),
+            "firmware" => _firmware ??= new FirmwareView(this, _downloads),
             "diagnostico" => _diagnostico ??= new DiagnosticoView(this, _tools),
             "acessibilidade" => _acessibilidade ??= new AcessibilidadeView(this, _tools),
             "driver" => _driver ??= new DriverView(this, _tools),

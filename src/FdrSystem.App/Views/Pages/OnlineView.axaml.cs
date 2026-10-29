@@ -37,20 +37,16 @@ public partial class OnlineView : UserControl
     private sealed record RowUi(TextBlock Status, ProgressBar Bar, Button Pause);
 
     // Construtor público sem dependências para o carregador XAML/designer.
-    public OnlineView() : this(null!, new ToolRunner())
+    public OnlineView() : this(null!, new ToolRunner(), new DownloadManager(AppPaths.FirmwareFolder))
     {
     }
 
-    public OnlineView(MainWindow owner, ToolRunner tools)
+    public OnlineView(MainWindow owner, ToolRunner tools, DownloadManager downloads)
     {
         InitializeComponent();
         _owner = owner;
         _tools = tools;
-
-        _downloads = new DownloadManager(AppPaths.FirmwareFolder)
-        {
-            Log = (channel, message, level) => AppLog.Write(level, message, channel),
-        };
+        _downloads = downloads;
 
         _timer = new DispatcherTimer { Interval = TimeSpan.FromMilliseconds(650) };
         _timer.Tick += (_, _) => RenderDownloads();
@@ -62,11 +58,8 @@ public partial class OnlineView : UserControl
         RenderDownloads();
         UpdateDetection();
 
-        DetachedFromVisualTree += (_, _) =>
-        {
-            _timer.Stop();
-            _downloads.Dispose();
-        };
+        // O DownloadManager é partilhado (MainWindow) e só é libertado no fim da app.
+        DetachedFromVisualTree += (_, _) => _timer.Stop();
 
         AppLog.Info("página Online aberta (api.ipsw.me)", "Online");
     }

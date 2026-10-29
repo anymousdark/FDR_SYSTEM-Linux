@@ -31,7 +31,6 @@ Estas cinco ainda são placeholders **de propósito**:
 
 - **Restauro**
 - **Reparo**
-- **Firmware**
 - **Jailbreak**
 
 Se vires o cartão “Falta: …” nessas cinco, está correto. O que não pode acontecer é
@@ -147,7 +146,7 @@ página implementada, o código é antigo.
 | Online | funcional | `OnlineView.axaml(.cs)` + `Core/Firmware/` | `api.ipsw.me`; `idevicerestore` só na página Restauro |
 | Restauro | **placeholder** | `PlaceholderView.cs` | `idevicerestore`; depende de Online |
 | Reparo | **placeholder** | `PlaceholderView.cs` | `ideviceenterrecovery`, `idevicediagnostics`, `irecovery` |
-| Firmware | **placeholder** | `PlaceholderView.cs` | catálogo `api.ipsw.me`, lista partilhada com Online |
+| Firmware | funcional | `FirmwareView.axaml(.cs)` | catálogo `api.ipsw.me` + cache local; download partilhado com Online |
 | Jailbreak | **placeholder** | `PlaceholderView.cs` | `palera1n`/`checkra1n` externos; sem binários incluídos |
 
 O encaminhamento está em:
@@ -204,7 +203,7 @@ Com um iPhone 13 real, no Windows de desenvolvimento:
 | Acessibilidade | `libimobiledevice-1.0.so`, `idevice_id`, `ideviceinfo`, `idevicescreenshot` |
 | Driver | `usbmuxd`, regras udev, `systemctl`, `id` |
 | Online | rede + `api.ipsw.me`; `DownloadManager` (a implementar) |
-| Firmware | rede + `api.ipsw.me`; catálogo (a implementar) |
+| Firmware | rede + `api.ipsw.me` (cache em `~/.local/share/FDR_SYSTEM/cache`) |
 | Restauro | `idevicerestore` (opcional no sistema; necessário para restaurar) |
 | Reparo | `ideviceenterrecovery`, `idevicediagnostics`, `irecovery` |
 | Jailbreak | `palera1n` ou `checkra1n` instalados pelo utilizador; não vêm no FDR |

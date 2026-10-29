@@ -67,7 +67,7 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Página **Online** | ✅ implementada (catálogo `api.ipsw.me`, download segmentado com retoma, SHA-256) |
 | Restauro | ⬜ placeholder |
 | Reparo | ⬜ placeholder |
-| Firmware | ⬜ placeholder |
+| Página **Firmware** | ✅ implementada (catálogo completo, filtro, cache 12 h, download por linha) |
 | Jailbreak | ⬜ placeholder |
 | Empacotamento `.deb` | 🟡 básico |
 | AppImage | ⬜ por fazer |
@@ -311,7 +311,8 @@ Ordem sugerida para completar o port:
       `DriverEnvironment`; a UI mostra comandos sem executar `sudo`.
 - [x] **Online** — catálogo `api.ipsw.me`, `DownloadManager` segmentado com retoma e SHA-256,
       importação de IPSW e verificação. `idevicerestore` fica na página Restauro.
-- [ ] **Firmware / Restauro** — lista completa de firmwares e
+- [x] **Firmware** — catálogo completo com filtro e cache, DataGrid por modelo e download partilhado.
+- [ ] **Restauro** —
       `idevicerestore` com progresso por `stdout`.
 - [ ] **Reparo** — recovery/restart/ativação; MDM apenas deteção.
 - [ ] **Jailbreak** — detetar `palera1n`/`checkra1n` e abrir a ferramenta do sistema,
