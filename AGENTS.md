@@ -8,7 +8,7 @@ Linux, lê `docs/LINUX-FULL-GUIDE.md` (guia completo) e `docs/CONTINUE-ON-LINUX.
 ## Regras de ouro
 
 1. **Não mexer** em `C:\Users\p\Documents\OfflineDeviceDiagnostics` (ou `~/OfflineDeviceDiagnostics`).
-   Essa é a app Windows, em produção, com 1.5.9 publicada. Serve **só** como referência de leitura.
+   Essa é a app Windows, em produção, com 1.6.0 publicada. Serve **só** como referência de leitura.
 2. **Não subir versões** de Avalonia/DataGrid sem testar: DataGrid tem de ficar em `11.3.13`
    (não existe 11.3.22). .NET fica em `net8.0` (não usar `System.Threading.Lock`).
 3. **Ficheiros XAML têm de ser `.axaml`**, senão não compilam e o erro engana (`AVLN2000`).
@@ -82,7 +82,11 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
       vêm do CPID/BDID (`IrecoveryDevices` + `DeviceSpecs`); bateria/iOS/armazenamento dizem
       "indisponível em Recovery" em vez de "—".
 - [x] **Empacotamento `.deb` + CI** — `packaging/build-linux.sh` (amd64/arm64) e
-      `.github/workflows/linux.yml`. Falta AppImage.
+      `.github/workflows/linux.yml` (build + publish + artefactos).
+- [x] **AppImage + ícone + release** — `packaging/build-appimage.sh` (host x86_64/aarch64),
+      ícones 16–512 instalados no `.deb`/`.desktop` e `.github/workflows/release.yml`
+      (tag `v*` ou manual) para anexar `.deb` e AppImage à release.
+- [ ] **Testes automáticos** — parsers (progresso, IPSW/modelo, MDM, CPID/BDID) e motores.
 - [ ] **Teste no hardware** — correr no Linux com iPhone real e registar o que falha.
 
 ## Armadilhas que já custaram tempo

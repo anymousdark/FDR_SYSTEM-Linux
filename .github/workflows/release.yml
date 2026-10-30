@@ -1,0 +1,102 @@
+name: Release
+
+on:
+  push:
+    tags: ["v*"]
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Tag da release (ex.: v1.6.0)"
+        required: true
+        type: string
+
+permissions:
+  contents: write
+
+jobs:
+  deb:
+    name: .deb ${{ matrix.rid }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    strategy:
+      fail-fast: false
+      matrix:
+        rid: [linux-x64, linux-arm64]
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install dpkg-deb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev
+
+      - name: Build self-contained and package
+        run: RID=${{ matrix.rid }} bash packaging/build-linux.sh
+
+      - name: Upload .deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: deb-${{ matrix.rid }}
+          path: publish/*.deb
+          if-no-files-found: error
+
+  appimage:
+    name: AppImage x86_64
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Install dpkg-deb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev
+
+      - name: Build AppImage
+        run: bash packaging/build-appimage.sh
+
+      - name: Upload AppImage
+        uses: actions/upload-artifact@v4
+        with:
+          name: appimage-x86_64
+          path: publish/*.AppImage
+          if-no-files-found: error
+
+  release:
+    name: Publish release assets
+    needs: [deb, appimage]
+    runs-on: ubuntu-24.04
+    steps:
+      - name: Download artifacts
+        uses: actions/download-artifact@v4
+        with:
+          path: dist
+          merge-multiple: true
+
+      - name: List assets
+        run: ls -lh dist
+
+      - name: Create or update release
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          if gh release view "$TAG" >/dev/null 2>&1; then
+            echo "Release $TAG já existe; a atualizar assets."
+          else
+            gh release create "$TAG" --title "FDR_SYSTEM Linux ${TAG#v}" --generate-notes
+          fi
+          gh release upload "$TAG" dist/* --clobber

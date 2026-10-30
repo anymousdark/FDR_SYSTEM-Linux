@@ -97,7 +97,7 @@ Reinstala depois de construir:
 
 ```bash
 bash packaging/build-linux.sh
-sudo apt install --reinstall ./publish/fdr-system_1.5.9_amd64.deb
+sudo apt install --reinstall ./publish/fdr-system_1.6.0_amd64.deb
 ```
 
 Ou, para testar sem instalar:
@@ -205,12 +205,12 @@ Com um iPhone 13 real, no Windows de desenvolvimento:
 | Diagnóstico | `idevicesyslog`, `idevicecrashreport`, `idevicepair`, `ideviceprovision` |
 | Acessibilidade | `libimobiledevice-1.0.so`, `idevice_id`, `ideviceinfo`, `idevicescreenshot` |
 | Driver | `usbmuxd`, regras udev, `systemctl`, `id` |
-| Online | rede + `api.ipsw.me`; `DownloadManager` (a implementar) |
+| Online | rede + `api.ipsw.me`; `DownloadManager` (retoma + SHA-256) |
 | Firmware | rede + `api.ipsw.me` (cache em `~/.local/share/FDR_SYSTEM/cache`) |
 | Restauro | `idevicerestore` (opcional no sistema; necessário para restaurar) |
 | Reparo | `ideviceenterrecovery`, `idevicediagnostics`, `irecovery` |
 | Jailbreak | `palera1n` ou `checkra1n` instalados pelo utilizador; não vêm no FDR |
-| Empacotamento | `dpkg-deb`, `fakeroot`; AppImage opcional |
+| Empacotamento | `dpkg-deb`; AppImage precisa de `appimagetool` (descarregado pelo script) |
 
 ### 2.4 O que **não** é necessário
 
@@ -424,6 +424,17 @@ Para ARM64:
 RID=linux-arm64 bash packaging/build-linux.sh
 ```
 
+AppImage:
+
+```bash
+bash packaging/build-appimage.sh
+# → publish/FDR_SYSTEM-<versao>-x86_64.AppImage
+```
+
+A AppImage tem de ser gerada no host da mesma arquitectura (`RID=linux-arm64` só num
+host `aarch64`); o script recusa cross-build com uma mensagem clara. O `.deb` pode ser
+cross-compilado.
+
 O script deriva a `Architecture` do `.deb` a partir do RID: `linux-x64` → `amd64` e
 `linux-arm64` → `arm64`. Qualquer outro RID aborta com erro, em vez de gerar um pacote
 com a arquitectura errada.
@@ -433,10 +444,10 @@ com a arquitectura errada.
 
 ```bash
 # x64
-sudo apt install ./publish/fdr-system_1.5.9_amd64.deb
+sudo apt install ./publish/fdr-system_1.6.0_amd64.deb
 
 # ARM64
-sudo apt install ./publish/fdr-system_1.5.9_arm64.deb
+sudo apt install ./publish/fdr-system_1.6.0_arm64.deb
 
 fdr-system
 ```
@@ -444,7 +455,7 @@ fdr-system
 Se já tinhas a mesma versão instalada e queres substituir:
 
 ```bash
-sudo apt install --reinstall ./publish/fdr-system_1.5.9_amd64.deb
+sudo apt install --reinstall ./publish/fdr-system_1.6.0_amd64.deb
 ```
 
 Confirma que estás a abrir o binário novo:
@@ -620,7 +631,8 @@ Ordem recomendada:
 3. **Restauro** — `idevicerestore` e progresso.
 4. **Reparo** — recovery/restart/estado; sem contornar bloqueios.
 5. ~~**Jailbreak**~~ — feito em `JailbreakView` (deteta e mostra comandos; nunca executa).
-6. ~~**Empacotamento `.deb`**~~ — feito em `packaging/build-linux.sh` + CI; falta AppImage.
+6. ~~**Empacotamento `.deb` + AppImage**~~ — feito em `packaging/build-linux.sh`,
+   `packaging/build-appimage.sh` e nos workflows de CI/release.
 
 Cada página deve:
 
@@ -829,8 +841,8 @@ contorna iCloud/Activation Lock/MDM.
 
 ### 6.6 Empacotamento e CI
 
-**Estado:** `.deb` funcional para `amd64` e `arm64`; CI Linux activa em
-`.github/workflows/linux.yml`.
+**Estado:** `.deb` funcional para `amd64` e `arm64`, AppImage para `x86_64`/`aarch64`
+(gerada no host), CI Linux activa e release automática por tag.
 
 - `packaging/build-linux.sh` publica self-contained (`publish/<RID>`) e gera
   `publish/fdr-system_<versao>_<arch>.deb`;
@@ -839,11 +851,15 @@ contorna iCloud/Activation Lock/MDM.
 - instala em `/opt/fdr-system`, cria `/usr/bin/fdr-system` e o `.desktop`;
 - `Depends: libimobiledevice-utils, usbmuxd` e
   `Recommends: libimobiledevice-1.0-6 | libimobiledevice-1.0-6t64` (Ubuntu 24.04 usa `t64`);
-- a CI corre `dotnet build` e `build-linux.sh` para os dois RIDs e publica os `.deb`
-  como artefactos;
+- `packaging/build-appimage.sh` cria `publish/FDR_SYSTEM-<versao>-<arch>.AppImage`
+  (AppDir + `AppRun` + `.desktop` + `.DirIcon`), sem precisar de FUSE no build;
+- o ícone (`Assets/fdr-system.svg` + PNG 16–512) entra na janela (`_NET_WM_ICON` via
+  `WindowIcon`) e é instalado em `/usr/share/icons/hicolor/*/apps/fdr-system.png`;
+- a CI (`.github/workflows/linux.yml`) corre `build-linux.sh` para os dois RIDs e publica
+  os `.deb` como artefactos;
+- a release (`.github/workflows/release.yml`) corre em tags `v*` ou manualmente, compila
+  `.deb` x64/arm64 + AppImage x64 e anexa tudo à release com `gh release upload --clobber`;
 - não colocar tokens ou chaves no repositório; não publicar o repositório.
-
-Falta o AppImage (`linuxdeploy` + `appimagetool`) e o ícone PNG/SVG no `.desktop`.
 
 ---
 
@@ -923,7 +939,7 @@ Se as rotas existem mas a app instalada é antiga:
 
 ```bash
 bash packaging/build-linux.sh
-sudo apt install --reinstall ./publish/fdr-system_1.5.9_amd64.deb
+sudo apt install --reinstall ./publish/fdr-system_1.6.0_amd64.deb
 ```
 
 Se estás a abrir `fdr-system` e o `readlink` aponta para outro sítio, remove ou
@@ -1029,7 +1045,7 @@ permitir tentar novamente.
 ### O `.deb` não substitui a versão antiga
 
 ```bash
-sudo apt install --reinstall ./publish/fdr-system_1.5.9_amd64.deb
+sudo apt install --reinstall ./publish/fdr-system_1.6.0_amd64.deb
 ```
 
 Confirma depois:
@@ -1100,7 +1116,7 @@ dotnet run --project src/FdrSystem.App/FdrSystem.App.csproj
 bash packaging/build-linux.sh
 
 # 7. Instalar/substituir .deb
-sudo apt install --reinstall ./publish/fdr-system_1.5.9_amd64.deb
+sudo apt install --reinstall ./publish/fdr-system_1.6.0_amd64.deb
 
 # 8. Estado USB
 systemctl status usbmuxd --no-pager

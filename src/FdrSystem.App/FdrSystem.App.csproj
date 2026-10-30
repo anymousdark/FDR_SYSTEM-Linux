@@ -26,4 +26,9 @@
     <ProjectReference Include="..\FdrSystem.Core\FdrSystem.Core.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Ícone da janela e do pacote (.deb/AppImage). -->
+    <AvaloniaResource Include="Assets\**" />
+  </ItemGroup>
+
 </Project>

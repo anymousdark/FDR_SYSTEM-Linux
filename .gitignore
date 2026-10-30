@@ -22,3 +22,6 @@ tools/dev/FakeDevice/obj/
 # Packages
 *.deb
 *.AppImage
+
+# AppImage extraída (--appimage-extract)
+squashfs-root/

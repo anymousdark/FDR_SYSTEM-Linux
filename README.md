@@ -74,8 +74,10 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Página **Firmware** | ✅ implementada (catálogo completo, filtro, cache 12 h, download por linha) |
 | Página **Jailbreak** | ✅ implementada (deteta `palera1n`/`checkra1n`, mostra caminho/versão, comandos e avisos; não executa nem corre `sudo`) |
 | Empacotamento `.deb` | ✅ amd64 e arm64 (`Architecture` derivada do RID) |
-| AppImage | ⬜ por fazer |
-| Teste com iPhone real em Linux | ⬜ por fazer |
+| AppImage | ✅ x86_64 e aarch64 (gerada no host da mesma arquitectura) |
+| Ícone e `.desktop` | ✅ SVG + PNG 16–512, `Icon=fdr-system`, `StartupWMClass` |
+| Releases | ✅ `.github/workflows/release.yml` anexa `.deb` e AppImage à tag `v*` |
+| Teste com iPhone real em Linux | 🟡 Offline validado com iPhone 12 (iOS 27.2); falta Restauro/Reparo/AFC/Diagnóstico |
 
 O código dos placeholders está em
 `src/FdrSystem.App/Views/Pages/PlaceholderView.cs`. Cada página nova entra no `switch`
@@ -204,7 +206,19 @@ O script gera ainda um `.deb` se `dpkg-deb` estiver instalado. A `Architecture` 
 segue o RID (`linux-x64` → `amd64`, `linux-arm64` → `arm64`).
 
 A CI em `.github/workflows/linux.yml` compila as duas arquitecturas e publica os `.deb`
-como artefactos em cada push para `main`.
+como artefactos em cada push para `main`. O workflow `.github/workflows/release.yml`
+corre em tags `v*` (ou manualmente) e anexa os `.deb` e a AppImage à release.
+
+### AppImage
+
+```bash
+bash packaging/build-appimage.sh
+# → publish/FDR_SYSTEM-1.6.0-x86_64.AppImage
+```
+
+A AppImage é self-contained (não precisa de .NET nem de dependências instaladas) e só
+pode ser gerada **no host da mesma arquitectura**: `RID=linux-arm64` exige um host
+`aarch64`. O `.deb` continua a poder ser cross-compilado.
 
 ### Pacote `.deb`
 
@@ -214,18 +228,22 @@ O script instala em `/opt/fdr-system`, cria o symlink `/usr/bin/fdr-system` e o 
 
 ```bash
 # x64
-sudo apt install ./publish/fdr-system_1.5.9_amd64.deb
+sudo apt install ./publish/fdr-system_1.6.0_amd64.deb
 
 # ARM64
-sudo apt install ./publish/fdr-system_1.5.9_arm64.deb
+sudo apt install ./publish/fdr-system_1.6.0_arm64.deb
+
+# ou AppImage (sem instalar)
+chmod +x FDR_SYSTEM-1.6.0-x86_64.AppImage
+./FDR_SYSTEM-1.6.0-x86_64.AppImage
 ```
 
 ### Ainda por fazer
 
-- AppImage com `linuxdeploy` + `appimagetool`;
-- ícone PNG/SVG no `.desktop`;
 - atualizações via `.deb`/`apt` ou `AppImageUpdate`;
-- teste de instalação numa máquina Linux limpa.
+- teste de instalação numa máquina Linux limpa (dependências, polkit, udev);
+- validação em hardware real das operações destrutivas (Restauro/Reparo) e de AFC/Diagnóstico;
+- testes automáticos dos parsers (progresso, IPSW/modelo, MDM, CPID/BDID).
 
 ---
 
@@ -336,9 +354,11 @@ Ordem sugerida para completar o port:
       por `pkexec`; nunca corre `sudo` nem guarda credenciais.
 - [x] **Empacotamento `.deb` + CI** — `packaging/build-linux.sh` (amd64/arm64) e
       `.github/workflows/linux.yml` (build + publish + artefactos).
-- [ ] **AppImage** — `linuxdeploy` + `appimagetool`, e ícone no `.desktop`.
-- [ ] **Teste real** — correr numa instalação Linux limpa com iPhone físico.
-- [ ] **CI** — build e testes automáticos num runner Linux.
+- [x] **AppImage + ícone + release** — `packaging/build-appimage.sh`, ícones 16–512 no
+      `.deb`/`.desktop` e `.github/workflows/release.yml` para anexar assets à tag.
+- [ ] **Teste real** — correr numa instalação Linux limpa com iPhone físico
+      (Offline já validado com iPhone 12).
+- [ ] **Testes automáticos** — projeto de testes para parsers e motores.
 
 Definição de pronto por página: compila, aparece na navegação, tem os botões do original,
 escreve logs por `AppLog`, mascara IDs e mostra uma mensagem clara quando falta uma

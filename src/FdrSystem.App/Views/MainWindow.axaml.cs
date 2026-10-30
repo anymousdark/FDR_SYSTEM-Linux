@@ -42,6 +42,14 @@ public partial class MainWindow : Window
     {
         InitializeComponent();
 
+        // O ícone é embutido como AvaloniaResource; carregá-lo aqui garante que
+        // o X11 recebe _NET_WM_ICON (o XAML não converte o URI para WindowIcon).
+        using (var iconStream = Avalonia.Platform.AssetLoader.Open(
+                   new Uri("avares://FDR_SYSTEM/Assets/fdr-system-256.png")))
+        {
+            Icon = new WindowIcon(iconStream);
+        }
+
         VersionText.Text = "v" + (typeof(MainWindow).Assembly.GetName().Version?.ToString(3) ?? "—");
 
         var themeIndex = Array.IndexOf(["Dark", "Light", "Midnight", "Forest", "Amethyst"], AppSettings.Current.Theme);

@@ -18,9 +18,12 @@
 | Diagnóstico | implementado; testado com iPhone real no Windows |
 | Acessibilidade (AFC) | implementado; testado com iPhone real no Windows |
 | Driver | implementado; testado no Windows; falta validar no Linux |
-| Online, Firmware, Restauro, Reparo e Jailbreak | ainda placeholders |
-| Publicação `linux-x64` self-contained | funcional |
-| `.deb` básico | funcional; AppImage ainda falta |
+| Online, Firmware, Restauro, Reparo e Jailbreak | implementados |
+| Instalação (`pkexec`) | implementada |
+| Publicação `linux-x64`/`linux-arm64` self-contained | funcional |
+| `.deb` amd64/arm64 | funcional |
+| AppImage x86_64/aarch64 + ícone | funcional (no host da mesma arquitectura) |
+| Release automática (`.github/workflows/release.yml`) | funcional |
 
 Testes já feitos no Windows de desenvolvimento, com um iPhone 13 real:
 
@@ -29,7 +32,8 @@ Testes já feitos no Windows de desenvolvimento, com um iPhone 13 real:
 - Diagnóstico: `idevicepair validate`, `ideviceprovision list` e syslog a iniciar/parar;
 - Driver: deteção do iPhone, atualização do estado e cópia dos comandos.
 
-**O que falta mesmo é validar tudo numa instalação Linux real.**
+**O que falta mesmo é validar as operações destrutivas e de hardware numa instalação Linux
+real** (Offline já foi validado com um iPhone 12, iOS 27.2).
 
 ---
 
@@ -214,7 +218,7 @@ bash packaging/build-linux.sh
 O script gera o publish e, se `dpkg-deb` estiver instalado, um `.deb` simples.
 
 ```bash
-sudo apt install ./publish/fdr-system_1.5.9_amd64.deb
+sudo apt install ./publish/fdr-system_1.6.0_amd64.deb
 fdr-system
 ```
 
@@ -230,7 +234,7 @@ Ordem recomendada:
    SHA-256) e executar `idevicerestore` com progresso por `stdout`.
 2. **Reparo** — recovery/restart/ativação; MDM apenas deteção.
 3. **Jailbreak** — detetar `palera1n`/`checkra1n` instalados e abrir a ferramenta do sistema.
-4. **Empacotamento** — AppImage e `.deb` mais completo.
+4. ~~**Empacotamento**~~ — `.deb` amd64/arm64, AppImage e release automática feitos.
 5. **CI** — build e testes num runner Linux.
 
 Para cada página:

@@ -58,6 +58,12 @@ PKGROOT="$ROOT/publish/deb-root"
 rm -rf "$PKGROOT"
 mkdir -p "$PKGROOT/DEBIAN" "$PKGROOT/opt/fdr-system" "$PKGROOT/usr/bin" "$PKGROOT/usr/share/applications"
 
+ICONS="$ROOT/src/FdrSystem.App/Assets"
+if [ ! -f "$ICONS/fdr-system-256.png" ]; then
+  echo "ERRO: ícone não encontrado em $ICONS." >&2
+  exit 1
+fi
+
 cp -r "$OUT/." "$PKGROOT/opt/fdr-system/"
 ln -sf /opt/fdr-system/FDR_SYSTEM "$PKGROOT/usr/bin/fdr-system"
 
@@ -81,9 +87,31 @@ Type=Application
 Name=FDR_SYSTEM
 Comment=Diagnostico e recuperacao de iPhones
 Exec=/opt/fdr-system/FDR_SYSTEM
+Icon=fdr-system
 Terminal=false
+StartupWMClass=FDR_SYSTEM
 Categories=Utility;
+Keywords=iphone;ipsw;firmware;restore;diagnostico;usb;
 EOF
+chmod 644 "$PKGROOT/usr/share/applications/fdr-system.desktop"
+
+for size in 16 24 32 48 64 128 256 512; do
+  install -Dm644 "$ICONS/fdr-system-${size}.png" \
+    "$PKGROOT/usr/share/icons/hicolor/${size}x${size}/apps/fdr-system.png"
+done
+
+cat > "$PKGROOT/DEBIAN/postinst" <<'EOF'
+#!/bin/sh
+set -e
+if command -v update-desktop-database >/dev/null 2>&1; then
+  update-desktop-database -q /usr/share/applications || true
+fi
+if command -v gtk-update-icon-cache >/dev/null 2>&1; then
+  gtk-update-icon-cache -q -t /usr/share/icons/hicolor || true
+fi
+exit 0
+EOF
+chmod 755 "$PKGROOT/DEBIAN/postinst"
 
 DEB="$ROOT/publish/fdr-system_${VERSION}_${DEB_ARCH}.deb"
 dpkg-deb --build --root-owner-group "$PKGROOT" "$DEB" >/dev/null
