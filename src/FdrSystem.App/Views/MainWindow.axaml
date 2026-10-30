@@ -42,7 +42,7 @@
         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center" Spacing="10">
           <Path Data="{StaticResource IconPhone}" Stroke="{DynamicResource BrandIconFg}" StrokeThickness="1.6" Width="20" Height="20" Stretch="Uniform" />
           <TextBlock Text="FDR_SYSTEM" Foreground="{DynamicResource HeaderTitleStrong}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
-          <TextBlock Text="v1.5.9" Foreground="{DynamicResource HeaderVersionFg}" FontSize="11" VerticalAlignment="Center" />
+          <TextBlock x:Name="VersionText" Text="v—" Foreground="{DynamicResource HeaderVersionFg}" FontSize="11" VerticalAlignment="Center" />
           <TextBlock Text="·  por anymousdark" Foreground="{DynamicResource HeaderAuthorFg}" FontSize="10.5" VerticalAlignment="Center" />
         </StackPanel>
 
@@ -141,6 +141,16 @@
                 <StackPanel>
                   <TextBlock Text="Driver" FontWeight="SemiBold" FontSize="13" />
                   <TextBlock Text="Acesso USB no Linux" FontSize="10.5" Opacity="0.75" />
+                </StackPanel>
+              </StackPanel>
+            </RadioButton>
+
+            <RadioButton x:Name="NavInstalacao" Classes="nav" GroupName="pages" Tag="instalacao" Click="Nav_Click">
+              <StackPanel Orientation="Horizontal" Spacing="10">
+                <Path Data="{StaticResource IconDownload}" Classes="icon" VerticalAlignment="Center" Stretch="Uniform" />
+                <StackPanel>
+                  <TextBlock Text="Instalação" FontWeight="SemiBold" FontSize="13" />
+                  <TextBlock Text="Dependências Linux" FontSize="10.5" Opacity="0.75" />
                 </StackPanel>
               </StackPanel>
             </RadioButton>

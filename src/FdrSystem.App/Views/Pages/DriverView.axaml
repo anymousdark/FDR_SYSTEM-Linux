@@ -137,6 +137,15 @@
 
               <TextBlock x:Name="ToolsHintText" Classes="label" TextWrapping="Wrap"
                          Text="A verificar as ferramentas…" />
+
+              <Button x:Name="ToolsInstallButton" Classes="tool" Click="ToolsInstall_Click"
+                      IsVisible="False" HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <Path Data="{StaticResource IconDownload}" Stroke="{DynamicResource TextSecondary}"
+                        StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
+                  <TextBlock Text="Abrir Instalação" VerticalAlignment="Center" FontSize="10.5" />
+                </StackPanel>
+              </Button>
             </StackPanel>
           </Border>
 

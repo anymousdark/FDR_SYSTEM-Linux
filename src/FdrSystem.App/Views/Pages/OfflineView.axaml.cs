@@ -64,7 +64,9 @@ public partial class OfflineView : UserControl
             RefreshGrid();
             _owner.SetStatus(snapshot.Paired
                 ? $"iPhone lido — {snapshot.Model} · iOS {FindValue("ProductVersion") ?? "—"}"
-                : "iPhone ligado sem emparelhamento — dados do USB apenas. Desbloqueie e aceite 'Confiar neste computador'.");
+                : snapshot.Mode is "Recovery" or "DFU"
+                    ? $"iPhone em {snapshot.Mode} — {snapshot.Model} · dados lidos diretamente do USB."
+                    : "iPhone ligado sem emparelhamento — dados do USB apenas. Desbloqueie e aceite 'Confiar neste computador'.");
         }
         catch (Exception ex) when (ex is InvalidOperationException or TimeoutException)
         {
@@ -85,7 +87,9 @@ public partial class OfflineView : UserControl
 
     private void FillCards(DeviceSnapshot snapshot)
     {
-        var productType = FindValue("ProductType");
+        // Em recovery/DFU não há ProductType do lockdown: o modelo vem do CPID/BDID
+        // cruzado com a tabela IrecoveryDevices (ver DeviceService).
+        var productType = FindValue("ProductType") ?? snapshot.ProductType;
         var spec = DeviceSpecs.Get(productType);
 
         ModelName.Text = snapshot.Model;
@@ -97,6 +101,14 @@ public partial class OfflineView : UserControl
         ModelIos.Text = FindValue("ProductVersion") is { Length: > 0 } version
             ? version + (FindValue("BuildVersion") is { Length: > 0 } build ? $" ({build})" : "")
             : "—";
+
+        if (!snapshot.Paired)
+        {
+            FillUnpairedCards(snapshot);
+            return;
+        }
+
+        IosHint.IsVisible = false;
 
         var battery = snapshot.Battery;
         if (battery?.Level is { } level)
@@ -120,6 +132,32 @@ public partial class OfflineView : UserControl
         BatteryCycles.Text = snapshot.Cycles is { Length: > 0 } cycles ? $"Ciclos: {cycles}" : "Ciclos —";
 
         FillStorage(snapshot);
+    }
+
+    /// <summary>
+    /// Aparelho sem emparelhamento (recovery/DFU ou ecrã bloqueado): o USB não
+    /// expõe iOS, bateria nem armazenamento. Dizemo-lo em vez de deixar «—».
+    /// </summary>
+    private void FillUnpairedCards(DeviceSnapshot snapshot)
+    {
+        var mode = snapshot.Mode ?? "USB";
+        var recovery = mode is "Recovery" or "DFU";
+
+        IosHint.IsVisible = true;
+        IosHint.Text = recovery
+            ? $"Em {mode} o iOS, a bateria e o armazenamento não passam pelo USB. O modelo e a ficha vêm do CPID/BDID."
+            : "Sem emparelhamento: desbloqueia o iPhone e aceita «Confiar neste computador» para ler o iOS completo.";
+
+        BatteryLevel.Text = "—";
+        BatteryBar.Value = 0;
+        BatteryHealth.Text = recovery ? $"Indisponível em {mode}" : "Indisponível sem emparelhamento";
+        BatteryCharging.Text = recovery
+            ? "A bateria só é lida com o iPhone ligado em modo normal e desbloqueado."
+            : "Desbloqueia e confia neste computador para ler a bateria.";
+        BatteryCycles.Text = "Ciclos indisponíveis";
+
+        StorageText.Text = recovery ? $"Indisponível em {mode}" : "Indisponível sem emparelhamento";
+        StorageBar.Value = 0;
     }
 
     private void FillStorage(DeviceSnapshot snapshot)

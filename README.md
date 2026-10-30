@@ -1,13 +1,16 @@
 # FDR_SYSTEM — Linux (Avalonia)
 
-> Port do **FDR_SYSTEM 1.5.9** (C# + WPF, Windows) para **Linux**, em **Avalonia UI**.
+> Port do **FDR_SYSTEM** (C# + WPF, Windows) para **Linux**, em **Avalonia UI**.
+> **Versão Linux: 1.6.0** (o projeto Windows mantém a sua própria numeração).
 > Repositório **privado**. A aplicação Windows original não é alterada por este projeto.
 
-**Estado atual:** alpha técnico. A shell, os temas e a página **Offline** funcionam; as páginas
-**Diagnóstico**, **Acessibilidade (AFC)**, **Driver** e **Online** estão implementadas. Diagnóstico e AFC
-foram testados com um iPhone real no ambiente Windows de desenvolvimento; falta validar tudo
-numa instalação Linux. As outras cinco páginas ainda são placeholders. O projeto compila e
-gera um binário `linux-x64` self-contained.
+**Estado atual:** as dez páginas estão implementadas — **Offline**, **Online**, **Restauro**,
+**Reparo**, **Diagnóstico**, **Firmware**, **Acessibilidade (AFC)**, **Driver**, **Instalação** e
+**Jailbreak**. A 1.6.0 acrescenta a página **Instalação**, que instala as dependências Linux
+(`usbmuxd`, `libimobiledevice`, motores opcionais) por `pkexec`, e faz a página **Offline** mostrar
+modelo e ficha técnica também em recovery/DFU. Diagnóstico e AFC foram testados com um iPhone real
+no ambiente Windows de desenvolvimento; falta validar tudo numa instalação Linux. O projeto compila
+e gera um binário `linux-x64` self-contained.
 
 > **A continuar numa máquina Linux?** Começa pelo guia completo
 > [`docs/LINUX-FULL-GUIDE.md`](docs/LINUX-FULL-GUIDE.md): dependências, build, testes,
@@ -64,6 +67,7 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Página **Diagnóstico** | ✅ implementada (syslog, crash ZIP, pair, provision; teste real no Windows, Linux pendente) |
 | Página **Acessibilidade (AFC)** | ✅ implementada (navegar, importar/exportar, DCIM, captura; teste real no Windows, Linux pendente) |
 | Página **Driver** | ✅ implementada (usbmuxd, udev, grupos, dispositivos; teste Linux pendente) |
+| Página **Instalação** | ✅ implementada (`pkexec`, script revisto, registo e verificação final) |
 | Página **Online** | ✅ implementada (catálogo `api.ipsw.me`, download segmentado com retoma, SHA-256) |
 | Página **Restauro** | ✅ implementada (`idevicerestore`, duas barras, confirmação destrutiva, cancelar) |
 | Página **Reparo** | ✅ implementada (modo normal/recovery/DFU, entrar/sair do recovery, reiniciar, ativação e MDM só leitura) |
@@ -327,6 +331,9 @@ Ordem sugerida para completar o port:
 - [x] **Jailbreak** — `Views/Pages/JailbreakView.axaml(.cs)`: deteta `palera1n`/`checkra1n`,
       mostra caminho/versão e comandos para copiar, com avisos checkm8 (A5–A11); nunca executa
       as ferramentas nem corre `sudo`, e não serve para contornar iCloud/Activation Lock/MDM.
+- [x] **Instalação** — `Views/Pages/InstalacaoView.axaml(.cs)` + `Core/Setup/`:
+      deteta distribuição/gestor, mostra o estado dos pacotes e instala com uma ação explícita
+      por `pkexec`; nunca corre `sudo` nem guarda credenciais.
 - [x] **Empacotamento `.deb` + CI** — `packaging/build-linux.sh` (amd64/arm64) e
       `.github/workflows/linux.yml` (build + publish + artefactos).
 - [ ] **AppImage** — `linuxdeploy` + `appimagetool`, e ícone no `.desktop`.
@@ -373,6 +380,27 @@ systemctl status usbmuxd
 Se as regras udev não forem encontradas, confirma que o pacote `usbmuxd` está instalado e
 que o utilizador está no grupo `plugdev` (termina e volta a entrar na sessão depois de
 `usermod`).
+
+### Instalação: dependências, `pkexec` e versões
+
+A página **Instalação** substitui o passo manual `sudo bash packaging/install-linux-deps.sh`:
+
+- deteta a distribuição, o gestor de pacotes e o estado de cada dependência;
+- instala `usbmuxd`, `libimobiledevice-utils` e os motores opcionais com um script gerado
+  pela app e revisto antes de correr;
+- a elevação é pedida pelo **pkexec** (polkit) — a app não corre `sudo` nem guarda a palavra-passe;
+- no fim verifica ferramenta a ferramenta e diz o que ficou em falta;
+- se preferires o terminal, os botões copiam o script completo ou o comando `sudo` equivalente.
+
+A versão vive num único sítio, `Directory.Build.props`, e é usada pelo csproj, pelo cabeçalho
+da app e pelo nome do `.deb`:
+
+```bash
+bash packaging/bump-version.sh patch     # 1.6.0 -> 1.6.1
+bash packaging/bump-version.sh minor     # 1.6.0 -> 1.7.0
+bash packaging/bump-version.sh 1.6.2 --tag --push
+bash packaging/build-linux.sh            # usa a versão atual, sem números à mão
+```
 
 ### Acessibilidade: biblioteca nativa em falta
 

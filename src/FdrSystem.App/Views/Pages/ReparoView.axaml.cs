@@ -79,6 +79,40 @@ public partial class ReparoView : UserControl
               + ".\nEm falta: " + string.Join(", ", missing) + "."
               + (missing.Contains("irecovery") ? "\n«irecovery» vem do pacote libirecovery." : "")
               + (missing.Contains("ideviceactivation") ? "\n«ideviceactivation» vem do libimobiledevice." : "");
+
+        // Sem estas ferramentas os botões ficam desativados: dizê-lo em vez de
+        // deixar o utilizador a adivinhar porque é que não respondem.
+        var reasons = new List<string>();
+
+        if (!_tools.Has("ideviceenterrecovery"))
+            reasons.Add("«Entrar em modo recovery» precisa de ideviceenterrecovery (pacote libimobiledevice-utils).");
+
+        if (!_tools.Has("irecovery"))
+            reasons.Add("«Sair do modo recovery» e «Reiniciar» em recovery/DFU precisam de irecovery (pacote libirecovery-utils).");
+
+        if (!_tools.Has("idevicediagnostics"))
+            reasons.Add("«Reiniciar dispositivo» em modo normal precisa de idevicediagnostics.");
+
+        if (!_tools.Has("ideviceactivation"))
+            reasons.Add("«Verificar estado» de ativação precisa de ideviceactivation.");
+
+        ButtonsHintText.Text = string.Join("\n", reasons);
+        ToolsMissingBox.IsVisible = reasons.Count > 0;
+
+        ToolTip.SetTip(RRecoveryButton, _tools.Has("ideviceenterrecovery")
+            ? "Reinicia o iPhone para o modo recovery."
+            : "Indisponível: falta ideviceenterrecovery.");
+        ToolTip.SetTip(RExitRecoveryButton, _tools.Has("irecovery")
+            ? "Reinicia o iPhone para o modo normal."
+            : "Indisponível: falta irecovery (libirecovery-utils).");
+        ToolTip.SetTip(RRestartButton, _usb?.Mode == "Normal"
+            ? (_tools.Has("idevicediagnostics") ? "Reinicia o iPhone." : "Indisponível: falta idevicediagnostics.")
+            : (_tools.Has("irecovery") ? "Reinicia o iPhone." : "Indisponível: falta irecovery (libirecovery-utils)."));
+    }
+
+    private void ToolsInstall_Click(object? sender, RoutedEventArgs e)
+    {
+        _owner?.Navigate("instalacao");
     }
 
     // ------------------------------------------------------------------ modo

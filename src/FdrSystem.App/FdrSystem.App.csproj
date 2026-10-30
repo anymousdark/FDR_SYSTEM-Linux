@@ -10,10 +10,7 @@
     <RootNamespace>FdrSystem.App</RootNamespace>
     <ApplicationManifest>app.manifest</ApplicationManifest>
     <AvaloniaUseCompiledBindingsByDefault>false</AvaloniaUseCompiledBindingsByDefault>
-    <Version>1.5.9</Version>
-    <Product>FDR_SYSTEM</Product>
-    <Company>anymousdark</Company>
-    <Description>FDR_SYSTEM — leitura, recuperação e restauro de iPhones (Linux)</Description>
+    <!-- Versão/Product/Company vêm de Directory.Build.props (fonte única). -->
   </PropertyGroup>
 
   <ItemGroup>

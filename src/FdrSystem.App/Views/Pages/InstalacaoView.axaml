@@ -1,0 +1,202 @@
+<UserControl xmlns="https://github.com/avaloniaui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+             x:Class="FdrSystem.App.Views.Pages.InstalacaoView">
+
+  <Grid RowDefinitions="Auto,12,*">
+
+    <Border Grid.Row="0" Background="{DynamicResource BlueBoxBg}" CornerRadius="12" Padding="14">
+      <Grid ColumnDefinitions="Auto,*">
+        <Path Grid.Column="0" Data="{StaticResource IconDownload}" Stroke="{DynamicResource BlueText}"
+              StrokeThickness="1.6" Width="16" Height="16" VerticalAlignment="Top" Margin="0,2,9,0" Stretch="Uniform" />
+        <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="{DynamicResource BlueText2}" FontSize="10.5"
+                   Text="Esta página instala o usbmuxd, o libimobiledevice e os motores opcionais. A elevação é pedida pelo pkexec (polkit) e a app nunca lê nem guarda a palavra-passe. Só a atualização de pacotes usa a rede." />
+      </Grid>
+    </Border>
+
+    <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" HorizontalScrollBarVisibility="Disabled">
+      <Grid ColumnDefinitions="*,16,380">
+
+        <!-- Coluna esquerda: estado e pacotes -->
+        <StackPanel Grid.Column="0" Spacing="12">
+
+          <Border Classes="card" Padding="14">
+            <Grid RowDefinitions="Auto,Auto,Auto,Auto,Auto" ColumnDefinitions="*,Auto">
+
+              <StackPanel Grid.Row="0" Grid.Column="0" Spacing="3">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <Path Data="{StaticResource IconChip}" Stroke="{DynamicResource TextMuted}"
+                        StrokeThickness="1.6" Width="14" Height="14" Stretch="Uniform" />
+                  <TextBlock Text="ESTADO DO AMBIENTE" Classes="label" FontWeight="Bold" />
+                </StackPanel>
+                <TextBlock x:Name="EnvironmentText" Classes="value" TextWrapping="Wrap"
+                           Text="A verificar o ambiente…" />
+              </StackPanel>
+
+              <Button x:Name="SetupRefreshButton" Grid.Row="0" Grid.Column="1" Classes="tool"
+                      Click="SetupRefresh_Click" VerticalAlignment="Top" ToolTip.Tip="Voltar a verificar pacotes e serviços">
+                <StackPanel Orientation="Horizontal" Spacing="6">
+                  <Path Data="{StaticResource IconRefresh}" Stroke="{DynamicResource TextSecondary}"
+                        StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
+                  <TextBlock Text="Verificar" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+
+              <Border Grid.Row="1" Grid.ColumnSpan="2" Height="1" Margin="0,12"
+                      Background="{DynamicResource CardBorder}" />
+
+              <Grid Grid.Row="2" Grid.ColumnSpan="2" RowDefinitions="Auto,Auto,Auto,Auto,Auto"
+                    ColumnDefinitions="165,*">
+                <TextBlock Grid.Row="0" Grid.Column="0" Text="Distribuição" Classes="label" Margin="0,0,8,7" />
+                <TextBlock Grid.Row="0" Grid.Column="1" x:Name="DistroText" Classes="value" TextWrapping="Wrap" Margin="0,0,0,7" />
+
+                <TextBlock Grid.Row="1" Grid.Column="0" Text="Gestor de pacotes" Classes="label" Margin="0,0,8,7" />
+                <TextBlock Grid.Row="1" Grid.Column="1" x:Name="ManagerText" Classes="value" TextWrapping="Wrap" Margin="0,0,0,7" />
+
+                <TextBlock Grid.Row="2" Grid.Column="0" Text="pkexec (polkit)" Classes="label" Margin="0,0,8,7" />
+                <TextBlock Grid.Row="2" Grid.Column="1" x:Name="PkexecText" Classes="value" TextWrapping="Wrap" Margin="0,0,0,7" />
+
+                <TextBlock Grid.Row="3" Grid.Column="0" Text="usbmuxd / udev" Classes="label" Margin="0,0,8,7" />
+                <TextBlock Grid.Row="3" Grid.Column="1" x:Name="UsbmuxdText" Classes="value" TextWrapping="Wrap" Margin="0,0,0,7" />
+
+                <TextBlock Grid.Row="4" Grid.Column="0" Text="Regras udev" Classes="label" Margin="0,0,8,0" />
+                <TextBlock Grid.Row="4" Grid.Column="1" x:Name="UdevText" Classes="value" TextWrapping="Wrap" />
+              </Grid>
+
+              <Border Grid.Row="3" Grid.ColumnSpan="2" Height="1" Margin="0,12"
+                      Background="{DynamicResource CardBorder}" />
+
+              <Border Grid.Row="4" Grid.ColumnSpan="2" x:Name="SetupStatusBox"
+                      Background="{DynamicResource AmberBoxBg}" CornerRadius="8" Padding="10,8">
+                <TextBlock x:Name="SetupStatusText" Classes="value" TextWrapping="Wrap"
+                           Text="A verificar o ambiente Linux…" />
+              </Border>
+            </Grid>
+          </Border>
+
+          <Border Classes="card" Padding="14">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Path Data="{StaticResource IconBox}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="14" Height="14" Stretch="Uniform" />
+                <TextBlock Text="O QUE É INSTALADO" Classes="label" FontWeight="Bold" />
+              </StackPanel>
+
+              <ItemsControl x:Name="PackagesList">
+                <ItemsControl.ItemTemplate>
+                  <DataTemplate>
+                    <Grid ColumnDefinitions="*,Auto" Margin="0,3">
+                      <StackPanel Spacing="1">
+                        <TextBlock Text="{Binding Label}" Foreground="{DynamicResource TextSecondary}" FontSize="10.5" />
+                        <TextBlock Text="{Binding Detail}" Foreground="{DynamicResource TextFaint}" FontSize="9.5" />
+                      </StackPanel>
+                      <TextBlock Grid.Column="1" Text="{Binding StatusText}" Foreground="{Binding StatusBrush}"
+                                 FontSize="10.5" FontWeight="SemiBold" VerticalAlignment="Center" />
+                    </Grid>
+                  </DataTemplate>
+                </ItemsControl.ItemTemplate>
+              </ItemsControl>
+
+              <TextBlock x:Name="PackagesHintText" Classes="label" TextWrapping="Wrap"
+                         Text="A verificar os pacotes…" />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="14">
+            <StackPanel Spacing="6">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Path Data="{StaticResource IconTerminal}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="14" Height="14" Stretch="Uniform" />
+                <TextBlock Text="O QUE O SCRIPT FAZ" Classes="label" FontWeight="Bold" />
+              </StackPanel>
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Text="Atualiza os índices, instala usbmuxd + libimobiledevice (e os motores opcionais quando existem no repositório), ativa o serviço usbmuxd, recarrega as regras udev e adiciona o teu utilizador ao grupo plugdev." />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Text="No fim verifica as ferramentas uma a uma e diz o que ficou em falta. Não instala drivers Apple, não mexe em certificados e não envia dados do iPhone para lado nenhum." />
+            </StackPanel>
+          </Border>
+
+        </StackPanel>
+
+        <!-- Coluna direita: instalação e registo -->
+        <StackPanel Grid.Column="2" Spacing="12">
+
+          <Border Classes="card" Padding="14">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Path Data="{StaticResource IconDownload}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="14" Height="14" Stretch="Uniform" />
+                <TextBlock Text="INSTALAÇÃO AUTOMÁTICA" Classes="label" FontWeight="Bold" />
+              </StackPanel>
+
+              <Button x:Name="InstallButton" Classes="primary" Click="Install_Click"
+                      HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" IsEnabled="False">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <Path Data="{StaticResource IconDownload}" Stroke="White" StrokeThickness="1.5"
+                        Width="13" Height="13" Stretch="Uniform" />
+                  <TextBlock Text="Instalar tudo" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+
+              <Grid ColumnDefinitions="*,8,*">
+                <Button Grid.Column="0" x:Name="CancelButton" Classes="tool" Click="Cancel_Click"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center" IsEnabled="False">
+                  <TextBlock Text="Cancelar" />
+                </Button>
+                <Button Grid.Column="2" x:Name="CopyCommandsButton" Classes="tool" Click="CopyCommands_Click"
+                        HorizontalAlignment="Stretch" HorizontalContentAlignment="Center">
+                  <TextBlock Text="Copiar script" />
+                </Button>
+              </Grid>
+
+              <ProgressBar x:Name="RunBar" Minimum="0" Maximum="100" Value="0" IsIndeterminate="False" Height="8" />
+              <TextBlock x:Name="RunStatusText" Classes="label" TextWrapping="Wrap"
+                         Text="Ainda não foi executada nenhuma instalação." />
+
+              <TextBox x:Name="LogText" IsReadOnly="True" AcceptsReturn="True" TextWrapping="NoWrap"
+                       Height="236" FontSize="10"
+                       FontFamily="Cascadia Mono,DejaVu Sans Mono,Consolas,monospace" />
+
+              <TextBlock x:Name="LogHintText" Classes="label" TextWrapping="Wrap"
+                         Text="O pedido de palavra-passe aparece numa janela do sistema. A app não vê nem guarda essa palavra-passe." />
+            </StackPanel>
+          </Border>
+
+          <Border Classes="card" Padding="14">
+            <StackPanel Spacing="8">
+              <StackPanel Orientation="Horizontal" Spacing="7">
+                <Path Data="{StaticResource IconCopy}" Stroke="{DynamicResource TextMuted}"
+                      StrokeThickness="1.6" Width="14" Height="14" Stretch="Uniform" />
+                <TextBlock Text="PREFERES O TERMINAL?" Classes="label" FontWeight="Bold" />
+              </StackPanel>
+
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
+                         Text="O mesmo script pode ser copiado e revisto antes de correr. Fora da app, o pedido de administrador é feito pelo sudo." />
+              <Button x:Name="CopyTerminalButton" Classes="tool" Click="CopyTerminal_Click"
+                      HorizontalAlignment="Left">
+                <StackPanel Orientation="Horizontal" Spacing="7">
+                  <Path Data="{StaticResource IconTerminal}" Stroke="{DynamicResource TextSecondary}"
+                        StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
+                  <TextBlock Text="Copiar comando sudo" VerticalAlignment="Center" />
+                </StackPanel>
+              </Button>
+            </StackPanel>
+          </Border>
+
+          <Border Background="{DynamicResource AmberBoxBg}" CornerRadius="12" Padding="14">
+            <StackPanel Spacing="7">
+              <TextBlock Text="DEPOIS DE INSTALAR" Foreground="{DynamicResource AmberText}"
+                         Classes="label" FontWeight="Bold" />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AmberText2}" FontSize="10.5"
+                         Text="1. Termina a sessão e volta a entrar para o grupo plugdev passar a valer." />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AmberText2}" FontSize="10.5"
+                         Text="2. Abre a página Driver e confirma o socket /run/usbmuxd." />
+              <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource AmberText2}" FontSize="10.5"
+                         Text="3. Liga o iPhone, desbloqueia-o e aceita «Confiar neste computador»." />
+            </StackPanel>
+          </Border>
+
+        </StackPanel>
+      </Grid>
+    </ScrollViewer>
+  </Grid>
+</UserControl>

@@ -141,6 +141,7 @@ página implementada, o código é antigo.
 | Diagnóstico | implementado; teste Linux pendente | `DiagnosticoView.axaml(.cs)` | `idevicesyslog`, `idevicecrashreport`, `idevicepair`, `ideviceprovision` |
 | Acessibilidade | implementado; teste Linux pendente | `AcessibilidadeView.axaml(.cs)` + `AfcSession.cs` | `libimobiledevice-1.0-6`, `idevice_id`, `ideviceinfo`, `idevicescreenshot` |
 | Driver | implementado; teste Linux pendente | `DriverView.axaml(.cs)` + `DriverEnvironment.cs` | `usbmuxd`, udev, `systemctl`, `id` |
+| Instalação | funcional | `InstalacaoView.axaml(.cs)` + `Core/Setup/` | `pkexec`/polkit, `apt`/`dnf`/`pacman`, rede para o repositório |
 | Online | funcional | `OnlineView.axaml(.cs)` + `Core/Firmware/` | `api.ipsw.me`; `idevicerestore` só na página Restauro |
 | Restauro | funcional | `RestauroView.axaml(.cs)` + `Core/Firmware/RestoreEngine.cs` | `idevicerestore --erase --no-input`, duas barras e log |
 | Reparo | funcional | `ReparoView.axaml(.cs)` | `ideviceenterrecovery`, `idevicediagnostics restart`, `irecovery -n`, ativação/MDM só leitura |
@@ -153,8 +154,12 @@ O encaminhamento está em:
 src/FdrSystem.App/Views/MainWindow.axaml.cs  →  ShowPage(string tag)
 ```
 
-O `switch` atual liga `offline`, `diagnostico`, `acessibilidade` e `driver`; tudo o resto
-cai em `PlaceholderView.For(tag, this)`.
+O `switch` atual liga `offline`, `online`, `firmware`, `restauro`, `reparo`, `jailbreak`,
+`diagnostico`, `acessibilidade`, `driver` e `instalacao`; `PlaceholderView.For(tag, this)`
+fica só como rede de segurança.
+
+A versão não se escreve à mão: vive em `Directory.Build.props` e
+`packaging/bump-version.sh` sobe-a (o `.deb` e o cabeçalho acompanham).
 
 ### Testes já feitos
 

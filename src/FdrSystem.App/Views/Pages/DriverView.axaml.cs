@@ -210,6 +210,8 @@ public partial class DriverView : UserControl
             .Select(spec => spec.Command)
             .ToArray();
 
+        ToolsInstallButton.IsVisible = ToolSpecs.Any(spec => !_tools.Has(spec.Command));
+
         if (missing.Length == 0)
         {
             ToolsHintText.Text = "Ferramentas essenciais presentes. As opcionais podem faltar sem impedir o USB.";
@@ -224,6 +226,8 @@ public partial class DriverView : UserControl
     }
 
     private void DriverRefresh_Click(object? sender, RoutedEventArgs e) => EnsureRefreshed();
+
+    private void ToolsInstall_Click(object? sender, RoutedEventArgs e) => _owner?.Navigate("instalacao");
 
     private async void CopyCommands_Click(object? sender, RoutedEventArgs e)
     {

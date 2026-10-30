@@ -18,6 +18,9 @@ Linux, lê `docs/LINUX-FULL-GUIDE.md` (guia completo) e `docs/CONTINUE-ON-LINUX.
 6. **Mascarar identificadores** por omissão; obedecer ao `Reveal IDs`.
 7. A app **não** contorna iCloud/Activation Lock nem MDM. Não implementar isso, mesmo que peçam
    "para testar".
+8. **A versão vive só em `Directory.Build.props`.** Sobe-a com `packaging/bump-version.sh`
+   (nunca escrever `1.x.y` à mão no csproj, no README ou no cabeçalho). O binário, o `.deb` e o
+   `vX.Y.Z` do cabeçalho são derivados daí.
 
 ## Comandos
 
@@ -26,7 +29,8 @@ sudo bash packaging/install-linux-deps.sh                        # Debian/Ubuntu
 bash packaging/check-linux-env.sh                                # estado do ambiente
 dotnet build src/FdrSystem.App/FdrSystem.App.csproj -c Debug     # ~10 s
 dotnet run   --project src/FdrSystem.App/FdrSystem.App.csproj    # precisa de display (X11/Wayland)
-bash packaging/build-linux.sh                                    # publish + .deb (se houver dpkg-deb)
+bash packaging/build-linux.sh                                    # publish + .deb (versão de Directory.Build.props)
+bash packaging/bump-version.sh patch [--commit|--tag|--push]     # sobe a versão num único sítio
 ```
 
 Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas falsas de
@@ -41,6 +45,7 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 | Diagnosticar (syslog, crash, pair, provision) | `src/FdrSystem.App/Views/Pages/DiagnosticoView.axaml(.cs)` |
 | Acessibilidade/AFC | `src/FdrSystem.App/Views/Pages/AcessibilidadeView.axaml(.cs)` + `src/FdrSystem.Core/Devices/AfcSession.cs` |
 | Driver / usbmuxd / udev | `src/FdrSystem.App/Views/Pages/DriverView.axaml(.cs)` + `src/FdrSystem.Core/Usb/DriverEnvironment.cs` |
+| Instalação de dependências (`pkexec`) | `src/FdrSystem.App/Views/Pages/InstalacaoView.axaml(.cs)` + `src/FdrSystem.Core/Setup/` |
 | Ler dados do iPhone | `src/FdrSystem.Core/Devices/DeviceService.cs` |
 | Etiquetas/máscaras PT | `src/FdrSystem.Core/Devices/DeviceLabels.cs` |
 | Cores/temas | `src/FdrSystem.App/Themes/*.axaml` + `Services/ThemeManager.cs` |
@@ -70,6 +75,12 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 - [x] **Jailbreak** — `Views/Pages/JailbreakView.axaml(.cs)`: deteta `palera1n`/`checkra1n`
       (`Locate` + `--version` só no palera1n), mostra caminho, comandos e avisos; nunca executa
       as ferramentas, nunca corre `sudo`, não contorna iCloud/Activation Lock/MDM.
+- [x] **Instalação** — `SetupEnvironment`/`SetupRunner` + `InstalacaoView`: deteta
+      distribuição/gestor, lista pacotes, instala por `pkexec` com registo e verificação final;
+      a elevação é explícita (polkit) e a app nunca guarda credenciais.
+- [x] **Offline em recovery/DFU** — `DeviceSnapshot.ProductType/Mode`: modelo e ficha técnica
+      vêm do CPID/BDID (`IrecoveryDevices` + `DeviceSpecs`); bateria/iOS/armazenamento dizem
+      "indisponível em Recovery" em vez de "—".
 - [x] **Empacotamento `.deb` + CI** — `packaging/build-linux.sh` (amd64/arm64) e
       `.github/workflows/linux.yml`. Falta AppImage.
 - [ ] **Teste no hardware** — correr no Linux com iPhone real e registar o que falha.

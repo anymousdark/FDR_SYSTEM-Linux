@@ -1,12 +1,29 @@
 #!/usr/bin/env bash
 # Publica a app para linux-x64 e, se existir dpkg-deb, gera um .deb simples.
-#   bash packaging/build-linux.sh            # x64, self-contained
+#   bash packaging/build-linux.sh                 # x64, self-contained
 #   RID=linux-arm64 bash packaging/build-linux.sh
+#   bash packaging/build-linux.sh --bump patch    # sobe a versão antes de compilar
+#   bash packaging/build-linux.sh --bump minor
 set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+
+BUMP=""
+if [[ "${1:-}" == "--bump" ]]; then
+  BUMP="${2:-patch}"
+fi
+
+if [[ -n "$BUMP" ]]; then
+  bash "$ROOT/packaging/bump-version.sh" "$BUMP"
+fi
+
 RID="${RID:-linux-x64}"
-VERSION="1.5.9"
+PROPS="$ROOT/Directory.Build.props"
+VERSION="${VERSION:-$(sed -n 's:.*<Version>\([^<]*\)</Version>.*:\1:p' "$PROPS" 2>/dev/null | head -1)}"
+if [[ -z "$VERSION" ]]; then
+  echo "ERRO: versão não encontrada em Directory.Build.props." >&2
+  exit 1
+fi
 OUT="$ROOT/publish/$RID"
 
 case "$RID" in

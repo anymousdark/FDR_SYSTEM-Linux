@@ -29,6 +29,7 @@ public partial class MainWindow : Window
     private DiagnosticoView? _diagnostico;
     private AcessibilidadeView? _acessibilidade;
     private DriverView? _driver;
+    private InstalacaoView? _instalacao;
     private string? _lastUsbSignature;
 
     /// <summary>IPSW escolhido na página Online e entregue à página Restauro.</summary>
@@ -40,6 +41,8 @@ public partial class MainWindow : Window
     public MainWindow()
     {
         InitializeComponent();
+
+        VersionText.Text = "v" + (typeof(MainWindow).Assembly.GetName().Version?.ToString(3) ?? "—");
 
         var themeIndex = Array.IndexOf(["Dark", "Light", "Midnight", "Forest", "Amethyst"], AppSettings.Current.Theme);
         ThemeManager.Apply(themeIndex >= 0 ? themeIndex : 0);
@@ -102,12 +105,14 @@ public partial class MainWindow : Window
             "diagnostico" => _diagnostico ??= new DiagnosticoView(this, _tools),
             "acessibilidade" => _acessibilidade ??= new AcessibilidadeView(this, _tools),
             "driver" => _driver ??= new DriverView(this, _tools),
+            "instalacao" => _instalacao ??= new InstalacaoView(this, _tools),
             _ => PlaceholderView.For(tag, this),
         };
 
         if (tag == "offline") _offline?.EnsureAutoRead();
         if (tag == "acessibilidade") _acessibilidade?.EnsureConnected();
         if (tag == "driver") _driver?.EnsureRefreshed();
+        if (tag == "instalacao") _instalacao?.EnsureRefreshed();
         if (tag == "restauro" && PendingRestoreFile is { Length: > 0 } ipsw) _restauro?.EnsureLoaded(ipsw);
         if (tag == "reparo") _reparo?.EnsureRefreshed();
         if (tag == "jailbreak") _jailbreak?.EnsureRefreshed();

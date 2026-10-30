@@ -55,6 +55,18 @@
                 <TextBlock Text="Reiniciar dispositivo" />
               </Button>
 
+              <Border x:Name="ToolsMissingBox" Background="{DynamicResource AmberBoxBg}" CornerRadius="8"
+                      Padding="10,8" IsVisible="False">
+                <StackPanel Spacing="6">
+                  <TextBlock x:Name="ButtonsHintText" FontSize="10.5" Foreground="{DynamicResource AmberText2}"
+                             TextWrapping="Wrap" />
+                  <Button x:Name="ToolsInstallButton" Classes="tool" Click="ToolsInstall_Click"
+                          HorizontalAlignment="Left">
+                    <TextBlock Text="Instalar ferramentas" FontSize="10.5" />
+                  </Button>
+                </StackPanel>
+              </Border>
+
               <TextBlock x:Name="ActionStatusText" FontSize="10.5" Foreground="{DynamicResource TextFaint}"
                          TextWrapping="Wrap" Text="Nada foi alterado no aparelho." />
             </StackPanel>

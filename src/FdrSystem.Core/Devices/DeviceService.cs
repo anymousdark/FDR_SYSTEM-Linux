@@ -26,6 +26,8 @@ public sealed class DeviceService(ToolRunner tools)
     {
         var rows = new List<DetailRow>();
         var usbDevices = UsbScanner.FindAppleDevices();
+        var usbMode = usbDevices.Count > 0 ? usbDevices[0].Mode : null;
+        string? usbProductType = null;
 
         foreach (var device in usbDevices)
         {
@@ -42,7 +44,10 @@ public sealed class DeviceService(ToolRunner tools)
             {
                 var rec = AppleUsb.ParseRecoveryIds(device.Serial ?? device.Path);
                 if (IrecoveryDevices.TryResolve(rec.Cpid, rec.Bdid, out var pt, out var nm))
+                {
+                    usbProductType ??= pt;
                     rows.Add(new DetailRow("UsbModel", "Identificação", $"Modelo (USB, {mode})", $"{nm} ({pt})"));
+                }
                 if (!string.IsNullOrWhiteSpace(rec.EcidDec))
                     rows.Add(new DetailRow("UsbEcid", "Identificação", $"ECID (USB, {mode})", rec.EcidDec));
                 else if (!string.IsNullOrWhiteSpace(rec.EcidHex))
@@ -84,7 +89,17 @@ public sealed class DeviceService(ToolRunner tools)
                 throw new InvalidOperationException(
                     "iPhone não detectado. Verifique o cabo, desbloqueie o aparelho e aceite 'Confiar neste computador'.");
 
-            return new DeviceSnapshot(rows, "—", "—", null, null, null, Paired: false);
+            var usbSpec = DeviceSpecs.Get(usbProductType);
+            return new DeviceSnapshot(
+                rows,
+                usbProductType is null ? "—" : usbSpec?.Name ?? usbProductType,
+                usbProductType is null ? "—" : usbSpec?.Chip ?? "—",
+                null,
+                null,
+                null,
+                Paired: false,
+                ProductType: usbProductType,
+                Mode: usbMode);
         }
 
         var diskTask = tools.RunTextAsync("ideviceinfo", ["-q", "com.apple.disk_usage", "-x"], TimeSpan.FromSeconds(8), ct);
@@ -176,6 +191,8 @@ public sealed class DeviceService(ToolRunner tools)
         var model = spec?.Name ?? type;
         var cpu = spec?.Chip ?? rows.FirstOrDefault(x => x.Key == "CPUArchitecture")?.Value ?? "—";
 
-        return new DeviceSnapshot(rows, model, cpu, charge, cycles, health, Paired: true, Battery: battery);
+        return new DeviceSnapshot(
+            rows, model, cpu, charge, cycles, health,
+            Paired: true, Battery: battery, ProductType: type, Mode: usbMode);
     }
 }

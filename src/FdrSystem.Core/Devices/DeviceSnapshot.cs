@@ -1,5 +1,3 @@
-using FdrSystem.Core.Devices;
-
 namespace FdrSystem.Core.Devices;
 
 /// <summary>Resultado de uma leitura do iPhone.</summary>
@@ -11,4 +9,6 @@ public sealed record DeviceSnapshot(
     string? Cycles,
     double? Health,
     bool Paired,
-    BatteryReport? Battery = null);
+    BatteryReport? Battery = null,
+    string? ProductType = null,
+    string? Mode = null);
