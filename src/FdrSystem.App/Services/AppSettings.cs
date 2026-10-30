@@ -3,7 +3,7 @@ using FdrSystem.Core;
 
 namespace FdrSystem.App.Services;
 
-/// <summary>Definições guardadas em ~/.local/share/FDR_SYSTEM/settings.json.</summary>
+/// <summary>Definições guardadas em ~/.local/share/FDR-SYSTEM/settings.json.</summary>
 public sealed class AppSettings
 {
     public string Theme { get; set; } = "Dark";

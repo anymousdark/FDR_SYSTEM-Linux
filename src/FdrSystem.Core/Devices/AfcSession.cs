@@ -139,7 +139,7 @@ public sealed class AfcSession : IDisposable
                     }
 
                     if (lockdownd_client_new_with_handshake(
-                            session._device, out session._lockdown, "FDR_SYSTEM") != 0 ||
+                            session._device, out session._lockdown, "FDR SYSTEM") != 0 ||
                         session._lockdown == IntPtr.Zero)
                     {
                         throw new InvalidOperationException(

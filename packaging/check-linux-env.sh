@@ -1,11 +1,11 @@
 #!/usr/bin/env bash
-# Diagnóstico do ambiente Linux do FDR_SYSTEM.
+# Diagnóstico do ambiente Linux do FDR SYSTEM.
 # Não instala nada e não corre sudo.
 #
 #   bash packaging/check-linux-env.sh
 #
 # Mostra o commit, as ferramentas, o usbmuxd, o iPhone, as páginas ligadas
-# e compara o binário do repositório com um eventual FDR_SYSTEM instalado.
+# e compara o binário do repositório com um eventual FDR-SYSTEM instalado.
 set -u
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
@@ -19,7 +19,7 @@ warn() { printf '[AVISO]   %s\n' "$*"; warnings=$((warnings + 1)); }
 fail() { printf '[FALHA]   %s\n' "$*"; failures=$((failures + 1)); }
 info() { printf '          %s\n' "$*"; }
 
-echo "== FDR_SYSTEM — verificação Linux =="
+echo "== FDR SYSTEM — verificação Linux =="
 echo "Repositório: $ROOT"
 echo
 
@@ -194,7 +194,7 @@ done
 
 echo
 echo "-- binários"
-repo_bin="$ROOT/publish/linux-x64/FDR_SYSTEM"
+repo_bin="$ROOT/publish/linux-x64/FDR-SYSTEM"
 if [[ -x "$repo_bin" ]]; then
   ok "build do repositório: $repo_bin"
   info "$(stat -c '%y' "$repo_bin" 2>/dev/null || true)"
@@ -213,13 +213,13 @@ if [[ -n "$installed_bin" ]]; then
     info "sudo apt install --reinstall ./publish/fdr-system_1.5.9_amd64.deb"
   fi
 else
-  info "fdr-system não está no PATH; podes correr ./publish/linux-x64/FDR_SYSTEM"
+  info "fdr-system não está no PATH; podes correr ./publish/linux-x64/FDR-SYSTEM"
 fi
 
 echo
 echo "-- logs"
-if [[ -d "$HOME/.local/share/FDR_SYSTEM/logs" ]]; then
-  info "$HOME/.local/share/FDR_SYSTEM/logs"
+if [[ -d "$HOME/.local/share/FDR-SYSTEM/logs" ]]; then
+  info "$HOME/.local/share/FDR-SYSTEM/logs"
 else
   info "a pasta de logs aparece depois da primeira execução."
 fi

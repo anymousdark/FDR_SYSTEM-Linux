@@ -88,7 +88,7 @@
             </WrapPanel>
 
             <TextBlock x:Name="CrashStatusText" Classes="label" TextWrapping="Wrap"
-                       Text="Os ficheiros ficam em Documentos/FDR_SYSTEM/Relatorios." />
+                       Text="Os ficheiros ficam em Documentos/FDR-SYSTEM/Relatorios." />
           </StackPanel>
         </Border>
 

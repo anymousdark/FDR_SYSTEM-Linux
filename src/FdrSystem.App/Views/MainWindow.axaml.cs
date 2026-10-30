@@ -45,7 +45,7 @@ public partial class MainWindow : Window
         // O ícone é embutido como AvaloniaResource; carregá-lo aqui garante que
         // o X11 recebe _NET_WM_ICON (o XAML não converte o URI para WindowIcon).
         using (var iconStream = Avalonia.Platform.AssetLoader.Open(
-                   new Uri("avares://FDR_SYSTEM/Assets/fdr-system-256.png")))
+                   new Uri("avares://FDR-SYSTEM/Assets/fdr-system-256.png")))
         {
             Icon = new WindowIcon(iconStream);
         }
@@ -189,7 +189,7 @@ public partial class MainWindow : Window
 
                 var summary = archive.CreateEntry("resumo.txt");
                 using var writer = new StreamWriter(summary.Open());
-                writer.WriteLine($"FDR_SYSTEM {typeof(MainWindow).Assembly.GetName().Version}");
+                writer.WriteLine($"FDR SYSTEM {typeof(MainWindow).Assembly.GetName().Version}");
                 writer.WriteLine($"SO: {Environment.OSVersion}");
                 writer.WriteLine($"Runtime: {Environment.Version}");
                 writer.WriteLine($"Ferramentas: ideviceinfo={( _tools.Has("ideviceinfo") ? "ok" : "ausente")}");

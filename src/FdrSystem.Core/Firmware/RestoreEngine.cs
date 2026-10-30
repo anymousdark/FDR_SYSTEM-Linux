@@ -41,14 +41,6 @@ public sealed record RestoreResult(int ExitCode, bool HadError)
 /// </summary>
 public sealed class RestoreEngine(ToolRunner tools)
 {
-    // O idevicerestore escreve "progress: 1 0.25" (passo + fração 0..1).
-    private static readonly Regex StepRe =
-        new(@"^progress:\s*(\d+)\s+([0-9.]+)\s*$", RegexOptions.Compiled);
-
-    // Linhas do tipo "Restoring image: 42.5" ou "IPSW: 100".
-    private static readonly Regex LabelRe =
-        new(@"^([A-Za-z0-9_ ]+):\s+([0-9.]+)\s*$", RegexOptions.Compiled);
-
     public bool HasEngine => tools.Has("idevicerestore");
 
     public string? EnginePath => tools.Locate("idevicerestore");
@@ -140,47 +132,11 @@ public sealed class RestoreEngine(ToolRunner tools)
 
         using var process = new Process { StartInfo = psi };
 
-        var prep = 0.0;
-        var install = 0.0;
-        var phase = "A iniciar o motor de restauro";
-        var detail = "A arrancar o idevicerestore…";
-        var hadError = false;
+        var parser = new RestoreProgressParser();
 
         void Handle(string? raw)
         {
-            if (raw is null) return;
-            var line = raw.TrimEnd();
-            var trimmed = line.Trim();
-            if (trimmed.Length == 0) return;
-
-            if (trimmed.StartsWith("ERROR", StringComparison.OrdinalIgnoreCase) ||
-                trimmed.Contains("ERROR:", StringComparison.Ordinal))
-                hadError = true;
-
-            var step = StepRe.Match(trimmed);
-            if (step.Success)
-            {
-                ApplyStep(
-                    int.Parse(step.Groups[1].Value, CultureInfo.InvariantCulture),
-                    double.Parse(step.Groups[2].Value, CultureInfo.InvariantCulture),
-                    ref prep, ref install, ref phase, ref detail);
-            }
-            else
-            {
-                var label = LabelRe.Match(trimmed);
-                if (label.Success &&
-                    double.TryParse(label.Groups[2].Value, NumberStyles.Float, CultureInfo.InvariantCulture,
-                        out var value))
-                {
-                    ApplyLabel(label.Groups[1].Value.Trim(), value, ref prep, ref install, ref phase, ref detail);
-                }
-                else if (trimmed.Length <= 160)
-                {
-                    detail = trimmed;
-                }
-            }
-
-            progress.Report(new RestoreProgress(prep, install, phase, detail, line));
+            if (parser.Apply(raw) is { } update) progress.Report(update);
         }
 
         process.OutputDataReceived += (_, e) => Handle(e.Data);
@@ -201,91 +157,138 @@ public sealed class RestoreEngine(ToolRunner tools)
             throw;
         }
 
-        var ok = process.ExitCode == 0 && !hadError;
+        var ok = process.ExitCode == 0 && !parser.HadError;
         progress.Report(new RestoreProgress(
-            ok ? 100 : prep,
-            ok ? 100 : install,
+            ok ? 100 : parser.PrepPercent,
+            ok ? 100 : parser.InstallPercent,
             ok ? "Concluído" : "Terminou com erros",
             ok
                 ? "O iPhone vai reiniciar no ecrã de configuração (bem-vindo)."
                 : $"O motor saiu com o código {process.ExitCode}. Veja as linhas ERROR no registo.",
             $"idevicerestore terminou com o código {process.ExitCode}."));
 
-        return new RestoreResult(process.ExitCode, hadError);
+        return new RestoreResult(process.ExitCode, parser.HadError);
+    }
+}
+
+/// <summary>
+/// Traduz a saída do <c>idevicerestore</c> em duas barras de progresso.
+/// Classe separada para poder ser testada sem lançar o processo.
+/// </summary>
+public sealed class RestoreProgressParser
+{
+    // O idevicerestore escreve "progress: 1 0.25" (passo + fração 0..1).
+    private static readonly Regex StepRe =
+        new(@"^progress:\s*(\d+)\s+([0-9.]+)\s*$", RegexOptions.Compiled);
+
+    // Linhas do tipo "Restoring image: 42.5", "IPSW: 100" ou "Fixing up /var: 1".
+    private static readonly Regex LabelRe =
+        new(@"^([A-Za-z0-9_ /]+):\s+([0-9.]+)\s*$", RegexOptions.Compiled);
+
+    public double PrepPercent { get; private set; }
+    public double InstallPercent { get; private set; }
+    public string Phase { get; private set; } = "A iniciar o motor de restauro";
+    public string Detail { get; private set; } = "A arrancar o idevicerestore…";
+    public bool HadError { get; private set; }
+
+    /// <summary>Processa uma linha; devolve <c>null</c> para linhas vazias.</summary>
+    public RestoreProgress? Apply(string? raw)
+    {
+        if (raw is null) return null;
+
+        var line = raw.TrimEnd();
+        var trimmed = line.Trim();
+        if (trimmed.Length == 0) return null;
+
+        if (trimmed.StartsWith("ERROR", StringComparison.OrdinalIgnoreCase) ||
+            trimmed.Contains("ERROR:", StringComparison.Ordinal))
+            HadError = true;
+
+        var step = StepRe.Match(trimmed);
+        if (step.Success)
+        {
+            ApplyStep(
+                int.Parse(step.Groups[1].Value, CultureInfo.InvariantCulture),
+                double.Parse(step.Groups[2].Value, CultureInfo.InvariantCulture));
+        }
+        else
+        {
+            var label = LabelRe.Match(trimmed);
+            if (label.Success &&
+                double.TryParse(label.Groups[2].Value, NumberStyles.Float, CultureInfo.InvariantCulture,
+                    out var value))
+            {
+                ApplyLabel(label.Groups[1].Value.Trim(), value);
+            }
+            else if (trimmed.Length <= 160)
+            {
+                Detail = trimmed;
+            }
+        }
+
+        return new RestoreProgress(PrepPercent, InstallPercent, Phase, Detail, line);
     }
 
     /// <summary>Traduz <c>progress: &lt;passo&gt; &lt;fração&gt;</c> (igual ao Windows).</summary>
-    private static void ApplyStep(
-        int step,
-        double fraction,
-        ref double prep,
-        ref double install,
-        ref string phase,
-        ref string detail)
+    private void ApplyStep(int step, double fraction)
     {
         var percent = Math.Clamp(fraction * 100.0, 0, 100);
 
         switch (step)
         {
             case 0:
-                phase = "A procurar o iPhone";
-                detail = "Ligue o iPhone por USB (normal, recovery ou DFU).";
+                Phase = "A procurar o iPhone";
+                Detail = "Ligue o iPhone por USB (normal, recovery ou DFU).";
                 break;
 
             case 1:
-                prep = Math.Max(prep, percent);
-                phase = "A preparar o firmware";
-                detail = percent >= 99.5
+                PrepPercent = Math.Max(PrepPercent, percent);
+                Phase = "A preparar o firmware";
+                Detail = percent >= 99.5
                     ? "Extração concluída."
                     : "A extrair componentes do IPSW (pode demorar alguns minutos).";
                 break;
 
             case 2:
-                install = Math.Max(install, percent);
-                phase = "A gravar no iPhone";
-                detail = "A enviar o sistema de ficheiros — a fase mais demorada.";
+                InstallPercent = Math.Max(InstallPercent, percent);
+                Phase = "A gravar no iPhone";
+                Detail = "A enviar o sistema de ficheiros — a fase mais demorada.";
                 break;
 
             case 3:
-                install = Math.Max(install, percent);
-                phase = "A verificar";
-                detail = "A verificar os ficheiros enviados ao iPhone.";
+                InstallPercent = Math.Max(InstallPercent, percent);
+                Phase = "A verificar";
+                Detail = "A verificar os ficheiros enviados ao iPhone.";
                 break;
 
             case 4:
-                install = Math.Max(install, percent);
-                phase = "A gravar o firmware";
-                detail = "A gravar bootloader e firmware no aparelho.";
+                InstallPercent = Math.Max(InstallPercent, percent);
+                Phase = "A gravar o firmware";
+                Detail = "A gravar bootloader e firmware no aparelho.";
                 break;
 
             case 5:
-                install = Math.Max(install, percent);
-                phase = "A gravar o modem";
-                detail = "A atualizar o firmware do modem (baseband).";
+                InstallPercent = Math.Max(InstallPercent, percent);
+                Phase = "A gravar o modem";
+                Detail = "A atualizar o firmware do modem (baseband).";
                 break;
 
             case 6:
-                install = Math.Max(install, percent);
-                phase = "A finalizar";
-                detail = "A aplicar o complemento de firmware (FUD).";
+                InstallPercent = Math.Max(InstallPercent, percent);
+                Phase = "A finalizar";
+                Detail = "A aplicar o complemento de firmware (FUD).";
                 break;
 
             default:
-                install = Math.Max(install, percent);
-                phase = "A terminar";
-                detail = "A enviar os últimos componentes.";
+                InstallPercent = Math.Max(InstallPercent, percent);
+                Phase = "A terminar";
+                Detail = "A enviar os últimos componentes.";
                 break;
         }
     }
 
     /// <summary>Traduz linhas <c>Etiqueta: valor</c> (igual ao Windows).</summary>
-    private static void ApplyLabel(
-        string label,
-        double value,
-        ref double prep,
-        ref double install,
-        ref string phase,
-        ref string detail)
+    private void ApplyLabel(string label, double value)
     {
         var percent = value <= 1.0001 ? Math.Clamp(value * 100.0, 0, 100) : Math.Clamp(value, 0, 100);
 
@@ -293,31 +296,31 @@ public sealed class RestoreEngine(ToolRunner tools)
         {
             case "IPSW":
             case "SHA1":
-                prep = Math.Max(prep, percent);
+                PrepPercent = Math.Max(PrepPercent, percent);
                 break;
 
             case "Restoring image":
-                install = Math.Max(install, percent);
-                phase = "A gravar no iPhone";
-                detail = "A restaurar a imagem do sistema.";
+                InstallPercent = Math.Max(InstallPercent, percent);
+                Phase = "A gravar no iPhone";
+                Detail = "A restaurar a imagem do sistema.";
                 break;
 
             case "Verifying restore":
-                install = Math.Max(install, percent);
-                phase = "A verificar";
-                detail = "A verificar o restauro.";
+                InstallPercent = Math.Max(InstallPercent, percent);
+                Phase = "A verificar";
+                Detail = "A verificar o restauro.";
                 break;
 
             case "Flashing firmware":
-                install = Math.Max(install, percent);
-                phase = "A gravar o firmware";
-                detail = "A gravar firmware no aparelho.";
+                InstallPercent = Math.Max(InstallPercent, percent);
+                Phase = "A gravar o firmware";
+                Detail = "A gravar firmware no aparelho.";
                 break;
 
             case "Updating baseband":
-                install = Math.Max(install, percent);
-                phase = "A gravar o modem";
-                detail = "A atualizar o modem (baseband).";
+                InstallPercent = Math.Max(InstallPercent, percent);
+                Phase = "A gravar o modem";
+                Detail = "A atualizar o modem (baseband).";
                 break;
 
             case "Creating partition map":
@@ -325,13 +328,13 @@ public sealed class RestoreEngine(ToolRunner tools)
             case "Checking filesystems":
             case "Mounting filesystems":
             case "Fixing up /var":
-                phase = "A preparar o armazenamento";
-                detail = "A preparar o sistema de ficheiros do iPhone: " + label + ".";
+                Phase = "A preparar o armazenamento";
+                Detail = "A preparar o sistema de ficheiros do iPhone: " + label + ".";
                 break;
 
             case "Rebooting device":
-                phase = "A reiniciar";
-                detail = "O iPhone está a reiniciar.";
+                Phase = "A reiniciar";
+                Detail = "O iPhone está a reiniciar.";
                 break;
         }
     }

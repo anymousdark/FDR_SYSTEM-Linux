@@ -5,11 +5,11 @@
     e o csproj, o binário, o nome do .deb e o cabeçalho da app acompanham.
   -->
   <PropertyGroup>
-    <Version>1.6.0</Version>
-    <Product>FDR_SYSTEM</Product>
+    <Version>1.6.1</Version>
+    <Product>FDR SYSTEM</Product>
     <Company>anymousdark</Company>
     <Authors>anymousdark</Authors>
-    <Description>FDR_SYSTEM — leitura, recuperação e restauro de iPhones (Linux)</Description>
+    <Description>FDR SYSTEM — leitura, recuperação e restauro de iPhones (Linux)</Description>
   </PropertyGroup>
 
 </Project>

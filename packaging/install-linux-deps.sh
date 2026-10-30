@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Instala as dependências do FDR_SYSTEM numa distribuição Debian/Ubuntu/Kali.
+# Instala as dependências do FDR SYSTEM numa distribuição Debian/Ubuntu/Kali.
 #
 #   sudo bash packaging/install-linux-deps.sh
 #

@@ -1,7 +1,7 @@
 <Window xmlns="https://github.com/avaloniaui"
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         x:Class="FdrSystem.App.Views.MainWindow"
-        Title="FDR_SYSTEM"
+        Title="FDR SYSTEM"
         Width="1240" Height="760"
         MinWidth="1120" MinHeight="620"
         WindowStartupLocation="CenterScreen"
@@ -41,7 +41,7 @@
 
         <StackPanel DockPanel.Dock="Left" Orientation="Horizontal" VerticalAlignment="Center" Spacing="10">
           <Path Data="{StaticResource IconPhone}" Stroke="{DynamicResource BrandIconFg}" StrokeThickness="1.6" Width="20" Height="20" Stretch="Uniform" />
-          <TextBlock Text="FDR_SYSTEM" Foreground="{DynamicResource HeaderTitleStrong}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
+          <TextBlock Text="FDR SYSTEM" Foreground="{DynamicResource HeaderTitleStrong}" FontSize="14" FontWeight="Bold" VerticalAlignment="Center" />
           <TextBlock x:Name="VersionText" Text="v—" Foreground="{DynamicResource HeaderVersionFg}" FontSize="11" VerticalAlignment="Center" />
           <TextBlock Text="·  por anymousdark" Foreground="{DynamicResource HeaderAuthorFg}" FontSize="10.5" VerticalAlignment="Center" />
         </StackPanel>

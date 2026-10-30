@@ -128,7 +128,7 @@ Não colar tokens em issues, logs ou capturas de ecrã.
 ## 4. Build e execução
 
 ```bash
-dotnet restore FDR_SYSTEM.sln
+dotnet restore FDR-SYSTEM.sln
 dotnet build src/FdrSystem.App/FdrSystem.App.csproj -c Debug
 ```
 
@@ -206,7 +206,7 @@ dotnet publish src/FdrSystem.App/FdrSystem.App.csproj \
   -c Release -r linux-x64 --self-contained true \
   -o publish/linux-x64
 
-./publish/linux-x64/FDR_SYSTEM
+./publish/linux-x64/FDR-SYSTEM
 ```
 
 ### Script de empacotamento
@@ -218,7 +218,7 @@ bash packaging/build-linux.sh
 O script gera o publish e, se `dpkg-deb` estiver instalado, um `.deb` simples.
 
 ```bash
-sudo apt install ./publish/fdr-system_1.6.0_amd64.deb
+sudo apt install ./publish/fdr-system_1.6.1_amd64.deb
 fdr-system
 ```
 

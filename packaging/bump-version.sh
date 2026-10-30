@@ -64,7 +64,7 @@ if [[ "$commit" -eq 1 ]]; then
 fi
 
 if [[ "$tag" -eq 1 ]]; then
-  git tag -a "v$new" -m "FDR_SYSTEM Linux $new"
+  git tag -a "v$new" -m "FDR SYSTEM Linux $new"
   echo "tag criada: v$new"
 fi
 

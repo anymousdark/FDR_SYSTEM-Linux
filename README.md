@@ -1,17 +1,22 @@
-# FDR_SYSTEM — Linux (Avalonia)
+# FDR SYSTEM — Linux (Avalonia)
 
-> Port do **FDR_SYSTEM** (C# + WPF, Windows) para **Linux**, em **Avalonia UI**.
-> **Versão Linux: 1.6.0** (o projeto Windows mantém a sua própria numeração).
+> Port do **FDR SYSTEM** (C# + WPF, Windows) para **Linux**, em **Avalonia UI**.
+> **Versão Linux: 1.6.1** (o projeto Windows mantém a sua própria numeração).
 > Repositório **privado**. A aplicação Windows original não é alterada por este projeto.
 
 **Estado atual:** as dez páginas estão implementadas — **Offline**, **Online**, **Restauro**,
 **Reparo**, **Diagnóstico**, **Firmware**, **Acessibilidade (AFC)**, **Driver**, **Instalação** e
-**Jailbreak**. A 1.6.0 acrescenta a página **Instalação**, que instala as dependências Linux
-(`usbmuxd`, `libimobiledevice`, motores opcionais) por `pkexec`, e faz a página **Offline** mostrar
-modelo e ficha técnica também em recovery/DFU. Diagnóstico e AFC foram testados com um iPhone real
+**Jailbreak**. A 1.6.0 acrescentou a página **Instalação**, que instala as dependências Linux
+(`usbmuxd`, `libimobiledevice`, motores opcionais) por `pkexec`, e fez a página **Offline** mostrar
+modelo e ficha técnica também em recovery/DFU. A 1.6.1 adota o nome **FDR SYSTEM** (binário
+`FDR-SYSTEM`), acrescenta **166 testes** automáticos e este documento de apresentação.
+Diagnóstico e AFC foram testados com um iPhone real
 no ambiente Windows de desenvolvimento; falta validar tudo numa instalação Linux. O projeto compila
 e gera um binário `linux-x64` self-contained.
 
+> **Apresentação da aplicação:** [`docs/APRESENTACAO.md`](docs/APRESENTACAO.md) descreve as
+> dez páginas, a instalação e a privacidade no mesmo estilo do README do projeto Windows.
+>
 > **A continuar numa máquina Linux?** Começa pelo guia completo
 > [`docs/LINUX-FULL-GUIDE.md`](docs/LINUX-FULL-GUIDE.md): dependências, build, testes,
 > implementação das páginas e diagnóstico de “só aparece Offline”.
@@ -41,7 +46,7 @@ e gera um binário `linux-x64` self-contained.
 
 ## 1. O que é
 
-O FDR_SYSTEM é uma ferramenta de diagnóstico, leitura e recuperação de iPhones por USB.
+O FDR SYSTEM é uma ferramenta de diagnóstico, leitura e recuperação de iPhones por USB.
 Esta versão Linux mantém a lógica do projeto Windows, mas substitui a camada WPF por
 **Avalonia 11.3.x** e usa as ferramentas oficiais do Linux:
 
@@ -138,7 +143,7 @@ pareamento ou permissões), não da interface.
 git clone https://github.com/anymousdark/FDR_SYSTEM-Linux.git
 cd FDR_SYSTEM-Linux
 
-dotnet restore FDR_SYSTEM.sln
+dotnet restore FDR-SYSTEM.sln
 dotnet build src/FdrSystem.App/FdrSystem.App.csproj -c Debug
 ```
 
@@ -170,7 +175,7 @@ modo headless.
 Para correr o binário já publicado:
 
 ```bash
-./publish/linux-x64/FDR_SYSTEM
+./publish/linux-x64/FDR-SYSTEM
 ```
 
 ---
@@ -184,10 +189,10 @@ dotnet publish src/FdrSystem.App/FdrSystem.App.csproj \
   -c Release -r linux-x64 --self-contained true \
   -o publish/linux-x64
 
-./publish/linux-x64/FDR_SYSTEM
+./publish/linux-x64/FDR-SYSTEM
 ```
 
-Resultado medido no projeto: **91,6 MB**, **218 ficheiros**, binário ELF `FDR_SYSTEM`.
+Resultado medido no projeto: **91,6 MB**, **218 ficheiros**, binário ELF `FDR-SYSTEM`.
 O destino não precisa de ter o .NET instalado.
 
 Atalho:
@@ -213,7 +218,7 @@ corre em tags `v*` (ou manualmente) e anexa os `.deb` e a AppImage à release.
 
 ```bash
 bash packaging/build-appimage.sh
-# → publish/FDR_SYSTEM-1.6.0-x86_64.AppImage
+# → publish/FDR-SYSTEM-1.6.1-x86_64.AppImage
 ```
 
 A AppImage é self-contained (não precisa de .NET nem de dependências instaladas) e só
@@ -228,14 +233,14 @@ O script instala em `/opt/fdr-system`, cria o symlink `/usr/bin/fdr-system` e o 
 
 ```bash
 # x64
-sudo apt install ./publish/fdr-system_1.6.0_amd64.deb
+sudo apt install ./publish/fdr-system_1.6.1_amd64.deb
 
 # ARM64
-sudo apt install ./publish/fdr-system_1.6.0_arm64.deb
+sudo apt install ./publish/fdr-system_1.6.1_arm64.deb
 
 # ou AppImage (sem instalar)
-chmod +x FDR_SYSTEM-1.6.0-x86_64.AppImage
-./FDR_SYSTEM-1.6.0-x86_64.AppImage
+chmod +x FDR-SYSTEM-1.6.1-x86_64.AppImage
+./FDR-SYSTEM-1.6.1-x86_64.AppImage
 ```
 
 ### Ainda por fazer
@@ -251,7 +256,7 @@ chmod +x FDR_SYSTEM-1.6.0-x86_64.AppImage
 
 ```text
 FDR_SYSTEM-Linux/
-├─ FDR_SYSTEM.sln
+├─ FDR-SYSTEM.sln
 ├─ README.md
 ├─ AGENTS.md
 ├─ docs/
@@ -283,7 +288,7 @@ Regras de arquitetura:
 - **Core sem UI**: tudo o que pode ser testado sem janela fica em `FdrSystem.Core`.
 - **Nada de `sudo` dentro da aplicação.** Se faltar permissão, a UI explica o comando.
 - **IDs mascarados por omissão**; revelar só com “Revelar IDs” ligado.
-- **Logs** em `~/.local/share/FDR_SYSTEM/logs/app-AAAAMMDD.log`.
+- **Logs** em `~/.local/share/FDR-SYSTEM/logs/app-AAAAMMDD.log`.
 - **Caminhos XDG** sempre por `AppPaths`; nunca `Environment.SpecialFolder` diretamente.
 
 ---
@@ -455,4 +460,4 @@ sem autorização do autor. A aplicação Windows e a release pública são proj
 Os dados lidos do iPhone ficam na máquina local. Os logs também são locais. Não há
 telemetria, contas ou servidores próprios.
 
-**FDR_SYSTEM** é um projeto de anymousdark. Todos os direitos reservados.
+**FDR SYSTEM** é um projeto de anymousdark. Todos os direitos reservados.

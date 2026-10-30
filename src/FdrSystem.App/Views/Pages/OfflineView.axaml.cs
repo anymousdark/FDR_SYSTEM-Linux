@@ -268,7 +268,7 @@ public partial class OfflineView : UserControl
 
             var payload = new
             {
-                app = "FDR_SYSTEM",
+                app = "FDR SYSTEM",
                 versao = typeof(OfflineView).Assembly.GetName().Version?.ToString(),
                 modo = "Linux",
                 data = DateTime.Now.ToString("O", CultureInfo.InvariantCulture),

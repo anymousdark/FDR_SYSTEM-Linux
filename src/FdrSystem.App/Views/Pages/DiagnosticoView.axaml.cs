@@ -306,7 +306,7 @@ public partial class DiagnosticoView : UserControl
             await using var stream = await file.OpenWriteAsync();
             await using var writer = new StreamWriter(stream, new UTF8Encoding(false));
             await writer.WriteLineAsync(
-                $"FDR_SYSTEM — registo do iOS — {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
+                $"FDR SYSTEM — registo do iOS — {DateTime.Now:dd/MM/yyyy HH:mm:ss}");
             await writer.WriteLineAsync();
             foreach (var line in _syslogLines)
                 await writer.WriteLineAsync(line);

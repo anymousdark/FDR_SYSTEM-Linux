@@ -29,7 +29,7 @@ if [[ "$HOST_ARCH" != "$APPIMAGE_ARCH" ]]; then
   exit 1
 fi
 
-OUT_BIN="$ROOT/publish/$RID/FDR_SYSTEM"
+OUT_BIN="$ROOT/publish/$RID/FDR-SYSTEM"
 if [ ! -x "$OUT_BIN" ]; then
   echo "==> publish em falta; a compilar ($RID)"
   RID="$RID" bash "$ROOT/packaging/build-linux.sh"
@@ -62,13 +62,13 @@ ln -sf fdr-system.png "$APPDIR/.DirIcon"
 cat > "$APPDIR/fdr-system.desktop" <<EOF
 [Desktop Entry]
 Type=Application
-Name=FDR_SYSTEM
+Name=FDR SYSTEM
 Comment=Diagnostico e recuperacao de iPhones
 Exec=fdr-system
 Icon=fdr-system
 Terminal=false
 Categories=Utility;
-StartupWMClass=FDR_SYSTEM
+StartupWMClass=FDR-SYSTEM
 Keywords=iphone;ipsw;firmware;restore;diagnostico;usb;
 X-AppImage-Version=$VERSION
 EOF
@@ -77,14 +77,14 @@ cp "$APPDIR/fdr-system.desktop" "$APPDIR/usr/share/applications/fdr-system.deskt
 cat > "$APPDIR/AppRun" <<'EOF'
 #!/bin/sh
 HERE="$(dirname "$(readlink -f "$0")")"
-exec "$HERE/usr/lib/fdr-system/FDR_SYSTEM" "$@"
+exec "$HERE/usr/lib/fdr-system/FDR-SYSTEM" "$@"
 EOF
 chmod 755 "$APPDIR/AppRun"
 
 # O appimagetool exige leitura para todos e execução onde já existe.
 chmod -R a+rX "$APPDIR"
 
-APPIMAGE="$ROOT/publish/FDR_SYSTEM-${VERSION}-${APPIMAGE_ARCH}.AppImage"
+APPIMAGE="$ROOT/publish/FDR-SYSTEM-${VERSION}-${APPIMAGE_ARCH}.AppImage"
 echo "==> a gerar AppImage"
 ARCH="$APPIMAGE_ARCH" APPIMAGE_EXTRACT_AND_RUN=1 \
   "$TOOL" --no-appstream "$APPDIR" "$APPIMAGE"

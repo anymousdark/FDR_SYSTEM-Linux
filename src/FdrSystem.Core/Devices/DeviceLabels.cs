@@ -128,7 +128,9 @@ public static class DeviceLabels
     }
 
     public static string FormatMinutes(double minutes) =>
-        minutes >= 60 ? $"{minutes / 60:0} h {minutes % 60:0} min" : $"{minutes:0} min";
+        minutes >= 60
+            ? $"{(int)(minutes / 60)} h {(int)minutes % 60:0} min"
+            : $"{minutes:0} min";
 
     public static string HealthWord(double health) => health >= 90 ? "Boa" : health >= 80 ? "Razoável" : "Fraca";
 }

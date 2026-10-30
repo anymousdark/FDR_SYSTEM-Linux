@@ -1,6 +1,6 @@
 # AGENTS.md — instruções para agentes de IA
 
-Port de **FDR_SYSTEM** (WPF/Windows) para **Linux** com **Avalonia 11.3.x**.
+Port de **FDR SYSTEM** (WPF/Windows) para **Linux** com **Avalonia 11.3.x**.
 Lê o `README.md` primeiro; este ficheiro é o resumo operacional. Para retomar numa máquina
 Linux, lê `docs/LINUX-FULL-GUIDE.md` (guia completo) e `docs/CONTINUE-ON-LINUX.md`
 (resumo).
@@ -34,7 +34,7 @@ bash packaging/bump-version.sh patch [--commit|--tag|--push]     # sobe a versã
 ```
 
 Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas falsas de
-`tools/dev/` para validar parsing → ver logs em `~/.local/share/FDR_SYSTEM/logs/`.
+`tools/dev/` para validar parsing → ver logs em `~/.local/share/FDR-SYSTEM/logs/`.
 
 ## Onde está o quê
 
@@ -66,7 +66,7 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
       de desenvolvimento; falta validar no Linux.
 - [x] **Online** — `Core/Firmware/DownloadManager.cs` + `IpswCatalog.cs`, UI em
       `Views/Pages/OnlineView.axaml(.cs)`.
-- [x] **Firmware** — `Views/Pages/FirmwareView.axaml(.cs)` com cache em `~/.local/share/FDR_SYSTEM/cache`.
+- [x] **Firmware** — `Views/Pages/FirmwareView.axaml(.cs)` com cache em `~/.local/share/FDR-SYSTEM/cache`.
 - [x] **Restauro** — `Core/Firmware/RestoreEngine.cs` (progresso `progress: <passo> <fração>`)
       + `Views/Pages/RestauroView.axaml(.cs)`; recusa IPSW pequeno/incompatível.
 - [x] **Reparo** — `Views/Pages/ReparoView.axaml(.cs)`: `UsbScanner` + `IrecoveryDevices`,
@@ -93,7 +93,7 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 
 - `ContentPresenter` sem `Content="{TemplateBinding Content}"` → nav invisível.
 - `FluentTheme.RequestedThemeVariant` não existe → usar `Application.Current.RequestedThemeVariant`.
-- `avares://` usa o **AssemblyName** (`FDR_SYSTEM`), não o namespace.
+- `avares://` usa o **AssemblyName** (`FDR-SYSTEM`), não o namespace.
 - Bindings compilados desligados de propósito (`AvaloniaUseCompiledBindingsByDefault=false`).
 - `dotnet publish -r linux-x64` demora (descarrega runtime pack) e **restore pode falhar** com
   `ResponseEnded`: repetir o comando, o cache fica.

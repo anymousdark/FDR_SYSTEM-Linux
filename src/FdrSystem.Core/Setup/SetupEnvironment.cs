@@ -16,7 +16,7 @@ public enum PackageManager
 public sealed record SetupPackage(string Name, string Label, bool Required, bool Installed);
 
 /// <summary>
-/// Estado do ambiente Linux relevante para o FDR_SYSTEM: distribuição, gestor de
+/// Estado do ambiente Linux relevante para o FDR SYSTEM: distribuição, gestor de
 /// pacotes, elevação por polkit e as bibliotecas de que o USB depende.
 /// A recolha é só de leitura; nada é instalado sem uma ação explícita do utilizador.
 /// </summary>
@@ -76,7 +76,7 @@ public sealed record SetupEnvironment(
         var sb = new StringBuilder();
 
         sb.AppendLine("#!/usr/bin/env bash");
-        sb.AppendLine("# FDR_SYSTEM — instalação de dependências Linux (" + mode + ")");
+        sb.AppendLine("# FDR SYSTEM — instalação de dependências Linux (" + mode + ")");
         sb.AppendLine("# Gerado pela aplicação. Revê antes de correr fora da app.");
         sb.AppendLine("set -u");
         sb.AppendLine("fail=0");

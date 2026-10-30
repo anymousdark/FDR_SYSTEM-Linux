@@ -1,4 +1,4 @@
-# FDR_SYSTEM no Linux — guia completo de build e implementação
+# FDR SYSTEM no Linux — guia completo de build e implementação
 
 > **Repositório privado:** `https://github.com/anymousdark/FDR_SYSTEM-Linux`
 > **Branch:** `main` · **Data:** 29/10/2026
@@ -92,18 +92,18 @@ readlink -f "$(which fdr-system)"
 stat -c '%y %n' "$(readlink -f "$(which fdr-system)")"
 ```
 
-Se o caminho instalado for `/opt/fdr-system/FDR_SYSTEM`, ele pode ser uma versão antiga.
+Se o caminho instalado for `/opt/fdr-system/FDR-SYSTEM`, ele pode ser uma versão antiga.
 Reinstala depois de construir:
 
 ```bash
 bash packaging/build-linux.sh
-sudo apt install --reinstall ./publish/fdr-system_1.6.0_amd64.deb
+sudo apt install --reinstall ./publish/fdr-system_1.6.1_amd64.deb
 ```
 
 Ou, para testar sem instalar:
 
 ```bash
-./publish/linux-x64/FDR_SYSTEM
+./publish/linux-x64/FDR-SYSTEM
 ```
 
 ### 0.3 Ver o que a app está a fazer
@@ -111,14 +111,14 @@ Ou, para testar sem instalar:
 A app escreve logs em:
 
 ```bash
-~/.local/share/FDR_SYSTEM/logs/
+~/.local/share/FDR-SYSTEM/logs/
 ```
 
 Abre o mais recente:
 
 ```bash
-ls -lt ~/.local/share/FDR_SYSTEM/logs | head
-tail -n 120 ~/.local/share/FDR_SYSTEM/logs/app-*.log
+ls -lt ~/.local/share/FDR-SYSTEM/logs | head
+tail -n 120 ~/.local/share/FDR-SYSTEM/logs/app-*.log
 ```
 
 A navegação regista linhas como `página -> diagnostico`. Se não houver linha nenhuma
@@ -206,7 +206,7 @@ Com um iPhone 13 real, no Windows de desenvolvimento:
 | Acessibilidade | `libimobiledevice-1.0.so`, `idevice_id`, `ideviceinfo`, `idevicescreenshot` |
 | Driver | `usbmuxd`, regras udev, `systemctl`, `id` |
 | Online | rede + `api.ipsw.me`; `DownloadManager` (retoma + SHA-256) |
-| Firmware | rede + `api.ipsw.me` (cache em `~/.local/share/FDR_SYSTEM/cache`) |
+| Firmware | rede + `api.ipsw.me` (cache em `~/.local/share/FDR-SYSTEM/cache`) |
 | Restauro | `idevicerestore` (opcional no sistema; necessário para restaurar) |
 | Reparo | `ideviceenterrecovery`, `idevicediagnostics`, `irecovery` |
 | Jailbreak | `palera1n` ou `checkra1n` instalados pelo utilizador; não vêm no FDR |
@@ -378,7 +378,7 @@ privado; não o tornar público sem autorização.
 ### 4.2 Compilar
 
 ```bash
-dotnet restore FDR_SYSTEM.sln
+dotnet restore FDR-SYSTEM.sln
 dotnet build src/FdrSystem.App/FdrSystem.App.csproj -c Debug
 ```
 
@@ -390,7 +390,7 @@ Se houver dúvidas sobre cache antiga:
 dotnet clean src/FdrSystem.App/FdrSystem.App.csproj
 rm -rf src/FdrSystem.App/bin src/FdrSystem.App/obj
 rm -rf src/FdrSystem.Core/bin src/FdrSystem.Core/obj
-dotnet restore FDR_SYSTEM.sln
+dotnet restore FDR-SYSTEM.sln
 dotnet build src/FdrSystem.App/FdrSystem.App.csproj -c Debug
 ```
 
@@ -409,7 +409,7 @@ dotnet publish src/FdrSystem.App/FdrSystem.App.csproj \
   -c Release -r linux-x64 --self-contained true \
   -o publish/linux-x64
 
-./publish/linux-x64/FDR_SYSTEM
+./publish/linux-x64/FDR-SYSTEM
 ```
 
 Ou:
@@ -428,7 +428,7 @@ AppImage:
 
 ```bash
 bash packaging/build-appimage.sh
-# → publish/FDR_SYSTEM-<versao>-x86_64.AppImage
+# → publish/FDR-SYSTEM-<versao>-x86_64.AppImage
 ```
 
 A AppImage tem de ser gerada no host da mesma arquitectura (`RID=linux-arm64` só num
@@ -444,10 +444,10 @@ com a arquitectura errada.
 
 ```bash
 # x64
-sudo apt install ./publish/fdr-system_1.6.0_amd64.deb
+sudo apt install ./publish/fdr-system_1.6.1_amd64.deb
 
 # ARM64
-sudo apt install ./publish/fdr-system_1.6.0_arm64.deb
+sudo apt install ./publish/fdr-system_1.6.1_arm64.deb
 
 fdr-system
 ```
@@ -455,7 +455,7 @@ fdr-system
 Se já tinhas a mesma versão instalada e queres substituir:
 
 ```bash
-sudo apt install --reinstall ./publish/fdr-system_1.6.0_amd64.deb
+sudo apt install --reinstall ./publish/fdr-system_1.6.1_amd64.deb
 ```
 
 Confirma que estás a abrir o binário novo:
@@ -470,11 +470,11 @@ stat -c '%y %n' "$(readlink -f "$(which fdr-system)")"
 
 | O quê | Onde |
 |---|---|
-| Dados | `~/.local/share/FDR_SYSTEM/` |
-| Logs | `~/.local/share/FDR_SYSTEM/logs/` |
-| Definições | `~/.local/share/FDR_SYSTEM/settings.json` |
+| Dados | `~/.local/share/FDR-SYSTEM/` |
+| Logs | `~/.local/share/FDR-SYSTEM/logs/` |
+| Definições | `~/.local/share/FDR-SYSTEM/settings.json` |
 | Firmware | `~/Documents/iDevice-Firmware/` |
-| Relatórios | `~/Documents/FDR_SYSTEM/Relatorios/` |
+| Relatórios | `~/Documents/FDR-SYSTEM/Relatorios/` |
 
 `XDG_DATA_HOME` e `XDG_DOCUMENTS_DIR` são respeitados quando definidos.
 
@@ -615,7 +615,7 @@ A página **não executa `sudo`**. Os comandos são mostrados/copiados para o ut
 | Acessibilidade | lista `/`, entra em `DCIM/100APPLE` e exporta um ficheiro |
 | Driver | mostra usbmuxd/udev/grupos e o iPhone sem pedir privilégios |
 | Build | `dotnet build` dá 0 erros e 0 avisos |
-| Publish | `publish/linux-x64/FDR_SYSTEM` arranca numa sessão gráfica |
+| Publish | `publish/linux-x64/FDR-SYSTEM` arranca numa sessão gráfica |
 
 **Não testar restauro, apagar ficheiros ou jailbreak num iPhone principal.** Usa um
 aparelho de teste e faz backup.
@@ -851,7 +851,7 @@ contorna iCloud/Activation Lock/MDM.
 - instala em `/opt/fdr-system`, cria `/usr/bin/fdr-system` e o `.desktop`;
 - `Depends: libimobiledevice-utils, usbmuxd` e
   `Recommends: libimobiledevice-1.0-6 | libimobiledevice-1.0-6t64` (Ubuntu 24.04 usa `t64`);
-- `packaging/build-appimage.sh` cria `publish/FDR_SYSTEM-<versao>-<arch>.AppImage`
+- `packaging/build-appimage.sh` cria `publish/FDR-SYSTEM-<versao>-<arch>.AppImage`
   (AppDir + `AppRun` + `.desktop` + `.DirIcon`), sem precisar de FUSE no build;
 - o ícone (`Assets/fdr-system.svg` + PNG 16–512) entra na janela (`_NET_WM_ICON` via
   `WindowIcon`) e é instalado em `/usr/share/icons/hicolor/*/apps/fdr-system.png`;
@@ -939,7 +939,7 @@ Se as rotas existem mas a app instalada é antiga:
 
 ```bash
 bash packaging/build-linux.sh
-sudo apt install --reinstall ./publish/fdr-system_1.6.0_amd64.deb
+sudo apt install --reinstall ./publish/fdr-system_1.6.1_amd64.deb
 ```
 
 Se estás a abrir `fdr-system` e o `readlink` aponta para outro sítio, remove ou
@@ -1045,7 +1045,7 @@ permitir tentar novamente.
 ### O `.deb` não substitui a versão antiga
 
 ```bash
-sudo apt install --reinstall ./publish/fdr-system_1.6.0_amd64.deb
+sudo apt install --reinstall ./publish/fdr-system_1.6.1_amd64.deb
 ```
 
 Confirma depois:
@@ -1106,7 +1106,7 @@ git pull --ff-only origin main
 git log -1 --oneline
 
 # 4. Compilar
-dotnet restore FDR_SYSTEM.sln
+dotnet restore FDR-SYSTEM.sln
 dotnet build src/FdrSystem.App/FdrSystem.App.csproj -c Debug
 
 # 5. Correr
@@ -1116,7 +1116,7 @@ dotnet run --project src/FdrSystem.App/FdrSystem.App.csproj
 bash packaging/build-linux.sh
 
 # 7. Instalar/substituir .deb
-sudo apt install --reinstall ./publish/fdr-system_1.6.0_amd64.deb
+sudo apt install --reinstall ./publish/fdr-system_1.6.1_amd64.deb
 
 # 8. Estado USB
 systemctl status usbmuxd --no-pager

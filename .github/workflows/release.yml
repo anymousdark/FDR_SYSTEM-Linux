@@ -6,7 +6,7 @@ on:
   workflow_dispatch:
     inputs:
       tag:
-        description: "Tag da release (ex.: v1.6.0)"
+        description: "Tag da release (ex.: v1.6.1)"
         required: true
         type: string
 
@@ -14,8 +14,25 @@ permissions:
   contents: write
 
 jobs:
+  test:
+    name: Tests
+    runs-on: ubuntu-24.04
+    timeout-minutes: 15
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Test
+        run: dotnet test tests/FdrSystem.Core.Tests/FdrSystem.Core.Tests.csproj -c Release --logger "console;verbosity=normal"
+
   deb:
     name: .deb ${{ matrix.rid }}
+    needs: test
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     strategy:
@@ -48,6 +65,7 @@ jobs:
 
   appimage:
     name: AppImage x86_64
+    needs: test
     runs-on: ubuntu-24.04
     timeout-minutes: 30
     steps:
@@ -79,11 +97,29 @@ jobs:
     needs: [deb, appimage]
     runs-on: ubuntu-24.04
     steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          ref: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+          fetch-depth: 0
+
       - name: Download artifacts
         uses: actions/download-artifact@v4
         with:
           path: dist
           merge-multiple: true
+
+      - name: Build source tarball and checksums
+        env:
+          TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          VERSION="${TAG#v}"
+          git archive --format=tar.gz --prefix="FDR-SYSTEM-${VERSION}/" \
+            -o "dist/FDR-SYSTEM-${VERSION}-source.tar.gz" HEAD
+          cd dist
+          sha256sum ./*.deb ./*.AppImage ./*-source.tar.gz > SHA256SUMS
+          cat SHA256SUMS
 
       - name: List assets
         run: ls -lh dist
@@ -98,6 +134,26 @@ jobs:
           if gh release view "$TAG" >/dev/null 2>&1; then
             echo "Release $TAG já existe; a atualizar assets."
           else
-            gh release create "$TAG" --title "FDR_SYSTEM Linux ${TAG#v}" --generate-notes
+            gh release create "$TAG" --title "FDR SYSTEM Linux ${TAG#v}" --generate-notes
           fi
           gh release upload "$TAG" dist/* --clobber
+
+      - name: Publish checksums in the release notes
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GH_REPO: ${{ github.repository }}
+          TAG: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
+        run: |
+          set -euo pipefail
+          body="$(gh release view "$TAG" --json body -q .body)"
+          if printf '%s' "$body" | grep -q '^## SHA-256$'; then
+            echo "As notas já têm a secção SHA-256; nada a fazer."
+            exit 0
+          fi
+          {
+            printf '%s\n\n' "$body"
+            printf '## SHA-256\n\n```\n'
+            cat dist/SHA256SUMS
+            printf '```\n'
+          } > release-notes.md
+          gh release edit "$TAG" --notes-file release-notes.md

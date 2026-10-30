@@ -26,7 +26,7 @@ public static class ThemeManager
 
         if (Application.Current is { } app)
         {
-            var uri = new Uri($"avares://FDR_SYSTEM/Themes/{Files[index]}.axaml");
+            var uri = new Uri($"avares://FDR-SYSTEM/Themes/{Files[index]}.axaml");
             var dictionaries = app.Resources.MergedDictionaries;
 
             for (var i = dictionaries.Count - 1; i >= 0; i--)
