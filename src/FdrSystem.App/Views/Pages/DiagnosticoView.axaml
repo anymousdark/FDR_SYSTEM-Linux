@@ -24,7 +24,7 @@
           <StackPanel Spacing="8">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <Path Data="{StaticResource IconTerminal}" Stroke="{DynamicResource GreenText}"
-                    StrokeThickness="1.6" Width="15" Height="15" />
+                    StrokeThickness="1.6" Width="15" Height="15" Stretch="Uniform" />
               <TextBlock Text="REGISTO DO iOS" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
             </StackPanel>
 
@@ -34,7 +34,7 @@
             <WrapPanel>
               <Button x:Name="SyslogToggleButton" Classes="primary" Click="SyslogToggle_Click" Margin="0,0,8,6">
                 <StackPanel Orientation="Horizontal" Spacing="6">
-                  <Path Data="{StaticResource IconTerminal}" Stroke="White" StrokeThickness="1.5" Width="13" Height="13" />
+                  <Path Data="{StaticResource IconTerminal}" Stroke="White" StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
                   <TextBlock x:Name="SyslogToggleText" Text="Começar a ouvir" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
@@ -71,7 +71,7 @@
           <StackPanel Spacing="8">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <Path Data="{StaticResource IconBox}" Stroke="{DynamicResource AmberText}"
-                    StrokeThickness="1.6" Width="15" Height="15" />
+                    StrokeThickness="1.6" Width="15" Height="15" Stretch="Uniform" />
               <TextBlock Text="RELATÓRIOS DE FALHAS" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
             </StackPanel>
 
@@ -97,7 +97,7 @@
           <StackPanel Spacing="8">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <Path Data="{StaticResource IconPhone}" Stroke="{DynamicResource BlueText}"
-                    StrokeThickness="1.6" Width="15" Height="15" />
+                    StrokeThickness="1.6" Width="15" Height="15" Stretch="Uniform" />
               <TextBlock Text="EMPARELHAMENTO" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
             </StackPanel>
 
@@ -131,7 +131,7 @@
           <StackPanel Spacing="8">
             <StackPanel Orientation="Horizontal" Spacing="8">
               <Path Data="{StaticResource IconFolder}" Stroke="{DynamicResource TextMuted}"
-                    StrokeThickness="1.6" Width="15" Height="15" />
+                    StrokeThickness="1.6" Width="15" Height="15" Stretch="Uniform" />
               <TextBlock Text="PERFIS DE APROVISIONAMENTO" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
             </StackPanel>
 

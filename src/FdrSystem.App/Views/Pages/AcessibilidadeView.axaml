@@ -7,7 +7,7 @@
     <Border Grid.Row="0" Background="{DynamicResource GreenBoxBg}" CornerRadius="12" Padding="14">
       <Grid ColumnDefinitions="Auto,*">
         <Path Grid.Column="0" Data="{StaticResource IconFolder}" Stroke="{DynamicResource GreenText}"
-              StrokeThickness="1.6" Width="16" Height="16" VerticalAlignment="Top" Margin="0,2,9,0" />
+              StrokeThickness="1.6" Width="16" Height="16" VerticalAlignment="Top" Margin="0,2,9,0" Stretch="Uniform" />
         <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="{DynamicResource GreenText2}" FontSize="10.5"
                    Text="Ficheiros e fotos do iPhone por USB (área Media, a mesma que o 3uTools usa para fotos e ficheiros). O aparelho tem de estar ligado, desbloqueado e com «Confiar neste computador» aceite. Nada é apagado sem confirmação." />
       </Grid>
@@ -24,12 +24,12 @@
               <StackPanel DockPanel.Dock="Right" Orientation="Horizontal" Spacing="6" VerticalAlignment="Center">
                 <Button x:Name="AfcUpButton" Classes="tool" Click="AfcUp_Click" Padding="9,4" ToolTip.Tip="Subir um nível">
                   <Path Data="{StaticResource IconUp}" Stroke="{DynamicResource TextSecondary}" StrokeThickness="1.6"
-                        Width="14" Height="14" />
+                        Width="14" Height="14" Stretch="Uniform" />
                 </Button>
                 <Button x:Name="AfcRefreshButton" Classes="tool" Click="AfcRefresh_Click" ToolTip.Tip="Voltar a ligar e atualizar">
                   <StackPanel Orientation="Horizontal" Spacing="6">
                     <Path Data="{StaticResource IconRefresh}" Stroke="{DynamicResource TextSecondary}"
-                          StrokeThickness="1.5" Width="13" Height="13" />
+                          StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
                     <TextBlock Text="Atualizar" VerticalAlignment="Center" />
                   </StackPanel>
                 </Button>
@@ -37,7 +37,7 @@
 
               <StackPanel Orientation="Horizontal" Spacing="7" VerticalAlignment="Center">
                 <Path Data="{StaticResource IconFolder}" Stroke="{DynamicResource TextMuted}"
-                      StrokeThickness="1.6" Width="14" Height="14" />
+                      StrokeThickness="1.6" Width="14" Height="14" Stretch="Uniform" />
                 <TextBlock Text="FICHEIROS DO IPHONE (MEDIA)" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
               </StackPanel>
             </DockPanel>
@@ -64,21 +64,21 @@
               <Button x:Name="AfcImportButton" Classes="tool" Click="AfcImport_Click" Margin="0,0,8,6">
                 <StackPanel Orientation="Horizontal" Spacing="7">
                   <Path Data="{StaticResource IconDownload}" Stroke="{DynamicResource TextSecondary}"
-                        StrokeThickness="1.5" Width="13" Height="13" />
+                        StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
                   <TextBlock Text="Importar ficheiros" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
               <Button x:Name="AfcExportButton" Classes="tool" Click="AfcExport_Click" Margin="0,0,8,6">
                 <StackPanel Orientation="Horizontal" Spacing="7">
                   <Path Data="{StaticResource IconExport}" Stroke="{DynamicResource TextSecondary}"
-                        StrokeThickness="1.5" Width="13" Height="13" />
+                        StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
                   <TextBlock Text="Exportar selecionado" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
               <Button x:Name="AfcNewFolderButton" Classes="tool" Click="AfcNewFolder_Click" Margin="0,0,8,6">
                 <StackPanel Orientation="Horizontal" Spacing="7">
                   <Path Data="{StaticResource IconFolder}" Stroke="{DynamicResource TextSecondary}"
-                        StrokeThickness="1.5" Width="13" Height="13" />
+                        StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
                   <TextBlock Text="Nova pasta" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
@@ -86,7 +86,7 @@
                       Background="{DynamicResource RedBoxBg}" Foreground="{DynamicResource RedTextSoft}">
                 <StackPanel Orientation="Horizontal" Spacing="7">
                   <Path Data="{StaticResource IconTrash}" Stroke="{DynamicResource RedTextSoft}"
-                        StrokeThickness="1.5" Width="13" Height="13" />
+                        StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
                   <TextBlock Text="Eliminar" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
@@ -94,7 +94,7 @@
                       IsVisible="False" Margin="0,0,8,6">
                 <StackPanel Orientation="Horizontal" Spacing="7">
                   <Path Data="{StaticResource IconClose}" Stroke="{DynamicResource TextSecondary}"
-                        StrokeThickness="1.5" Width="13" Height="13" />
+                        StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
                   <TextBlock Text="Cancelar operação" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
@@ -115,7 +115,7 @@
             <StackPanel Spacing="8">
               <StackPanel Orientation="Horizontal" Spacing="7">
                 <Path Data="{StaticResource IconFolder}" Stroke="{DynamicResource GreenText}"
-                      StrokeThickness="1.6" Width="15" Height="15" />
+                      StrokeThickness="1.6" Width="15" Height="15" Stretch="Uniform" />
                 <TextBlock Text="FOTOS (DCIM)" Foreground="{DynamicResource GreenText}"
                            Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
               </StackPanel>
@@ -124,7 +124,7 @@
               <Button x:Name="AfcExportPhotosButton" Classes="primary" Click="AfcExportPhotos_Click" Margin="0,2,0,0">
                 <StackPanel Orientation="Horizontal" Spacing="7">
                   <Path Data="{StaticResource IconExport}" Stroke="White" StrokeThickness="1.5"
-                        Width="13" Height="13" />
+                        Width="13" Height="13" Stretch="Uniform" />
                   <TextBlock Text="Exportar todas as fotos" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
@@ -135,7 +135,7 @@
             <StackPanel Spacing="8">
               <StackPanel Orientation="Horizontal" Spacing="7">
                 <Path Data="{StaticResource IconCamera}" Stroke="{DynamicResource TextMuted}"
-                      StrokeThickness="1.6" Width="15" Height="15" />
+                      StrokeThickness="1.6" Width="15" Height="15" Stretch="Uniform" />
                 <TextBlock Text="ECRÃ DO IPHONE" Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
               </StackPanel>
               <TextBlock TextWrapping="Wrap" Foreground="{DynamicResource TextSecondary}" FontSize="10.5"
@@ -143,7 +143,7 @@
               <Button x:Name="AfcScreenshotButton" Classes="tool" Click="AfcScreenshot_Click" Margin="0,2,0,0">
                 <StackPanel Orientation="Horizontal" Spacing="7">
                   <Path Data="{StaticResource IconCamera}" Stroke="{DynamicResource TextSecondary}"
-                        StrokeThickness="1.5" Width="13" Height="13" />
+                        StrokeThickness="1.5" Width="13" Height="13" Stretch="Uniform" />
                   <TextBlock Text="Capturar ecrã" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>

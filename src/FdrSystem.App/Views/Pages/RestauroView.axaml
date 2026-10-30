@@ -24,7 +24,7 @@
           <Border Background="{DynamicResource RedBoxBg}" CornerRadius="12" Padding="14">
             <Grid ColumnDefinitions="Auto,*">
               <Path Data="{StaticResource IconRestore}" Stroke="{DynamicResource RedText}"
-                    StrokeThickness="1.6" Width="14" Height="14" VerticalAlignment="Top" Margin="0,1,8,0" />
+                    StrokeThickness="1.6" Width="14" Height="14" VerticalAlignment="Top" Margin="0,1,8,0" Stretch="Uniform" />
               <TextBlock Grid.Column="1" TextWrapping="Wrap" Foreground="{DynamicResource RedTextSoft}"
                          FontSize="10.5"
                          Text="O restauro APAGA todo o conteúdo do iPhone. Só funciona com firmware que a Apple ainda assina e não remove o bloqueio de ativação (iCloud). Usa um aparelho de teste e faz backup." />
@@ -127,7 +127,7 @@
           <StackPanel Spacing="6">
             <StackPanel Orientation="Horizontal" Spacing="7">
               <Path Data="{StaticResource IconBattery}" Stroke="{DynamicResource AmberText6}"
-                    StrokeThickness="1.6" Width="13" Height="13" VerticalAlignment="Center" />
+                    StrokeThickness="1.6" Width="13" Height="13" VerticalAlignment="Center" Stretch="Uniform" />
               <TextBlock Text="DURANTE O RESTAURO" Foreground="{DynamicResource AmberText6}"
                          Classes="label" FontWeight="Bold" VerticalAlignment="Center" />
             </StackPanel>

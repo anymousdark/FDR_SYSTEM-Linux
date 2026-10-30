@@ -65,7 +65,7 @@
                       IsEnabled="False" Margin="0,0,8,6">
                 <StackPanel Orientation="Horizontal" Spacing="6">
                   <Path Data="{StaticResource IconDownload}" Stroke="White" StrokeThickness="1.5"
-                        Width="13" Height="13" />
+                        Width="13" Height="13" Stretch="Uniform" />
                   <TextBlock Text="Baixar selecionado" VerticalAlignment="Center" />
                 </StackPanel>
               </Button>
