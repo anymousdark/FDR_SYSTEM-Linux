@@ -70,7 +70,8 @@ Sem iPhone nem display, o ciclo útil é: compilar → correr as ferramentas fal
 - [x] **Jailbreak** — `Views/Pages/JailbreakView.axaml(.cs)`: deteta `palera1n`/`checkra1n`
       (`Locate` + `--version` só no palera1n), mostra caminho, comandos e avisos; nunca executa
       as ferramentas, nunca corre `sudo`, não contorna iCloud/Activation Lock/MDM.
-- [ ] **Empacotamento** — `.deb` completo + AppImage.
+- [x] **Empacotamento `.deb` + CI** — `packaging/build-linux.sh` (amd64/arm64) e
+      `.github/workflows/linux.yml`. Falta AppImage.
 - [ ] **Teste no hardware** — correr no Linux com iPhone real e registar o que falha.
 
 ## Armadilhas que já custaram tempo

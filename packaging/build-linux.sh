@@ -9,6 +9,15 @@ RID="${RID:-linux-x64}"
 VERSION="1.5.9"
 OUT="$ROOT/publish/$RID"
 
+case "$RID" in
+  linux-x64)   DEB_ARCH="amd64" ;;
+  linux-arm64) DEB_ARCH="arm64" ;;
+  *)
+    echo "ERRO: RID '$RID' sem arquitectura .deb conhecida (usa linux-x64 ou linux-arm64)." >&2
+    exit 1
+    ;;
+esac
+
 echo "==> publish ($RID)"
 dotnet publish "$ROOT/src/FdrSystem.App/FdrSystem.App.csproj" \
   -c Release -r "$RID" --self-contained true \
@@ -40,11 +49,13 @@ Package: fdr-system
 Version: $VERSION
 Section: utils
 Priority: optional
-Architecture: amd64
-Depends: libimobiledevice-utils, libimobiledevice-1.0-6, usbmuxd
-Maintainer: anymousdark
+Architecture: $DEB_ARCH
+Depends: libimobiledevice-utils, usbmuxd
+Recommends: libimobiledevice-1.0-6 | libimobiledevice-1.0-6t64
+Maintainer: anymousdark <anymousdark@users.noreply.github.com>
 Description: FDR_SYSTEM — leitura, recuperacao e restauro de iPhones (Linux)
- Diagnostico offline, firmwares, restauro e ficheiros de iPhones por USB.
+ Diagnostico offline, firmwares restauro e ficheiros de iPhones por USB.
+ A app nao corre sudo e nao contorna iCloud, Activation Lock nem MDM.
 EOF
 
 cat > "$PKGROOT/usr/share/applications/fdr-system.desktop" <<'EOF'
@@ -57,5 +68,6 @@ Terminal=false
 Categories=Utility;
 EOF
 
-dpkg-deb --build --root-owner-group "$PKGROOT" "$ROOT/publish/fdr-system_${VERSION}_amd64.deb" >/dev/null
-echo "==> $ROOT/publish/fdr-system_${VERSION}_amd64.deb"
+DEB="$ROOT/publish/fdr-system_${VERSION}_${DEB_ARCH}.deb"
+dpkg-deb --build --root-owner-group "$PKGROOT" "$DEB" >/dev/null
+echo "==> $DEB"

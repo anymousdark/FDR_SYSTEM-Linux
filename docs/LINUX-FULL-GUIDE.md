@@ -419,14 +419,20 @@ Para ARM64:
 RID=linux-arm64 bash packaging/build-linux.sh
 ```
 
-**Limitação atual:** o script `packaging/build-linux.sh` grava `Architecture: amd64` no
-`.deb`. Para ARM64 é preciso ajustar o `control` antes de instalar. O binário
-`linux-arm64` em si é gerado corretamente.
+O script deriva a `Architecture` do `.deb` a partir do RID: `linux-x64` → `amd64` e
+`linux-arm64` → `arm64`. Qualquer outro RID aborta com erro, em vez de gerar um pacote
+com a arquitectura errada.
+
 
 ### 4.5 Instalar o `.deb`
 
 ```bash
+# x64
 sudo apt install ./publish/fdr-system_1.5.9_amd64.deb
+
+# ARM64
+sudo apt install ./publish/fdr-system_1.5.9_arm64.deb
+
 fdr-system
 ```
 
@@ -609,7 +615,7 @@ Ordem recomendada:
 3. **Restauro** — `idevicerestore` e progresso.
 4. **Reparo** — recovery/restart/estado; sem contornar bloqueios.
 5. ~~**Jailbreak**~~ — feito em `JailbreakView` (deteta e mostra comandos; nunca executa).
-6. **Empacotamento** — AppImage e `.deb` completo.
+6. ~~**Empacotamento `.deb`**~~ — feito em `packaging/build-linux.sh` + CI; falta AppImage.
 
 Cada página deve:
 
@@ -818,12 +824,21 @@ contorna iCloud/Activation Lock/MDM.
 
 ### 6.6 Empacotamento e CI
 
-- `.deb` básico já existe em `packaging/build-linux.sh`;
-- corrigir `Architecture` para ARM64 quando `RID=linux-arm64`;
-- adicionar AppImage (`appimagetool`) numa fase posterior;
-- criar CI Linux para `dotnet build` e `dotnet publish`;
-- não colocar tokens ou chaves no repositório;
-- não publicar o repositório.
+**Estado:** `.deb` funcional para `amd64` e `arm64`; CI Linux activa em
+`.github/workflows/linux.yml`.
+
+- `packaging/build-linux.sh` publica self-contained (`publish/<RID>`) e gera
+  `publish/fdr-system_<versao>_<arch>.deb`;
+- `Architecture` segue o RID (`linux-x64` → `amd64`, `linux-arm64` → `arm64`); um RID
+  desconhecido aborta;
+- instala em `/opt/fdr-system`, cria `/usr/bin/fdr-system` e o `.desktop`;
+- `Depends: libimobiledevice-utils, usbmuxd` e
+  `Recommends: libimobiledevice-1.0-6 | libimobiledevice-1.0-6t64` (Ubuntu 24.04 usa `t64`);
+- a CI corre `dotnet build` e `build-linux.sh` para os dois RIDs e publica os `.deb`
+  como artefactos;
+- não colocar tokens ou chaves no repositório; não publicar o repositório.
+
+Falta o AppImage (`linuxdeploy` + `appimagetool`) e o ícone PNG/SVG no `.desktop`.
 
 ---
 

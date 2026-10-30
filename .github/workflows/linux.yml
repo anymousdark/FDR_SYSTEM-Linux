@@ -1,0 +1,47 @@
+name: Linux build
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  build:
+    name: ${{ matrix.rid }}
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+
+    strategy:
+      fail-fast: false
+      matrix:
+        rid: [linux-x64, linux-arm64]
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup .NET 8
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: 8.0.x
+
+      - name: Restore
+        run: dotnet restore src/FdrSystem.App/FdrSystem.App.csproj
+
+      - name: Build
+        run: dotnet build src/FdrSystem.App/FdrSystem.App.csproj -c Release --no-restore
+
+      - name: Install dpkg-deb
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y dpkg-dev
+
+      - name: Publish and package
+        run: RID=${{ matrix.rid }} bash packaging/build-linux.sh
+
+      - name: Upload .deb
+        uses: actions/upload-artifact@v4
+        with:
+          name: fdr-system-${{ matrix.rid }}
+          path: publish/*.deb
+          if-no-files-found: error

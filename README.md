@@ -69,7 +69,7 @@ No Linux, esse papel é desempenhado pelo `usbmuxd`.
 | Página **Reparo** | ✅ implementada (modo normal/recovery/DFU, entrar/sair do recovery, reiniciar, ativação e MDM só leitura) |
 | Página **Firmware** | ✅ implementada (catálogo completo, filtro, cache 12 h, download por linha) |
 | Página **Jailbreak** | ✅ implementada (deteta `palera1n`/`checkra1n`, mostra caminho/versão, comandos e avisos; não executa nem corre `sudo`) |
-| Empacotamento `.deb` | 🟡 básico |
+| Empacotamento `.deb` | ✅ amd64 e arm64 (`Architecture` derivada do RID) |
 | AppImage | ⬜ por fazer |
 | Teste com iPhone real em Linux | ⬜ por fazer |
 
@@ -196,16 +196,24 @@ Para ARM64:
 RID=linux-arm64 bash packaging/build-linux.sh
 ```
 
-O script gera ainda um `.deb` simples se `dpkg-deb` estiver instalado. O `.deb` atual é
-**amd64**; para ARM64 falta ajustar a arquitetura no `control`.
+O script gera ainda um `.deb` se `dpkg-deb` estiver instalado. A `Architecture` do pacote
+segue o RID (`linux-x64` → `amd64`, `linux-arm64` → `arm64`).
+
+A CI em `.github/workflows/linux.yml` compila as duas arquitecturas e publica os `.deb`
+como artefactos em cada push para `main`.
 
 ### Pacote `.deb`
 
 O script instala em `/opt/fdr-system`, cria o symlink `/usr/bin/fdr-system` e o ficheiro
-`.desktop`. Dependências declaradas: `libimobiledevice-utils`, `libimobiledevice-1.0-6` e `usbmuxd`.
+`.desktop`. Dependências declaradas: `libimobiledevice-utils` e `usbmuxd`; a biblioteca
+`libimobiledevice-1.0-6` (ou `-6t64` no Ubuntu 24.04) fica como recomendação.
 
 ```bash
+# x64
 sudo apt install ./publish/fdr-system_1.5.9_amd64.deb
+
+# ARM64
+sudo apt install ./publish/fdr-system_1.5.9_arm64.deb
 ```
 
 ### Ainda por fazer
@@ -319,7 +327,9 @@ Ordem sugerida para completar o port:
 - [x] **Jailbreak** — `Views/Pages/JailbreakView.axaml(.cs)`: deteta `palera1n`/`checkra1n`,
       mostra caminho/versão e comandos para copiar, com avisos checkm8 (A5–A11); nunca executa
       as ferramentas nem corre `sudo`, e não serve para contornar iCloud/Activation Lock/MDM.
-- [ ] **Empacotamento** — `.deb` completo e AppImage.
+- [x] **Empacotamento `.deb` + CI** — `packaging/build-linux.sh` (amd64/arm64) e
+      `.github/workflows/linux.yml` (build + publish + artefactos).
+- [ ] **AppImage** — `linuxdeploy` + `appimagetool`, e ícone no `.desktop`.
 - [ ] **Teste real** — correr numa instalação Linux limpa com iPhone físico.
 - [ ] **CI** — build e testes automáticos num runner Linux.
 
